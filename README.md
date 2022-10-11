@@ -10,7 +10,7 @@
 6. To create migrations: `python manage.py makemigrations`, `python manage.py migrate`
 7. To run the application: `python manage.py runserver`
 ### PostgressSQL Database Setup
-1. Install PostgressSQL from: `https://www.enterprisedb.com/postgresql-tutorial-resources-training?uuid=db55e32d-e9f0-4d7c-9aef-b17d01210704&campaignId=7012J000001NhszQAC`
+1. Install PostgressSQL from: [a link](https://www.enterprisedb.com/postgresql-tutorial-resources-training?uuid=db55e32d-e9f0-4d7c-9aef-b17d01210704&campaignId=7012J000001NhszQAC)
 2. Run application pgAdmin
 3. Create a Database : `audiobiDB` under Databases
 4. If migrations give error, trying changing password in the settings.py to the one that you set when you started the pgAdmin application.
