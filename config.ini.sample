@@ -1,0 +1,4 @@
+[psql]
+secret = /*generate random secret key*/
+user = /*USER*/
+password = /*PASSWORD*/
