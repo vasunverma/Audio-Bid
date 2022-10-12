@@ -11,16 +11,20 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import configparser
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+config = configparser.ConfigParser(interpolation=None)
+config.read('config.ini')
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-jr%kp3rl(3))z+3!dg0o5v3&xokttrhv7s0w24st97b2cov67l'
+SECRET_KEY = config['psql']['secret']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -79,8 +83,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'audiobidDB',
-        'USER': 'postgres',
-        'PASSWORD': 'password',
+        'USER': config['psql']['user'],
+        'PASSWORD': config['psql']['password'],
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
