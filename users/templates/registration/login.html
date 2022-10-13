@@ -1,0 +1,45 @@
+{% extends "registration/base.html" %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="/static/css/login.css"/>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript" src="/static/js/login.js"></script>
+{% endblock %}
+{% block title %} Login Page {% endblock title%}
+{% block content %} 
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2 col-sm-12">  
+        <div class="form">
+      
+          <form action="{%url 'login_url'%}" method="post">
+            {% csrf_token %}
+            <h1>Welcome back!</h1>
+
+            <div class="input-group col-md-8 col-md-offset-2">
+              <input type="email" name="email" class="input email" autocomplete="off">
+              <label>E-Mail Address</label>
+            </div>
+          
+            <div class="input-group col-md-8 col-md-offset-2">
+              <input type="password" name="password" class="input password">
+              <label>Password</label>
+            </div>
+        
+            <div class="input-group">
+              <div class="col-md-4 col-md-offset-4">
+                <button type="submit">
+                  LOGIN
+                </button>             
+              </div>
+            </div>
+            <div class="forgot">
+              <a href="#">Forgot Password?</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
