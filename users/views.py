@@ -24,6 +24,7 @@ def users_signup(request):
         last_name = request.POST.get('lname')
         pass_1 = request.POST.get('password')
         pass_2 = request.POST.get('password1')
+        is_creator = (request.POST.get('inlineRadioOptions') == 'creator')
         if pass_1 == pass_2:
              user = User.objects.create_user(
                                               username=email,
@@ -31,6 +32,7 @@ def users_signup(request):
                                               last_name=last_name,
                                               email=email,
                                               password=pass_1,
+                                              is_staff=is_creator # Staff = creator
                                              )
              return HttpResponseRedirect("/")
         else:
