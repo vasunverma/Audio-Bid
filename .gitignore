@@ -4,6 +4,7 @@ users/migrations/*
 config.ini
 
 # Django #
+audiobidV1/static/
 .env
 *.log
 *.pot
