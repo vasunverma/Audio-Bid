@@ -28,7 +28,9 @@ SECRET_KEY = os.environ['secret_key']
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'audiobid.herokuapp.com'
+    'audiobid.herokuapp.com',
+    '127.0.0.1',
+    'localhost'
 ]
 
 # Application definition
@@ -151,7 +153,7 @@ ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_REQUIRED = True
 
-SITE_ID = 2  # Keeping on incrementing this if you get an error while using google auth
+SITE_ID = 3  # Keeping on incrementing this if you get an error while using google auth
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {

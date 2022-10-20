@@ -1,0 +1,92 @@
+{% load static %}
+{% load socialaccount %}
+<!doctype html>
+<html lang="en">
+<head>
+    {% load static %}
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!--Font awesome icons -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+    {% block css %}
+        <link rel="stylesheet" href="/static/css/homePage.css">
+    {% endblock %}
+    {% block script %}{% endblock %}
+    <title>{% block title %} {% endblock %} </title>
+</head>
+<body> 
+    <!--nav section-->
+    <div class = "nav">
+        <div class = "container">
+            <div class="nav__wrapper">
+                <div class = "nav__logo">
+                    <a href="{% url 'home' %}" class = "logo">AudioBid Portal</a>
+                    <p class="nav__desc">Get your voice message transcribed!!</p>
+                </div>
+                <nav>
+                    <ul class="nav__list">
+                        <div class="nav__list__wrapper">
+                            {% if user.is_authenticated %}
+                            <li><a href="{% url 'home' %}" class="nav__link">Home</a></li>
+                            <li><a href="{% url 'jobs_url' %}" class="nav__link">Jobs</a></li>
+                            <li><a href="{% url 'reviews_url' %}" class="nav__link">Reviews</a></li>
+                            <li><a href="{% url 'payments_url' %}" class="nav__link">Payments</a></li>
+                            <li><a href="{% url 'profile_url' %}" class="nav__link">Profile</a></li>
+                            <li><a href="{% url 'instructions_url' %}" class="nav__link">Instructions</a></li>
+                            <li><a href="{% url 'logout' %}" class="btn primary-btn">LogOut</a></li>
+                            {% else %}
+                            <li><a href="{% url 'login_url' %}" class="btn primary-btn">Login</a> <a href="{% url 'signup_url' %}" class="btn primary-btn">SignUp</a></li>
+                            {% endif %}
+                        </div>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!--End of nav section-->
+    {% block content %}{% endblock %}
+    <!--Footer section-->
+    <footer>
+        <div class="container">
+            <div class="footer__wrapper">
+                <div class="footer__col1">
+                    <div class="footer__logo">
+                        <a href="{% url 'home' %}" class = "logo">AudioBid Portal</a>
+                    </div>
+                    <p class="footer__desc">
+                        An audio transcription job portal.
+                    </p>
+                </div>
+                <div class="footer__col2">
+                    <h3 class = "footer__text__title">Links</h3>
+                    <ol class="footer__text">
+                            <li><a href="{% url 'home' %}" class="footer__link">Home</a></li>
+                            <li><a href="{% url 'jobs_url' %}" class="footer__link">Jobs</a></li>
+                            <li><a href="{% url 'reviews_url' %}" class="footer__link">Reviews</a></li>
+                            <li><a href="{% url 'payments_url' %}" class="footer__link">Payments</a></li>
+                            <li><a href="{% url 'instructions_url' %}" class="footer__link">Instructions</a></li>
+                    </ol>
+                </div>
+                <div class="footer__col3">
+                    <h3 class="footer__text__title">Contact</h3>
+                    <ol class="footer__text">
+                        <li><a href="tel:+000000" class="footer__link"></a>+1 000000</li>
+                        <li><a href="mailto:cloud6@tamu.edu" class="footer__link">cloud6@tamu.edu</a></li>
+                        <li><a href="#" class="footer__link">College Station, Texas</a></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!--End of footer-->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+</html>
