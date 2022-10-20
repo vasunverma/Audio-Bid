@@ -2,10 +2,10 @@
 {% load socialaccount %}
 {% load static %}
 {% block css %}
-    <link rel="stylesheet" href="/static/css/login.css"/>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
 {% endblock %}
 {% block script %}
-    <script type="text/javascript" src="/static/js/login.js"></script>
+    <script type="text/javascript" src="{% static 'js/login.css' %}"></script>
 {% endblock %}
 {% block title %} Login Page {% endblock title%}
 {% block content %} 
