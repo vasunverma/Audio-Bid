@@ -27,7 +27,9 @@ SECRET_KEY = os.environ['secret_key']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'audiobid.herokuapp.com'
+]
 
 # Application definition
 INSTALLED_APPS = [
