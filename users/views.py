@@ -11,7 +11,7 @@ def user_login(request):
         user = authenticate(username=email, password=password)
         if user:
             login(request, user)
-            return redirect('profile_url')
+            return redirect('homePage_url')
         else:
             error = " Sorry! Username and Password didn't match, Please try again ! "
             return render(request, 'registration/login.html', {'error': error})
@@ -52,3 +52,18 @@ def users_profile(request):
         return render(request, 'home/profile.html')
     else:
         return redirect('login_url')
+
+def users_home(request):
+    return render(request, 'home.html')
+
+def users_jobs(request):
+    return render(request, 'jobs/jobs.html')
+
+def users_reviews(request):
+    return render(request, 'Reviews/reviews.html')
+
+def users_payments(request):
+    return render(request, 'Payments/payments.html')
+
+def users_instructions(request):
+    return render(request, 'home/instructions.html')
