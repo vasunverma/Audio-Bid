@@ -1,4 +1,5 @@
 {% load static %}
+{% load socialaccount %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -31,13 +32,17 @@
                 <nav>
                     <ul class="nav__list">
                         <div class="nav__list__wrapper">
+                            {% if user.is_authenticated %}
                             <li><a href="{% url 'homePage_url' %}" class="nav__link">Home</a></li>
                             <li><a href="{% url 'jobs_url' %}" class="nav__link">Jobs</a></li>
                             <li><a href="{% url 'reviews_url' %}" class="nav__link">Reviews</a></li>
                             <li><a href="{% url 'payments_url' %}" class="nav__link">Payments</a></li>
                             <li><a href="{% url 'profile_url' %}" class="nav__link">Profile</a></li>
                             <li><a href="{% url 'instructions_url' %}" class="nav__link">Instructions</a></li>
-                            <li><a href="{% url 'profile_url' %}" class="btn primary-btn">LogOut</a></li>
+                            <li><a href="{% url 'logout' %}" class="btn primary-btn">LogOut</a></li>
+                            {% else %}
+                            <li><a href="{% url 'login_url' %}" class="btn primary-btn">Login</a> <a href="{% url 'signup_url' %}" class="btn primary-btn">SignUp</a></li>
+                            {% endif %}
                         </div>
                     </ul>
                 </nav>
