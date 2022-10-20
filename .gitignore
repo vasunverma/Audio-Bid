@@ -4,6 +4,7 @@ users/migrations/*
 config.ini
 
 # Django #
+.env
 *.log
 *.pot
 *.pyc
