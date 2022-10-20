@@ -1,12 +1,20 @@
+{% load socialaccount %}
 <html>
 <head>
-<title>Audio Bid</title>
+  <title>Audio Bid</title>
 </head>
 <body>
-
 <h1>The Start of Audio Bid</h1>
+
+{% if user.is_authenticated %}
+<p>Welcome, {{ user.username }} !</p>
+<p><a href="{% url 'logout' %}">Log Out</a></p>
+
+{% else %}
+<p>You are not logged in</p>
 <a href="{%url 'login_url'%}">Login</a>
 <a href="{% url 'signup_url' %}">SignUp</a>
+{% endif %}
 
 </body>
 </html>
