@@ -153,12 +153,6 @@ body, html {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-  /*
-	background-image: url(download.png);
-	background-repeat: no-repeat;
-	background-size: cover;
-	background-position:bottom;
-  */
   background-color: #d8d7d7;
 	column-gap: 3rem;
 }
