@@ -21,8 +21,7 @@
           </a>
 
         </div>
-        <span class="under__social">or</span>
-        <span class="under__social"></span>
+        <span class="under__social">or use your account</span>
         
       <div class="button-input-group">
         <div class="group input-group">
@@ -30,6 +29,9 @@
         </div>
         <div class="group input-group">
           <input type="password" name="password" placeholder="Password" required pattern=".{5,}">
+        </div>
+        <div class="alert-text">
+          <span class="help__text">Don't have an account yet?  <a href="{% url 'signup_url' %}" class="login-link">Sign Up</a></span>
         </div>
         <div class="form-link forgot">
           <a href="#" class="login-link">Forgot your password?</a>
