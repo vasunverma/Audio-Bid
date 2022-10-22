@@ -1,117 +1,431 @@
-html, body{
-    height: 100%;
+*{
+	
+	
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	text-decoration: none;
+	outline: none;
+	list-style: none;
+
+}
+
+
+*,
+*::before,
+*::after {
+    margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	text-decoration: none;
+	outline: none;
+	list-style: none;
+}
+
+
+:root {
+  --step--2: clamp(0.69rem, calc(0.58rem + 0.60vw), 1.00rem);
+  --step--1: clamp(0.83rem, calc(0.67rem + 0.81vw), 1.25rem);
+  --step-0: clamp(1.00rem, calc(0.78rem + 1.10vw), 1.56rem);
+  --step-1: clamp(1.20rem, calc(0.91rem + 1.47vw), 1.95rem);
+  --step-2: clamp(1.44rem, calc(1.05rem + 1.95vw), 2.44rem);
+  --step-3: clamp(1.73rem, calc(1.21rem + 2.58vw), 3.05rem);
+  --step-4: clamp(2.07rem, calc(1.39rem + 3.40vw), 3.82rem);
+  --step-5: clamp(2.49rem, calc(1.60rem + 4.45vw), 4.77rem);
+	
+	/* Font style */
+	
+	--ff-primary: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	
+	/* Color style */
+	
+	/*
+	--color-primary:#c51350;
+	--color-secondary:#ff9a3c;
+	--color-body:#333;
+	--color-bg: #006600;
+	--color-primary-dark:#007f67;
+	--color-error:#cc3333;
+	--color-success:#4bb544;
+	--color-link:#cdcdcc;
+	--color-border:darkgrey;
+	--bs:#ffa857;
+	*/
+	
+	--color-primary: #0092ca;
+	--color-secondary: #6dd5ed;
+	--color-primary-dark:#192294;
+	--color-error:#cc3333;
+	--color-success:#4bb544;
+	--color-link:#606470;
+	--color-link-dark:#3c4245;
+	--color-background:#f5f9ee;
+	--color-border-sc:#ececec;
+	--color-border-focus:#a9d7f6;
+	--color-border:#eeeeee;
+	--bs:#ffa857;
+	--color-dark-grey:#a4a3a3;
+	--gradient: linear-gradient(135deg var(--color-primary), var(--color-secondary));
+	
+	
+}
+
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+}
+
+/* Set core root defaults */
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+/* Set core body defaults */
+body {
+  min-height:  100vh;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+  font-family: var(--ff-primary);
+}
+
+
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+ text-decoration-skip-ink: auto;
+}
+
+/* Make images easier to work with */
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+   scroll-behavior: auto;
   }
-
-  body{
-    display: flex;
-    align-items: center;
-    background-color: #f3f5fa;
-    font-family: lato;
-  }
-
-  .input-group{
-    margin-bottom: 35px;
-    position: relative;
-  }
-
-.input{
-    display: block;
-      width: 100%;
-      height: 30px;
-      border: 0;
-      border-bottom: 2px solid #ddd;
-      padding: 1.6em;
-      box-sizing: border-box;
-      background: none;
-      outline: none;
-      color: #78909c;
-      transition: all 0.2s ease-in;
-  } 
-
-  .input:focus{
-    border-bottom: 2px solid #615dec;
-  }
-
-label{
-    position: absolute;
-    top: 35%;
-    left: 39px;
-    color: #B0BEC5;
-    pointer-events: none;
-    font-size: meduim;
-    transition: all 0.3s ease;
-  } 
   
-  .input-group input:focus + label,
-  .input-group input.has-value + label{
-    top: -10px;
-    font-size: xx-small;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
+}
+
+
+body, html {
+  height:100%;
+}
+
+.container {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+  background-color: #ffffff;
+	column-gap: 3rem;
+}
 
 .form{
-    background-color: #f7f8f9;
-    padding: 50px;
-    border-radius: 10px;
-    -webkit-box-shadow: 0px 0px 33px 0px rgba(219,221,255,0.46);
-      -moz-box-shadow: 0px 0px 33px 0px rgba(219,221,255,0.46);
-      box-shadow: 0px 0px 33px 0px rgba(219, 225, 255, 0.46); 
-  }
+	position: absolute;
+	width: 100%;
+	max-width: 480px;
+	background: #fff;
+	border-radius: 1rem;
+	 box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+	padding: 3em 2.2em;
+	transition: all .3s ease-in-out;
+}
 
-  .form h1 {
-    text-align: center;
-    margin: 0 0 50px 0;
-    font-weight: 100;
-    font-size: 60px;
-    color: #615DEC;
-  }
+.form.sign-up {
+	opacity: 0;
+	pointer-events: none;
+}
 
-button {
-    display: block;
-    width: 100%;
-    border: none;
-    border-radius: 35px;
-    padding: 15px;
-    box-shadow: 0 5px 17px -2px rgba(102, 127, 255, 0.5);
-    color: #fff;
-    cursor: pointer;
-    outline: none;
-    transition: all 0.3s cubic-bezier(0.65, 0.05, 0.36, 1);
-    background: #718dff url(data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22iso-8859-1%22%3F%3E%0A%3C%21--%20Generator%3A%20Adobe%20Illustrator%2019.1.0%2C%20SVG%20Export%20Plug-In%20.%20SVG%20Version%3A%206.00%20Build%200%29%20%20--%3E%0A%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20xmlns%3Axlink%3D%22http%3A//www.w3.org/1999/xlink%22%20version%3D%221.1%22%20id%3D%22Capa_1%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2031.49%2031.49%22%20style%3D%22enable-background%3Anew%200%200%2031.49%2031.49%3B%22%20xml%3Aspace%3D%22preserve%22%20width%3D%2220px%22%20height%3D%2220px%22%3E%0A%3Cpath%20d%3D%22M21.205%2C5.007c-0.429-0.444-1.143-0.444-1.587%2C0c-0.429%2C0.429-0.429%2C1.143%2C0%2C1.571l8.047%2C8.047H1.111%20%20C0.492%2C14.626%2C0%2C15.118%2C0%2C15.737c0%2C0.619%2C0.492%2C1.127%2C1.111%2C1.127h26.554l-8.047%2C8.032c-0.429%2C0.444-0.429%2C1.159%2C0%2C1.587%20%20c0.444%2C0.444%2C1.159%2C0.444%2C1.587%2C0l9.952-9.952c0.444-0.429%2C0.444-1.143%2C0-1.571L21.205%2C5.007z%22%20fill%3D%22%23FFFFFF%22/%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3C/svg%3E%0A) right 35px center no-repeat;
-  }
-  button:active{
-    background-color: #5e7dfc;
-  }
-  hr {
-    border: 0;
-      border-top: 1px solid #e3e2ff;
-      margin-bottom: 30px;
-  }
-  .email{
-    background: url(data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22iso-8859-1%22%3F%3E%0A%3C%21--%20Generator%3A%20Adobe%20Illustrator%2016.0.0%2C%20SVG%20Export%20Plug-In%20.%20SVG%20Version%3A%206.00%20Build%200%29%20%20--%3E%0A%3C%21DOCTYPE%20svg%20PUBLIC%20%22-//W3C//DTD%20SVG%201.1//EN%22%20%22http%3A//www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd%22%3E%0A%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20xmlns%3Axlink%3D%22http%3A//www.w3.org/1999/xlink%22%20version%3D%221.1%22%20id%3D%22Capa_1%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2225px%22%20height%3D%2225px%22%20viewBox%3D%220%200%20612.011%20612.011%22%20style%3D%22enable-background%3Anew%200%200%20612.011%20612.011%3B%22%20xml%3Aspace%3D%22preserve%22%3E%0A%3Cg%3E%0A%09%3Cg%20id%3D%22Shape_17%22%3E%0A%09%09%3Cg%3E%0A%09%09%09%3Cpath%20d%3D%22M612%2C156.232c0-13.065-5.16-24.885-13.393-33.897c-0.137-0.179-0.168-0.39-0.316-0.57%20%20%20%20%20c-0.137-0.158-0.327-0.222-0.475-0.369c-9.361-9.794-22.553-15.988-37.243-15.988H51.437c-14.69%2C0-27.882%2C6.194-37.264%2C15.988%20%20%20%20%20c-0.137%2C0.147-0.338%2C0.211-0.475%2C0.38c-0.148%2C0.169-0.179%2C0.39-0.316%2C0.57C5.161%2C131.358%2C0%2C143.167%2C0%2C156.232v299.546%20%20%20%20%20c0%2C13.382%2C5.372%2C25.486%2C13.962%2C34.573c0.169%2C0.189%2C0.222%2C0.422%2C0.412%2C0.602c0.063%2C0.063%2C0.137%2C0.073%2C0.201%2C0.137%20%20%20%20%20c9.361%2C9.541%2C22.394%2C15.514%2C36.863%2C15.514h509.136c14.469%2C0%2C27.513-5.983%2C36.863-15.523c0.063-0.054%2C0.137-0.074%2C0.2-0.127%20%20%20%20%20c0.18-0.169%2C0.232-0.401%2C0.401-0.581c8.601-9.086%2C13.973-21.201%2C13.973-34.594V156.232H612z%20M411.687%2C290.175l176.368-146.238%20%20%20%20%20c1.73%2C3.757%2C2.754%2C7.904%2C2.754%2C12.294v299.546c0%2C3.969-0.823%2C7.736-2.248%2C11.208L411.687%2C290.175z%20M560.573%2C126.355%20%20%20%20%20c4.443%2C0%2C8.633%2C1.013%2C12.442%2C2.723l-267.01%2C221.378L38.995%2C129.078c3.81-1.709%2C8-2.723%2C12.442-2.723H560.573z%20M23.45%2C466.976%20%20%20%20%20c-1.425-3.461-2.248-7.239-2.248-11.208V156.232c0-4.39%2C1.024-8.538%2C2.754-12.294l176.368%2C146.238L23.45%2C466.976z%20%20%20%20%20%20M51.437%2C485.645c-4.896%2C0-9.456-1.267-13.55-3.313l178.731-178.658l82.58%2C68.471c1.963%2C1.636%2C4.39%2C2.459%2C6.807%2C2.459%20%20%20%20%20c2.417%2C0%2C4.844-0.823%2C6.807-2.459l82.58-68.471l178.731%2C178.658c-4.095%2C2.047-8.653%2C3.313-13.551%2C3.313H51.437z%22%20fill%3D%22%239aaeff%22/%3E%0A%09%09%3C/g%3E%0A%09%3C/g%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3C/svg%3E%0A) left center no-repeat;
-      padding-left: 40px;
-  }
-  .password{
-    padding-left: 40px;
-    background: url(data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22iso-8859-1%22%3F%3E%0A%3C%21--%20Generator%3A%20Adobe%20Illustrator%2019.0.0%2C%20SVG%20Export%20Plug-In%20.%20SVG%20Version%3A%206.00%20Build%200%29%20%20--%3E%0A%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20xmlns%3Axlink%3D%22http%3A//www.w3.org/1999/xlink%22%20version%3D%221.1%22%20id%3D%22Capa_1%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2054%2054%22%20style%3D%22enable-background%3Anew%200%200%2054%2054%3B%22%20xml%3Aspace%3D%22preserve%22%20width%3D%2225px%22%20height%3D%2225px%22%3E%0A%3Cg%3E%0A%09%3Cpath%20d%3D%22M43%2C20.113V14.5C43%2C6.505%2C35.822%2C0%2C27%2C0S11%2C6.505%2C11%2C14.5v5.613c-3.401%2C0.586-6%2C3.55-6%2C7.117v19.542%20%20%20C5%2C50.757%2C8.243%2C54%2C12.229%2C54h29.542C45.757%2C54%2C49%2C50.757%2C49%2C46.771V27.229C49%2C23.663%2C46.401%2C20.699%2C43%2C20.113z%20M13%2C14.5%20%20%20C13%2C7.607%2C19.28%2C2%2C27%2C2s14%2C5.607%2C14%2C12.5V20H13V14.5z%20M47%2C46.771C47%2C49.654%2C44.654%2C52%2C41.771%2C52H12.229C9.346%2C52%2C7%2C49.654%2C7%2C46.771%20%20%20V27.229C7%2C24.346%2C9.346%2C22%2C12.229%2C22h29.542C44.654%2C22%2C47%2C24.346%2C47%2C27.229V46.771z%22%20fill%3D%22%239aaeff%22/%3E%0A%09%3Cpath%20d%3D%22M27%2C28c-2.206%2C0-4%2C1.794-4%2C4v6c0%2C2.206%2C1.794%2C4%2C4%2C4s4-1.794%2C4-4v-6C31%2C29.794%2C29.206%2C28%2C27%2C28z%20M29%2C38c0%2C1.103-0.897%2C2-2%2C2%20%20%20s-2-0.897-2-2v-6c0-1.103%2C0.897-2%2C2-2s2%2C0.897%2C2%2C2V38z%22%20fill%3D%22%239aaeff%22/%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3Cg%3E%0A%3C/g%3E%0A%3C/svg%3E%0A) left center no-repeat;
-    
-  }
-  .user{
-    display: block;
-      margin: 0 auto 50px;
-  }
+.forms.show-signup .form.sign-up {
+	opacity: 1;
+	pointer-events: auto;
+}
 
-  .forgot{
-    text-align: center;
-  }
+.forms.show-signup .form.sign-in {
+	opacity: 0;
+	pointer-events: none;
+}
 
-  .forgot a {
-    color: #90A4AE;
-    text-decoration: none;
-    font-weight: 300;
-    transition: all 0.3s ease;
-  }
+.header {
+	color: var(--color-primary-dark);
+	font-size: var(--step-1);
+	font-weight: 500;
+	text-align: center;
+	letter-spacing: 1px;
+}
 
-  .forgot a:hover{
-    color: #7791fa;
-  }
 
+/* -----------------The start of Social media Design* ----------------- */
+
+.social__media__container {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	column-gap: 1rem;
+	margin-top: 1.1rem;
+}
+
+a.social {
+	width: 2.5rem;
+	height: 2.5rem;
+	background-color: #fff;
+	color: #000;
+	border-radius: 50%;
+	text-align: center;
+	border: 1px solid var(--color-border-sc);
+	box-shadow: 1px 0 10px rgba(0,0,0,.2);
+}
+
+a.social i {
+	line-height: 2.5rem;
+}
+
+/* -----------------The end of Social media Design* ----------------- */
+
+
+
+span.under__social {
+	display: grid;
+	place-items: center;
+	letter-spacing: 1px;
+	margin-top: 1.7rem;
+}
+
+
+.button-input-group {
+	display: grid;
+	place-items: center;
+	margin-top: .6rem;
+}
+
+.group {
+	width: 90%;
+	height: 47px;
+	margin-bottom: 1.3rem;
+}
+
+.group input,
+.group button {
+	width: 100%;
+	height: 100%;
+	border: none;
+	outline: none;
+	border-radius: .4rem;
+}
+
+.group.button-group {
+	width: 60%;
+}
+
+.group input {
+	border: 2px solid var(--color-border);
+	padding: 0 1.1rem;
+}
+
+.group input::placeholder {
+	opacity: .9;
+}
+
+.form-link {
+	margin: 1.6rem 0 1.8rem 0;
+}
+
+.alert-text.signup__alert {
+	margin-bottom: 2.2rem;
+}
+
+.alert-text .help__text {
+	position: absolute;
+	left: 4rem;
+	font-size: var(--step--2);
+	margin-top: -1rem;
+	opacity: .7;
+}
+
+a.link,
+a.login-link,
+.alert-text .help__text {
+	color: var(--color-link);
+}
+
+a.link:hover,
+a.login-link:hover {
+	color: var(--color-link-dark);
+	text-decoration: underline;
+	transition: all .4s ease;
+}
+
+
+
+/* -----------------The start of Validation* ----------------- */
+
+.form input:focus,
+.forum input:not(:placeholder-shown) {
+	background-color: var(--color-background);
+	border-color: var(--color-border-focus);
+}
+
+.form input:focus,
+.forum input:placeholder-shown {
+	box-shadow: 0 0 0 2px var(--color-border-focus);
+}
+
+.form input:focus:valid {
+	box-shadow: 0 0 0 2px var(--color-success);
+}
+
+.form input:valid:not(:placeholder-shown) {
+	border-color: var(--color-success);
+}
+
+.form input:focus:invalid {
+	box-shadow: 0 0 0 2px var(--color-error);
+}
+
+.form input:invalid:not(:placeholder-shown) {
+	border-color: var(--color-error);
+}
+
+/* -----------------The end of Validation* ----------------- */
+
+
+
+/* -----------------The start of Button Design* ----------------- */
+
+
+.group button {
+	position: relative;
+	background: transparent;
+	cursor: pointer;
+}
+
+.group button span {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	-ms-flex-pack: center;
+	justify-content: center;
+	-ms-flex-align: center;
+	align-items: center;
+	font-weight: 500;
+	color: var(--color-primary);
+	letter-spacing: 1px;
+	background: transparent;
+	border-radius: .6rem;
+	z-index: 99;
+}
+
+.group button:hover span {
+	background-color: var(--color-primary);
+	color: #fff;
+	transform: scale(1.1);
+	transition: all .2s ease;
+	transition-delay: .3s;
+	
+}
+
+.group button::before {
+	position: absolute;
+	content: '';
+	width: 1.5rem;
+	height: 1.5rem;
+	top: 1px;
+	left: 1px;
+	border-top: 2px solid var(--color-primary);
+	border-left: 2px solid var(--color-primary);
+	border-top-left-radius: .6rem;
+	transition: all .3s ease;
+	transition-delay: 0s;
+}
+
+.group button::after {
+	position: absolute;
+	content: '';
+	width: 1.5rem;
+	height: 1.5rem;
+	bottom: 1px;
+	right: 1px;
+	border-bottom: 2px solid var(--color-primary);
+	border-right: 2px solid var(--color-primary);
+	border-bottom-right-radius: .6rem;
+	transition: all .3s ease;
+	transition-delay: 0s;
+}
+
+.group button:hover {
+	box-shadow: 0 0 1.6rem var(--color-primary);
+	transform: scale(1.1);
+	transition: all .2s ease;
+	transition-delay: .3s;
+}
+
+.group button:hover::before,
+.group button:hover::after {
+	width: 99%;
+	height: 96%;
+	border-radius: .6rem;
+}
+
+
+/* -----------------The end of Button Design* ----------------- */
+
+
+footer {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+	word-spacing: 1px;
+		transform: translate(-50%, 19em);
+}
+
+footer p {
+	font-size: var(--step--1);
+	color: #fff;
+}
+	
+footer p a {
+	letter-spacing: 1px;
+	color: #f7aa00;
+}
+
+footer p a:hover {
+	text-decoration: underline;
+}

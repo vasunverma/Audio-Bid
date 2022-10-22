@@ -9,39 +9,40 @@
 {% endblock %}
 {% block title %} Login Page {% endblock title%}
 {% block content %} 
-  <div class="container">
-    <div class="row">
-      <div class="col-md-8 col-md-offset-2 col-sm-12">  
-        <div class="form">
-      
-          <form action="{%url 'login_url'%}" method="post">
-            {% csrf_token %}
-            <h1>Welcome back!</h1>
+  <div class="container forms" id="container">			
+    <div class="form sign-in">
+      <form action="{%url 'login_url'%}" method="post">
+        {% csrf_token %}
+        <div class="header">Sign In</div>
+        <div class="social__media__container">
 
-            <div class="input-group col-md-8 col-md-offset-2">
-              <input type="email" name="email" class="input email" autocomplete="off">
-              <label>E-Mail Address</label>
-            </div>
-          
-            <div class="input-group col-md-8 col-md-offset-2">
-              <input type="password" name="password" class="input password">
-              <label>Password</label>
-            </div>
+          <a href="{% provider_login_url 'google' %}" class="social google">
+            <i class="fa-brands fa-google"></i>
+          </a>
+
+        </div>
+        <span class="under__social">or use your account</span>
         
-            <div class="input-group">
-              <div class="col-md-4 col-md-offset-4">
-                <button type="submit">
-                  LOGIN
-                </button>             
-              </div>
-              <a href="{% provider_login_url 'google' %}">Login with Google</a>
-            </div>
-            <div class="forgot">
-              <a href="#">Forgot Password?</a>
-            </div>
-          </form>
+      <div class="button-input-group">
+        <div class="group input-group">
+          <input type="email" name ="email" placeholder="Email" required>
+        </div>
+        <div class="group input-group">
+          <input type="password" name="password" placeholder="Password" required pattern=".{5,}">
+        </div>
+        <div class="alert-text">
+          <span class="help__text">Don't have an account yet?  <a href="{% url 'signup_url' %}" class="login-link">Sign Up</a></span>
+        </div>
+        <div class="form-link forgot">
+          <a href="#" class="login-link">Forgot your password?</a>
+        </div>
+        <div class="group button-group">
+          <button class="signup-btn">
+            <span>Sign in</span>
+          </button>
         </div>
       </div>
+      </form>
     </div>
   </div>
 {% endblock %}
