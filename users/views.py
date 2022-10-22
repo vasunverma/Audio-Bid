@@ -24,27 +24,23 @@ def users_signup(request):
         email = request.POST.get('email')
         first_name = request.POST.get('fname')
         last_name = request.POST.get('lname')
-        pass_1 = request.POST.get('password')
-        pass_2 = request.POST.get('password1')
+        password = request.POST.get('password')
         role = request.POST.get('inlineRadioOptions')
-        if pass_1 == pass_2:
-            user = User.objects.create_user(
-                username=email,
-                first_name=first_name,
-                last_name=last_name,
-                email=email,
-                password=pass_1
-            )
-            user.profile.role = role
-            user.profile.native_auth = True
-            user.save()
+        user = User.objects.create_user(
+            username=email,
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            password=password
+        )
+        user.profile.role = role
+        user.profile.native_auth = True
+        user.save()
 
-            return HttpResponseRedirect("/")
-        else:
-            error = " Password Mismatch "
-            return render(request, 'registration/signup.html', {"error": error})
+        return HttpResponseRedirect("/")
     else:
-        return render(request, 'registration/signup.html')
+        error = " Unhandled Exception. Please try again"
+        return render(request, 'registration/signup.html', {"error": error})
 
 
 def users_profile(request):
