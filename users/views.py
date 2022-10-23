@@ -49,6 +49,10 @@ def users_signup(request):
 
 def users_profile(request):
     if request.user.is_authenticated:
+        #Get existing data from database and display everything to the user
+        #Display empty fields as empty wibth Submit button enabled
+        #If no fields are required then submit button should be disabled
+        #If user changes any info in the form then submit button should become enabled
         return render(request, 'home/profile.html')
     else:
         return redirect('login_url')
