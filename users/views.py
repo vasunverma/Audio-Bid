@@ -44,8 +44,8 @@ def users_signup(request):
                 login(request, user)
                 return redirect('home')
             else:
-                error = " Sorry! Username and Password didn't match, Please try again ! "
-                return render(request, 'registration/login.html', {'error': error})
+                error = " Sorry! There was an error while registering your account, Please try again ! "
+                return render(request, 'registration/signup.html', {"error": error})
         else:
             error = " Password Mismatch "
             return render(request, 'registration/signup.html', {"error": error})
