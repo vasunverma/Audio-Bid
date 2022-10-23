@@ -11,6 +11,18 @@
 {% block content %}
 <div class="container forms" id="container">
   <div class="form sign-in">
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+      <div {% if message.tags %} class=" alert {{ message.tags }} alert-top-message alert-dismissible fade show"
+           role="alert" {% endif %}>{{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endfor %}
+    </ul>
+    {% endif %}
     <form method="post" action="{%url 'signup_url'%}">
       {% csrf_token %}
       <div class="header">Sign Up</div>
