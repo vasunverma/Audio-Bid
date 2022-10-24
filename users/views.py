@@ -38,8 +38,14 @@ def users_signup(request):
             user.profile.role = role
             user.profile.native_auth = True
             user.save()
-
-            return HttpResponseRedirect("/")
+        
+            user = authenticate(username=email, password=pass_1)
+            if user:
+                login(request, user)
+                return redirect('home')
+            else:
+                error = " Sorry! There was an error while registering your account, Please try again ! "
+                return render(request, 'registration/signup.html', {"error": error})
         else:
             error = " Password Mismatch "
             return render(request, 'registration/signup.html', {"error": error})
