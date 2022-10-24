@@ -16,7 +16,8 @@
 1. Install PostgressSQL from: [Download Link](https://www.enterprisedb.com/postgresql-tutorial-resources-training?uuid=db55e32d-e9f0-4d7c-9aef-b17d01210704&campaignId=7012J000001NhszQAC)
 2. Run application pgAdmin
 3. Create a Database : `audiobidDB` under Databases
-4. If migrations give error, trying changing password in the settings.py to the one that you set when you started the pgAdmin application.
+4. Enter all the DB Details in the `.env` file
+5. If migrations give error, trying changing password in the .env file to the one that you set when you started the pgAdmin application.
 ### Google OAuth Setup
 1. If you have existing Db, Delete it
 2. Create new DB and new super user
