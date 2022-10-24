@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
-
+import pytz
 
 def user_login(request):
     form = AuthenticationForm()
@@ -25,6 +25,9 @@ def user_login(request):
             else:
                 messages.error(request, "Username and Password didn't match, please try again!")
 
+    elif request.method == 'GET':
+        return render(request, 'registration/login.html')
+
     return render(request, 'registration/login.html', {'form': form, 'title': 'log in'})
 
 
@@ -35,6 +38,7 @@ def users_signup(request):
         last_name = request.POST.get('lname')
         password = request.POST.get('password')
         role = request.POST.get('inlineRadioOptions')
+        time_zone = request.POST.get('userTimezone')
         if not User.objects.filter(email=email).exists():
             user = User.objects.create_user(
                 username=email,
@@ -45,6 +49,7 @@ def users_signup(request):
             )
             user.profile.role = role
             user.profile.native_auth = True
+            user.profile.time_zone = time_zone
             user.save()
             messages.success(request, f' Account Successfully created for {user.username}!')
             return HttpResponseRedirect("/")
@@ -53,7 +58,7 @@ def users_signup(request):
             return render(request, 'registration/login.html')
 
     elif request.method == 'GET':
-        return render(request, 'registration/signup.html')
+        return render(request, 'registration/signup.html', {'timezones': pytz.common_timezones})
 
     else:
         error = " Unhandled Exception. Please try again"
