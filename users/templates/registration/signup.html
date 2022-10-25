@@ -14,7 +14,6 @@
 <div class="container forms" id="container">
   <div class="form sign-in">
     {% if messages %}
-    <ul class="messages">
       {% for message in messages %}
       <div {% if message.tags %} class=" alert {{ message.tags }} alert-top-message alert-dismissible fade show"
            role="alert" {% endif %}>{{ message }}
@@ -23,7 +22,6 @@
         </button>
       </div>
       {% endfor %}
-    </ul>
     {% endif %}
     <form method="post" action="{%url 'signup_url'%}">
       {% csrf_token %}

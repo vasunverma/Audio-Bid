@@ -25,17 +25,15 @@
     <div class = "nav">
         <div class = "container">
             {% if messages %}
-            <ul class="messages" style="zoom:1.8;">
                 {% for message in messages %}
                 <div {% if message.tags %}
                      class=" alert {{ message.tags }} alert-top-message alert-dismissible fade show"
-                     role="alert" {% endif %}>{{ message }}
+                     role="alert" {% endif %} style="zoom:1.8;">{{ message }}
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 {% endfor %}
-            </ul>
             {% endif %}
             <div class="nav__wrapper">
                 <div class = "nav__logo">
