@@ -3,9 +3,23 @@
 {% block css %}
     <link rel="stylesheet" href="/static/css/homePage.css"/>
 {% endblock %}
+{% block script %}
+{% if MissingInfo %}
+    <script type="text/javascript">
+    window.onload = function () {
+        OpenBootstrapPopup();
+    };
+    function OpenBootstrapPopup() {
+        $("#exampleModal").modal('show');
+    }
+</script>
+{% endif %}
+{% endblock %}
 {% block title %} Audio Bid {% endblock title%}
 {% block content %}
 {% load socialaccount %}
+{% load tz %}
+{% get_current_timezone as TIME_ZONE %}
 <!--Main section-->
 {% if user.is_authenticated %}
 <section id="main">
@@ -28,6 +42,75 @@
             </div>
         </div>
     </div>
+  <!-- Modal -->
+  <div class="modal fade" data-backdrop="static" id="exampleModal" tabindex="-1" role="dialog"
+       aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class=" alert alert-warning alert-top-message alert-dismissible fade show"
+                 role="alert"><h5>Please fill out the missing info below.</h5>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" id="exampleModalLabel">Finish Profile</h2>
+        </div>
+        <div class="modal-body">
+          <div class="form sign-in">
+            <form method="post" action="{%url 'home'%}">
+              {% csrf_token %}
+              <div class="button-input-group">
+                <div class="input-group mb-3">
+                  <input type="text" name="fname" aria-label="First name" placeholder="First name"
+                         class="form-control form-control-lg"
+                         value="{{fname}}" disabled>
+                  <input type="text" name="lname" aria-label="Last name" placeholder="Last name"
+                         class="form-control form-control-lg"
+                         value="{{lname}}" disabled>
+                </div>
+                <div class="input-group mb-3">
+                  <input type="text" name="username" class="form-control form-control-lg" placeholder="Username"
+                         aria-label="Username" value="{{username}}" disabled>
+                </div>
+                <div class="input-group mb-3">
+                  <input type="email" name="email" class="form-control form-control-lg" placeholder="Email"
+                         aria-label="email" value="{{email}}" disabled>
+                </div>
+                <div class="input-group mb-3">
+                  <label class="input-group-text" for="inputGroupSelect01">Time zone:</label>
+                  <select name="userTimezone" class="form-control form-control-lg" id="inputGroupSelect01">
+                    <option value="{{selectedTimeZone}}" selected>{{ selectedTimeZone }}</option>
+                    {% for tz in timezones %}
+                    <option value="{{ tz }}"{% if tz == TIME_ZONE %}{% endif %}>{{ tz }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="input_field mb-3">
+                  <label class="form-check-label"><h5>User Type: </h5></label><br>
+                  <div class="form-check form-check-lg form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
+                           value="{{selectedRoleType}}" checked/>
+                    <label class="form-check-label" for="inlineRadio1"><h5>{{selectedRoleType}}</h5></label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2"
+                           value="{{nonSelectedRoleType}}"/>
+                    <label class="form-check-label" for="inlineRadio2"><h5>{{nonSelectedRoleType}}</h5></label>
+                  </div>
+                </div>
+              </div>
+              <div class="group button-group">
+                <button class="btn primary-btn">
+                  <span>Save Changes</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 {% else %}
 <section id="main">

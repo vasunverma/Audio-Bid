@@ -1,14 +1,16 @@
-from cgi import print_exception
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    role = models.CharField(max_length=10) # Need to change default thing later and prompt user to select a user type on first login
+    role = models.CharField(max_length=10)
+    time_zone = models.CharField(max_length=500)
     native_auth = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.user.username} Profile'
+
 
 class Job(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -19,14 +21,9 @@ class Job(models.Model):
     url2audio = models.TextField()
     worker_id = models.CharField(max_length=100)
     status_choices = [  # 0 = not started, 1 = in progress, 2 = completed, 3 = cancelled
-                (0, 'CLAIMED'), 
-                (1, 'INPROGRESS'), 
-                (2, 'COMPLETED'),
-                (3, 'CANCELLED')
-            ]
+        (0, 'CLAIMED'),
+        (1, 'INPROGRESS'),
+        (2, 'COMPLETED'),
+        (3, 'CANCELLED')
+    ]
     status = models.IntegerField(choices=status_choices, default=0)
-    
-    
-    
-    
-    

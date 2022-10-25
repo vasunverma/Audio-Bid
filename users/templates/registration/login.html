@@ -2,47 +2,55 @@
 {% load socialaccount %}
 {% load static %}
 {% block css %}
-    <link rel="stylesheet" href="/static/css/login.css"/>
+<link rel="stylesheet" href="/static/css/login.css"/>
 {% endblock %}
 {% block script %}
-    <script type="text/javascript" src="/static/js/login.js"></script>
+<script type="text/javascript" src="/static/js/login.js"></script>
 {% endblock %}
 {% block title %} Login Page {% endblock title%}
-{% block content %} 
-  <div class="container forms" id="container">			
-    <div class="form sign-in">
-      <form action="{%url 'login_url'%}" method="post">
-        {% csrf_token %}
-        <div class="header">Sign In</div>
-        <div class="social__media__container">
-
-          <a href="{% provider_login_url 'google' %}" class="social google">
-            <i class="fa-brands fa-google"></i>
-          </a>
-
-        </div>
-        <span class="under__social">or use your account</span>
-        
+{% block content %}
+<div class="container forms" id="container">
+  <div class="form sign-in">
+    {% if messages %}
+      {% for message in messages %}
+      <div {% if message.tags %} class=" alert {{ message.tags }} alert-top-message alert-dismissible fade show"
+           role="alert" {% endif %}>{{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endfor %}
+    {% endif %}
+    <form action="{%url 'login_url'%}" method="post">
+      {% csrf_token %}
+      <div class="header">Sign In</div>
+      <div class="social__media__container">
+        <a href="{% provider_login_url 'google' %}" id="google-button" class="btn btn-outline-primary">
+          <i class="fa-brands fa-google"></i> Sign in with Google
+        </a>
+      </div>
+      <div class="mb-4">
+        <hr data-content="OR" class="hr-text">
+      </div>
       <div class="button-input-group">
-        <div class="group input-group">
-          <input type="email" name ="email" placeholder="Email" required>
+        <div class="input-group mb-3">
+          <input type="email" name="email" placeholder="Email" class="form-control" required>
         </div>
-        <div class="group input-group">
-          <input type="password" name="password" placeholder="Password" required pattern=".{5,}">
+        <div class="input-group mb-3">
+          <input type="password" name="password" placeholder="Password" class="form-control" required pattern=".{5,}">
         </div>
-        <div class="alert-text">
-          <span class="help__text">Don't have an account yet?  <a href="{% url 'signup_url' %}" class="login-link">Sign Up</a></span>
-        </div>
-        <div class="form-link forgot">
-          <a href="#" class="login-link">Forgot your password?</a>
+        <div class="input_field mb-3">
+          <span class="help__text"><a href="#" class="login-link">Forgot your password?</a></span>
         </div>
         <div class="group button-group">
           <button class="signup-btn">
             <span>Sign in</span>
           </button>
         </div>
+        <span class="help__text">Don't have an account yet?  <a href="{% url 'signup_url' %}"
+                                                                class="login-link">Sign Up</a></span>
       </div>
-      </form>
-    </div>
+    </form>
   </div>
+</div>
 {% endblock %}
