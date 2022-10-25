@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 import pytz
 
+
 def user_login(request):
     form = AuthenticationForm()
     if request.method == "POST":
@@ -51,8 +52,17 @@ def users_signup(request):
             user.profile.native_auth = True
             user.profile.time_zone = time_zone
             user.save()
-            messages.success(request, f' Account Successfully created for {user.username}!')
-            return HttpResponseRedirect("/")
+            user = authenticate(username=email, password=password)
+            if user:
+                login(request, user)
+                messages.success(request, f' Account Successfully created for {user.username}!')
+                return redirect('home')
+            else:
+                error = " Sorry! There was an error while registering your account, Please try again ! "
+                messages.error(request, f' Sorry! There was an error while registering the account for {user.username},'
+                                        f' Please try again!')
+                return render(request, 'registration/signup.html', {"error": error})
+
         else:
             messages.error(request, "Account already exists. Please login.")
             return render(request, 'registration/login.html')
