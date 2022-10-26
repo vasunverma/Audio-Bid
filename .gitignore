@@ -1,6 +1,5 @@
 .venv/*
 .venv/pyvenv.cfg
-users/migrations/*
 config.ini
 
 # Django #
