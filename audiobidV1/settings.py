@@ -13,7 +13,6 @@ import os
 from pathlib import Path
 import environ
 from django.contrib.messages import constants as messages
-import configparser
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,10 +22,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-config = configparser.ConfigParser(interpolation=None)
-config.read('config.ini')
 environ.Env.read_env()
-SECRET_KEY = config['psql']['secret']
+SECRET_KEY = os.environ['secret_key']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -103,11 +100,11 @@ WSGI_APPLICATION = 'audiobidV1.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config['psql']['db'],
-        'USER': config['psql']['user'],
-        'PASSWORD': config['psql']['password'],
-        'HOST': config['psql']['host'],
-        'PORT': config['psql']['port'],
+        'NAME': os.environ['db_name'],
+        'USER': os.environ['db_user'],
+        'PASSWORD': os.environ['db_pass'],
+        'HOST': os.environ['db_host'],
+        'PORT': os.environ['db_port'],
     }
 }
 
@@ -171,7 +168,7 @@ ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_REQUIRED = True
 
-SITE_ID = 5  # Keeping on incrementing this if you get an error while using google auth
+SITE_ID = 4  # Keeping on incrementing this if you get an error while using google auth
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {

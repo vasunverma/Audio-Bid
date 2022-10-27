@@ -1,12 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils import timezone
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=10)
-    time_zone = models.CharField(max_length=500, default=timezone.now())
+    time_zone = models.CharField(max_length=500)
     native_auth = models.BooleanField(default=False)
 
     def __str__(self):
@@ -14,7 +13,7 @@ class Profile(models.Model):
 
 
 class Job(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=19, decimal_places=10)
     created_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField()

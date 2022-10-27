@@ -1,7 +1,0 @@
-[psql]
-secret = /*generate random secret key*/
-db = audiobidDB
-host = 127.0.0.1
-port = 5432
-user = /*USER*/
-password = /*PASSWORD*/
