@@ -86,29 +86,17 @@ def users_profile(request):
 
 def users_jobs(request):
     if request.user.is_authenticated:
+        if request.method == 'POST':
+            print(request.body)
+            form = JobForm(request.POST or None)
+            if form.is_valid():
+                form.save()
+                messages.success(request, ('Your Job has been saved successfully'))
+            else:
+                messages.error(request, ('Error creating Job. Please try again'))
         return render(request, 'jobs/jobs.html')
     else:
         return redirect('login_url')
-
-def users_jobDetails(request):
-    if request.method == 'POST':
-        form = JobForm(request.POST or None)
-        # form.initial['user']=user
-        # user = User.objects.filter(id = request.user.id)
-        # form.fields['user'].label = user
-        # print(form.fields['user'].label)
-        if form.is_valid():
-            form.save()
-            # form.fields['user'].label = user
-            # form.save()
-            # user = request.user
-            messages.success(request, ('Your Job has been saved successfully'))
-            return render(request, 'jobs/jobDetails.html', {})
-        else:
-            messages.success(request, ('Error creating Job. Please try again'))
-            return render(request, 'jobs/jobDetails.html', {})
-    else:
-        return render(request, 'jobs/jobDetails.html', {})
 
 
 def users_reviews(request):

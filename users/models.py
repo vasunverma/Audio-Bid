@@ -14,18 +14,17 @@ class Profile(models.Model):
 
 
 class Job(models.Model):
-    #user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
-    audioName = models.CharField(max_length=200, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     price = models.DecimalField(max_digits=19, decimal_places=10)
-    # created_date = models.DateTimeField(auto_now_add=True)
-    # end_date = models.DateTimeField()
+    created_date = models.DateTimeField(auto_now_add=True)
+    end_date = models.DateTimeField()
     description = models.TextField()
-    # url2audio = models.TextField()
-    # worker_id = models.CharField(max_length=100)
-    # status_choices = [  # 0 = not started, 1 = in progress, 2 = completed, 3 = cancelled
-    #     (0, 'CLAIMED'),
-    #     (1, 'INPROGRESS'),
-    #     (2, 'COMPLETED'),
-    #     (3, 'CANCELLED')
-    # ]
-    # status = models.IntegerField(choices=status_choices, default=0)
+    url2audio = models.TextField()
+    worker_id = models.CharField(max_length=100)
+    status_choices = [  # 0 = not started, 1 = in progress, 2 = completed, 3 = cancelled
+        (0, 'CLAIMED'),
+        (1, 'INPROGRESS'),
+        (2, 'COMPLETED'),
+        (3, 'CANCELLED')
+    ]
+    status = models.IntegerField(choices=status_choices, default=0)

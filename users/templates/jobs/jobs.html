@@ -2,36 +2,34 @@
 {% load static %}
 {% block title %} Jobs Page {% endblock title%}
 {% block content %}
-<div class="container mt-5">
-    <a href="#" data-toggle="modal" data-target="#myModal">
-        <button class="btn btn-primary" type="button">Upload</button>
-    </a>
-            
-            <div class="modal" id = "myModal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header bg-light">
-                            <h5 class="modal-title">Select a method to upload audio file</h5>
-                            <button class="btn btn-close" type="button" data-dismiss="modal"></button>
+<div class="container">
+    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#myModal">Create Job</button>
+
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">Provide Job Details</div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{%url 'jobs_url'%}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="desc" class="form-label">Job Description</label>
+                            <textarea class="form-control" id="desc" rows="3"></textarea>
                         </div>
-                        <div class="modal-body">
-                            <ul class="upload_list">
-                                <li>
-                                    <a href="{% url 'jobDetails_url' %}" class="btn primary-btn">Audio File</a>
-                                    <a href="{% url 'jobDetails_url' %}">
-                                        <button class="btn btn-primary" type="button">Start Recording</button>
-                                    </a>
-                                    <a href="{% url 'jobDetails_url' %}">
-                                        <button class="btn btn-primary" type="button">Provide Drive URL</button>
-                                    </a>
-                                </li>
-                            </ul>
+                        <div class="mb-3">
+                            <label for="audiofile" class="form-label">Upload Audio File</label>
+                            <input class="form-control" type="file" id="audiofile">
                         </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                        </div>
-                    </div>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </form>
                 </div>
             </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
