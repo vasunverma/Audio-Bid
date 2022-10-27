@@ -1,1 +1,37 @@
 {% extends "home/baseHome.html" %}
+{% load static %}
+{% block title %} Jobs Page {% endblock title%}
+{% block content %}
+<div class="container mt-5">
+    <a href="#" data-toggle="modal" data-target="#myModal">
+        <button class="btn btn-primary" type="button">Upload</button>
+    </a>
+            
+            <div class="modal" id = "myModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-light">
+                            <h5 class="modal-title">Select a method to upload audio file</h5>
+                            <button class="btn btn-close" type="button" data-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <ul class="upload_list">
+                                <li>
+                                    <a href="{% url 'jobDetails_url' %}" class="btn primary-btn">Audio File</a>
+                                    <a href="{% url 'jobDetails_url' %}">
+                                        <button class="btn btn-primary" type="button">Start Recording</button>
+                                    </a>
+                                    <a href="{% url 'jobDetails_url' %}">
+                                        <button class="btn btn-primary" type="button">Provide Drive URL</button>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+</div>
+{% endblock %}

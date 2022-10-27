@@ -1,0 +1,28 @@
+{% extends "home/baseHome.html" %}
+{% load static %}
+{% block title %} Jobs Page {% endblock title%}
+{% block content %}
+<div class="container">
+    <div class="row col-md-6 col-md-offset-3">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h1>Audio Details Form</h1>
+            </div>
+            <div class="panel-body">
+                <form method="post" action="{%url 'jobDetails_url'%}">
+                    {% csrf_token %}
+                        <div class="form-group">
+                            <label for="audioName">Name of the Audio File:</label>
+                            <input type="text" class="form-control" name="audioName" id="audioName" >
+                            <label for="price">Job Price:</label>
+                            <input type="text" class="form-control" name="price" id="price" >
+                            <label for="description">Description:</label>
+                            <input type="text" class="form-control" name="description" id="description" >
+                        </div>
+                        <button type="submit" class="btn btn-secondary">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

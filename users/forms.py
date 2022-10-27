@@ -1,6 +1,12 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import Job
+
+class JobForm(forms.ModelForm):
+    class Meta:
+        model = Job
+        fields = ['audioName', 'price', 'description']
 
 
-# Create your forms here.
+
