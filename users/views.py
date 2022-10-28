@@ -123,10 +123,15 @@ def users_jobs(request):
                 if request.POST.get("URL"):
                     # test the gdrive link first
                     form.instance.url2audio = request.POST.get("URL")
-                else:
-                    filename = filename_gen(str(request.user))
+                elif request.FILES['audiofile']:
+                    filename = filename_gen(str(request.user), "mp3")
                     default_storage.save(filename, request.FILES['audiofile'])
                     form.instance.url2audio = url_gen(filename)
+                else:
+                    print("todo")
+                    # filename = filename_gen(str(request.user), "wav")
+                    # default_storage.save(filename, request.FILES['record-file'])
+                    # form.instance.url2audio = url_gen(filename)
                 form.save()
                 messages.success(request, ('Your Job has been created successfully'))
             else:
@@ -158,8 +163,8 @@ def users_instructions(request):
 
 
 # Helpers
-def filename_gen(user):
-    return str(datetime.datetime.now().timestamp()).replace('.', '-') + "-" + user + ".mp3"
+def filename_gen(user, ext):
+    return str(datetime.datetime.now().timestamp()).replace('.', '-') + "-" + user + "." + ext
 
 
 def url_gen(filename):

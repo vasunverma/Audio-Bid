@@ -40,7 +40,13 @@
                                 <input class="form-control" type="file" id="audiofile" name="audiofile">
                             </div>
                             <div>[OR]</div>
-                            <button type="button" class="btn btn-secondary btn-sm" disabled>Record Audio</button>
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-secondary" id="start-rec">Start Recording</button>
+                                <button type="button" class="btn btn-secondary" id="stop-rec" style="display:none">Stop Recording</button>
+                            </div>
+                            <div class="mb-3">
+                                <audio src="" id="record-file" name="record-file" controls></audio>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Save</button>
                     </form>
@@ -49,4 +55,8 @@
         </div>
     </div>
 </div>
+{% block script %}
+<script src="/static/js/recorder.js"></script>
+<script src="/static/js/audio-recorder.js"></script>
+{% endblock %}
 {% endblock %}
