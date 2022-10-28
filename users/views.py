@@ -1,7 +1,6 @@
 import os
 import datetime
 import pytz
-
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
@@ -9,10 +8,6 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.files.storage import default_storage
 from .forms import JobForm
-
-
-
-
 
 def user_login(request):
     form = AuthenticationForm()
