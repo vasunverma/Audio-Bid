@@ -87,8 +87,8 @@ def users_profile(request):
 def users_jobs(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
-            print(request.body)
             form = JobForm(request.POST or None)
+            form.instance.user = request.user
             if form.is_valid():
                 form.save()
                 messages.success(request, ('Your Job has been saved successfully'))
