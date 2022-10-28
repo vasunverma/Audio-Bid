@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
+from .forms import JobForm
 import pytz
 
 
@@ -85,6 +86,14 @@ def users_profile(request):
 
 def users_jobs(request):
     if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = JobForm(request.POST or None)
+            form.instance.user = request.user
+            if form.is_valid():
+                form.save()
+                messages.success(request, ('Your Job has been saved successfully'))
+            else:
+                messages.error(request, ('Error creating Job. Please try again'))
         return render(request, 'jobs/jobs.html')
     else:
         return redirect('login_url')
@@ -109,3 +118,4 @@ def users_instructions(request):
         return render(request, 'home/instructions.html')
     else:
         return redirect('login_url')
+

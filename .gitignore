@@ -1,10 +1,10 @@
 .venv/*
 .venv/pyvenv.cfg
-users/migrations/*
 config.ini
 
 # Django #
 audiobidV1/static/
+static/
 .env
 *.log
 *.pot
