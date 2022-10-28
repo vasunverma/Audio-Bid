@@ -1,1 +1,68 @@
 {% extends "home/baseHome.html" %}
+{% load static %}
+{% block personalcss %}
+<link rel="stylesheet" href="/static/css/profile.css"/>
+{% endblock %}
+{% block content %}
+	<h2 class="profileTitle">User Profile</h2>
+	<section id="main">
+	    <div class="container" id="formAlign" >
+	        <div class="main__wrapper">
+	            <div class="main__left">
+	                <div class="card cardb">
+	                    <div class="card-body" >
+	                        <form method="post" action="{%url 'profile_url'%}">
+	                            {% csrf_token %}
+	                            <div class="button-input-group">
+		                            <div class="form-group">
+	                                    <label for="fname" class="col-lg-12" >First Name:</label>
+	                                    <div class="col-lg-12">
+		                                    <input type="text"  name="fname" aria-label="First name" placeholder="First name"
+		                                                    class="form-control form-control-lg"
+		                                                    value="{{user.first_name}}" id="fname" disabled>
+	                                    </div>
+	                                    <label for="lname" class="col-lg-12" >Last Name:</label>
+									    <div class="col-lg-12">
+									      <input type="text" name="lname" aria-label="Last name" placeholder="Last name"
+									                         class="form-control form-control-lg"
+									                         value="{{user.last_name}}" disabled id="lname">
+									    </div>
+	                                    <label for="username" class="col-lg-12" >Username:</label>
+	                                    <div class="col-lg-12">
+									      <input type="text" name="username" class="form-control form-control-lg" placeholder="Username"
+									                         aria-label="Username" value="{{user}}" disabled id="username">
+	                                    </div>
+	                                    <label for="inlineRadioOptions" class="col-lg-12" >User Role:</label>
+									    <div class="col-lg-12">
+									     <input type="text" name="inlineRadioOptions" class="form-control form-control-lg" placeholder="role"
+									                         aria-label="role" value="{{user.profile.role}}" disabled id="inlineRadioOptions">
+									    </div>
+	                                    <label for="email" class="col-lg-12" >Email ID:</label>
+									    <div class="col-lg-12">
+									     <input type="email" name="email" class="form-control form-control-lg" placeholder="Email"
+									                         aria-label="email" value="{{user.email}}" disabled id="email">
+									    </div>
+			                            <div class="col-lg-12">
+	                                        <label  class="col-lg-12"  for="inputGroupSelect01">Time zone:</label>
+				                            <select name="userTimezone" class="form-control form-control-lg optionClass" id="inputGroupSelect01">
+							                    <option value="{{selectedTimeZone}}" selected>{{ selectedTimeZone }} </option>
+							                    {% for tz in timezones %}
+							                    <option value="{{ tz }}"{% if tz == TIME_ZONE %}{% endif %}>{{ tz }}</option>
+							                    {% endfor %}
+				                            </select>
+	                                    </div>
+	                                </div>
+	                            </div>
+		                        <div class="group button-group" >
+					                <button class="btn primary-btn">
+					                  <span>Save Changes</span>
+					                </button>
+		                        </div>
+	                        </form>
+	                    </div>
+					</div>
+	            </div>
+	        </div>
+	    </div>
+	</section>
+{% endblock content %}
