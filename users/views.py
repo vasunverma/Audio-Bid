@@ -11,6 +11,9 @@ from django.core.files.storage import default_storage
 from .forms import JobForm
 
 
+
+
+
 def user_login(request):
     form = AuthenticationForm()
     if request.method == "POST":
@@ -82,7 +85,31 @@ def users_signup(request):
 
 def users_profile(request):
     if request.user.is_authenticated:
-        return render(request, 'home/profile.html')
+        #Get existing data from database and display everything to the user
+        #Display empty fields as empty with Submit button enabled
+        #If no fields are required then submit button should be disabled
+        #If user changes any info in the form then submit button should become enabled
+        if request.method == 'GET':
+            selectedTimeZone = "UTC"
+            if request.user.profile.time_zone != '':
+                selectedTimeZone = request.user.profile.time_zone
+            context = {
+                'user': request.user,
+                'timezones': pytz.common_timezones,
+                'selectedTimeZone' : selectedTimeZone
+            }
+            return render(request, 'home/profile.html',context)
+        elif request.method == 'POST':
+            user = User.objects.get(id=request.user.id)
+            user.profile.time_zone = request.POST.get('userTimezone')
+            user.save()
+            context = {
+                'user': request.user,
+                'timezones': pytz.common_timezones,
+                'selectedTimeZone': user.profile.time_zone
+            }
+            messages.success(request, f' Profile updated successfully for {user.username}!')
+            return render(request, 'home/profile.html', context)
     else:
         return redirect('login_url')
 

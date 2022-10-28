@@ -1,0 +1,40 @@
+.profileTitle {
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+#main {
+    padding:0px;
+}
+
+.form-group{
+    padding-bottom: 20px;
+}
+
+.col-lg-12 {
+    padding-top:3px;
+}
+
+#formAlign {
+    width:50%;
+    margin:0 auto;
+    margin-bottom:20px;
+    text-align: center;
+}
+label {
+    text-align:center;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.form-control-lg {
+    text-align:center;
+}
+
+.button-group {
+    text-align: center;
+}
+
+.cardb{
+border-radius: 15px;
+}
