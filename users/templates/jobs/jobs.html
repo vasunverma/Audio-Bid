@@ -15,38 +15,34 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <!-- <form method="POST" action="{% url 'jobs_url' %}" enctype="multipart/form-data">
+                    <form method="post" action="{%url 'jobs_url'%}" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Job Description</label>
-                            <textarea class="form-control" id="description" rows="3"></textarea>
-                            <input class="form-control" type="text" id="description">
-                        </div>
-                        <div class="mb-3">
-                            <label for="audiofile" class="form-label">Upload Audio File</label>
-                            <input class="form-control" type="file" id="audiofile">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Create</button>
-                    </form> -->
-                    <form method="post" action="{%url 'jobs_url'%}">
-                        {% csrf_token %}
-                            <div class="form-group">
+                        <div class="form-group">
+                            <div class="mb-3">
                                 <label for="description">Description:</label>
                                 <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                            </div>
+                            <div class="mb-3">
                                 <label for="price">Job Price:</label>
-                                <input type="text" class="form-control" name="price" id="price" >
+                                <input type="text" class="form-control" name="price" id="price"/>
+                            </div>
+                            <div class="mb-3">
                                 <label for="end_date">End date:</label>
                                 <input type="date" id="end_date" name="end_date" value="2022-10-27" min="2022-10-27">
-                                <br>
-                                <label for="audiofile" class="form-label">Upload Audio File</label>
-                                <input class="form-control" type="file" id="audiofile">
-                                <br>
-                                <button type="submit">Record Audio</button>
-                                <br>
-                                <label for="URL" class="form-label">Drive URL:</label>
-                                <input class="form-control" type="url" id="URL">
                             </div>
-                            <button type="submit" class="btn btn-secondary">Save</button>
+                            <div class="mb-3">
+                                <label for="URL" class="form-label">Drive URL:</label>
+                                <input class="form-control" type="url" id="URL" name="URL">
+                            </div>
+                            <div>[OR]</div>
+                            <div class="mb-3">
+                                <label for="audiofile" class="form-label">Upload Audio File</label>
+                                <input class="form-control" type="file" id="audiofile" name="audiofile">
+                            </div>
+                            <div>[OR]</div>
+                            <button type="button" class="btn btn-secondary btn-sm" disabled>Record Audio</button>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </form>
                 </div>
             </div>
