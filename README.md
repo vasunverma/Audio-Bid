@@ -29,4 +29,7 @@
 9. Set Provide as `google`, Name as `Google_Oauth` and get Client ID and Secret
 10. Move all the available sites to chosen sites and click on Save
 11. If after this you get error `Site Matching Query does not exist` on using Google Auth, try incrementing Site_ID by 1, until error goes away
+### AWS S3
+1. Create a bucket with an S3-access IAM role
+2. Set necessary parameters in .env file
 
