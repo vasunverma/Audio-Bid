@@ -1,10 +1,14 @@
+import os
+import datetime
+import pytz
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
-from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
-import pytz
+from django.core.files.storage import default_storage
+from .forms import JobForm
 
 
 
@@ -112,6 +116,21 @@ def users_profile(request):
 
 def users_jobs(request):
     if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = JobForm(request.POST or None)
+            form.instance.user = request.user
+            if form.is_valid():
+                if request.POST.get("URL"):
+                    # test the gdrive link first
+                    form.instance.url2audio = request.POST.get("URL")
+                else:
+                    filename = filename_gen(str(request.user))
+                    default_storage.save(filename, request.FILES['audiofile'])
+                    form.instance.url2audio = url_gen(filename)
+                form.save()
+                messages.success(request, ('Your Job has been created successfully'))
+            else:
+                messages.error(request, ('Error creating Job. Please try again'))
         return render(request, 'jobs/jobs.html')
     else:
         return redirect('login_url')
@@ -136,3 +155,12 @@ def users_instructions(request):
         return render(request, 'home/instructions.html')
     else:
         return redirect('login_url')
+
+
+# Helpers
+def filename_gen(user):
+    return str(datetime.datetime.now().timestamp()).replace('.', '-') + "-" + user + ".mp3"
+
+
+def url_gen(filename):
+    return "https://" + os.environ['bucket_name'] + ".s3." + os.environ['aws_region'] + ".amazonaws.com/" + filename

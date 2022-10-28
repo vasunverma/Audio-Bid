@@ -4,6 +4,7 @@ config.ini
 
 # Django #
 audiobidV1/static/
+static/
 .env
 *.log
 *.pot
