@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',  # for Google OAuth 2.0
+    'storages',
 ]
 
 SOCIALACCOUNT_LOGIN_ON_GET = True  # Flag to skip intermediate google login page and go directly to google sign-in pop-up
@@ -168,7 +169,7 @@ ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_REQUIRED = True
 
-SITE_ID = 5  # Keeping on incrementing this if you get an error while using google auth
+SITE_ID = 4  # Keeping on incrementing this if you get an error while using google auth
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -181,3 +182,10 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+
+AWS_ACCESS_KEY_ID = os.environ['aws_id']
+AWS_SECRET_ACCESS_KEY = os.environ['aws_secret_id']
+AWS_STORAGE_BUCKET_NAME = os.environ['bucket_name']
+AWS_DEFAULT_ACL = None
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

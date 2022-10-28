@@ -1,1 +1,52 @@
 {% extends "home/baseHome.html" %}
+{% load static %}
+{% block title %} Jobs Page {% endblock title%}
+{% block content %}
+<div class="container">
+    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#myModal">Create Job</button>
+
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">Provide Job Details</div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{%url 'jobs_url'%}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <div class="mb-3">
+                                <label for="description">Description:</label>
+                                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="price">Job Price:</label>
+                                <input type="text" class="form-control" name="price" id="price"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="end_date">End date:</label>
+                                <input type="date" id="end_date" name="end_date" value="2022-10-27" min="2022-10-27">
+                            </div>
+                            <div class="mb-3">
+                                <label for="URL" class="form-label">Drive URL:</label>
+                                <input class="form-control" type="url" id="URL" name="URL">
+                            </div>
+                            <div>[OR]</div>
+                            <div class="mb-3">
+                                <label for="audiofile" class="form-label">Upload Audio File</label>
+                                <input class="form-control" type="file" id="audiofile" name="audiofile">
+                            </div>
+                            <div>[OR]</div>
+                            <button type="button" class="btn btn-secondary btn-sm" disabled>Record Audio</button>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
