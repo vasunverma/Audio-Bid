@@ -81,20 +81,6 @@ nav{
 
 .nav__list li:hover .nav__link{
     color: green;
-} 
-
-.btn{
-    color: green;
-    font-family: 'Poppins';
-    font-weight: 500;
-    border-radius: 8px;
-    font-size: 1.4rem;
-    padding: 1.2rem 2rem;
-}
-
-.primary-btn{
-    color: white;
-    background-color: green;
 }
 
 /* Footer styles */
