@@ -40,7 +40,7 @@
           <input type="password" name="password" placeholder="Password" class="form-control" required pattern=".{5,}">
         </div>
         <div class="input_field mb-3">
-          <span class="help__text"><a href="#" class="login-link">Forgot your password?</a></span>
+          <span class="help__text"><a href="{% url 'password_reset' %}" class="login-link">Forgot your password?</a></span>
         </div>
         <div class="group button-group">
           <button class="signup-btn">

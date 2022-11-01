@@ -16,6 +16,10 @@ section{
     padding: 100px 0;
 }
 
+.loggedIn {
+    height: 400px;
+}
+
 .container{
     max-width: 1200px;
     width: 90%;
@@ -191,4 +195,10 @@ footer{
 .main__list__element{
     font-size: 2rem;
     color: black;
+}
+
+#mainTitle {
+    text-align: center;
+    font-size: 50px;
+    padding-bottom: 50px;
 }
