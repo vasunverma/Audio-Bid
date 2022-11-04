@@ -22,6 +22,7 @@ def home(request):
                 if selectedRoleType == 'creator':
                     nonSelectedRoleType = 'worker'
 
+
                 return render(request, 'home.html', {"MissingInfo": True,
                                                      "fname": user.first_name,
                                                      "lname": user.last_name,

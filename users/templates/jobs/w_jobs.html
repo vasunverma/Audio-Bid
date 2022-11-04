@@ -17,28 +17,12 @@ $(function () {
         <div class="col-4">
             <div class="list-group" id="list-tab" role="tablist">
                 <div class="card-header">
-                    <h4>Jobs<button class="btn btn-primary" type="button" data-toggle="modal" data-target="#filterModal" >Apply filters</button></h4>
-                    <div class="modal" id="filterModal">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <div class="modal-title">Filter jobs on its status</div>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                        <span class="btn btn-secondary float-right mt-2">
-                                            {{myFilter.form}}</span>
-                                        <button type="submit" class="btn btn-primary">Apply</button>
-                                        
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <h4>Jobs<span class="btn btn-secondary float-right mt-2">
+                        {{myFilter.form}}</span></h4>
+
                 </div>
                 {% for job in posts %}
-                <a href="#list-job{{job.id}}" role="tab"> {{job.name}}
+                <a href="#list-job1" role="tab"> {{job.name}}
                     <span class="badge badge-primary float-right mt-2">{{job.status}}</span></a>
                 {% endfor %}
                 <div>
@@ -68,18 +52,15 @@ $(function () {
             </div>
             <div class="card-body">
                 <div class="tab-content" id="nav-tabContent">
-                    {% for job in posts %}
-                    <div class="tab-pane fade show active" id="list-job{{job.id}}" role="tabpanel">
-                        <h5 class="card-title">{{job.name}}</h5>
+                    <div class="tab-pane fade show active" id="list-job1" role="tabpanel">
+                        <h5 class="card-title">Job1</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
                         <p class="card-text">Some quick example text to build on the card title and make up the bulk of
                             the card's content.</p>
                         <a href="#" class="card-link">Card link</a>
                         <a href="#" class="card-link">Another link</a>
                     </div>
-                    {% endfor %}
-                    
-                    <!--<div class="tab-pane fade" id="list-job2" role="tabpanel">
+                    <div class="tab-pane fade" id="list-job2" role="tabpanel">
                         <h5 class="card-title">Job2</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
                         <p class="card-text">Some quick example text to build on the card title and make up the bulk of
@@ -111,60 +92,10 @@ $(function () {
                             the card's content.</p>
                         <a href="#" class="card-link">Card link</a>
                         <a href="#" class="card-link">Another link</a>
-                    </div>-->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#myModal">Create Job</button>
-    <div class="modal" id="myModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div class="modal-title">Provide Job Details</div>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form method="post" action="{%url 'jobs_url'%}" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <div class="mb-3">
-                                <label for="name">Job title:</label>
-                                <textarea class="form-control" id="name" name="name" rows="3"></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="description">Description:</label>
-                                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="price">Job Price:</label>
-                                <input type="text" class="form-control" name="price" id="price"/>
-                            </div>
-                            <div class="mb-3">
-                                <label for="end_date">End date:</label>
-                                <input type="date" id="end_date" name="end_date" value="2022-10-27" min="2022-10-27">
-                            </div>
-                            <div class="mb-3">
-                                <label for="URL" class="form-label">Drive URL:</label>
-                                <input class="form-control" type="url" id="URL" name="URL">
-                            </div>
-                            <div>[OR]</div>
-                            <div class="mb-3">
-                                <label for="audiofile" class="form-label">Upload Audio File</label>
-                                <input class="form-control" type="file" id="audiofile" name="audiofile">
-                            </div>
-                            <div>[OR]</div>
-                            <button type="button" class="btn btn-secondary btn-sm" disabled>Record Audio</button>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    
 </div>
 {% endblock %}

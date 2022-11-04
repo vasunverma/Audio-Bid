@@ -8,11 +8,11 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.files.storage import default_storage
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import JobForm
-
-
-
-
+from .models import Job
+from .models import Profile
+from .filters import JobFilter
 
 def user_login(request):
     form = AuthenticationForm()
@@ -131,10 +131,28 @@ def users_jobs(request):
                 messages.success(request, ('Your Job has been created successfully'))
             else:
                 messages.error(request, ('Error creating Job. Please try again'))
-        return render(request, 'jobs/jobs.html')
+            return render(request, 'jobs/jobs.html')
+        
+        elif request.method=='GET':
+            post_list = Job.objects.all()
+            paginator = Paginator(post_list, 2)
+            page = request.GET.get('page')
+            try:
+                posts = paginator.page(page)
+            except PageNotAnInteger:
+                posts = paginator.page(1)
+            except EmptyPage:
+                posts = paginator.page(paginator.num_pages)
+
+            myFilter = JobFilter()
+            #page=myFilter.queryset
+
+            if request.user.profile.role == 'creator':
+                return render(request, 'jobs/jobs.html', {'page':page,'posts':posts, 'myFilter':myFilter})
+            else:
+                return render(request, 'jobs/w_jobs.html', {'page':page,'posts':posts, 'myFilter':myFilter})
     else:
         return redirect('login_url')
-
 
 def users_reviews(request):
     if request.user.is_authenticated:
