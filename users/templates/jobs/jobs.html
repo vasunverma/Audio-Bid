@@ -31,16 +31,24 @@
                                 <input type="date" id="end_date" name="end_date" value="2022-10-27" min="2022-10-27">
                             </div>
                             <div class="mb-3">
-                                <label for="URL" class="form-label">Drive URL:</label>
+                                <label for="URL" class="form-label">Google Drive URL:</label>
                                 <input class="form-control" type="url" id="URL" name="URL">
                             </div>
                             <div>[OR]</div>
                             <div class="mb-3">
                                 <label for="audiofile" class="form-label">Upload Audio File</label>
-                                <input class="form-control" type="file" id="audiofile" name="audiofile">
+                                <input class="form-control" type="file" id="audiofile" name="audiofile" accept="audio/*">
                             </div>
                             <div>[OR]</div>
-                            <button type="button" class="btn btn-secondary btn-sm" disabled>Record Audio</button>
+                            <div class="mb-3">
+                                <i id="red-dot" class="fa fa-circle text-danger-glow blink" style="display:none"></i>
+                                <button type="button" class="btn btn-secondary" id="start-rec">Start Recording</button>
+                                <button type="button" class="btn btn-secondary" id="stop-rec" style="display:none">Stop Recording</button>
+                            </div>
+                            <div class="mb-3">
+                                <input type="file" id="recorded" name="recorded" style="display:none">
+                                <audio src="" id="record-file" controls></audio>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Save</button>
                     </form>
@@ -49,4 +57,8 @@
         </div>
     </div>
 </div>
+{% block script %}
+<script src="/static/js/recorder.js"></script>
+<script src="/static/js/audio-recorder.js"></script>
+{% endblock %}
 {% endblock %}

@@ -1,8 +1,8 @@
 import os
+import requests
 import datetime
 import pytz
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
@@ -10,7 +10,6 @@ from django.core.files.storage import default_storage
 from .forms import JobForm
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail, BadHeaderError
-from django.http import HttpResponse
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
@@ -18,6 +17,7 @@ from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
+
 
 def user_login(request):
     form = AuthenticationForm()
@@ -43,9 +43,11 @@ def user_login(request):
 
     return render(request, 'registration/login.html', {'form': form, 'title': 'log in'})
 
+
 def user_logout(request):
     logout(request)
     return redirect('home')
+
 
 def users_signup(request):
     if request.method == 'POST':
@@ -90,6 +92,7 @@ def users_signup(request):
         messages.error(request, "Account not created, please try again!")
         return render(request, 'registration/signup.html', {"error": error})
 
+
 def users_reset_password(request):
     if request.method == "POST":
         password_reset_form = PasswordResetForm(request.POST)
@@ -101,8 +104,8 @@ def users_reset_password(request):
                     subject = "Password Reset Requested"
                     email_template_name = "registration/password/password_reset_email.txt"
                     c = {
-                        "email":user.email,
-                        'domain':'127.0.0.1:8000',
+                        "email": user.email,
+                        'domain': '127.0.0.1:8000',
                         'site_name': 'Website',
                         "uid": urlsafe_base64_encode(force_bytes(user.pk)),
                         "user": user,
@@ -111,21 +114,23 @@ def users_reset_password(request):
                     }
                     email = render_to_string(email_template_name, c)
                     try:
-                        send_mail(subject, email, 'admin@example.com' , [user.email], fail_silently=False)
+                        send_mail(subject, email, 'admin@example.com', [user.email], fail_silently=False)
                     except BadHeaderError:
                         messages.error(request, "Error occurred while sending reset email.")
                         return render(request, 'registration/password/password_reset.html')
                     messages.success(request, 'A message with reset password instructions has been sent to your inbox.')
                     return render(request, 'registration/password/password_reset.html')
     password_reset_form = PasswordResetForm()
-    return render(request=request, template_name="registration/password/password_reset.html", context={"password_reset_form":password_reset_form})
+    return render(request=request, template_name="registration/password/password_reset.html",
+                  context={"password_reset_form": password_reset_form})
+
 
 def users_profile(request):
     if request.user.is_authenticated:
-        #Get existing data from database and display everything to the user
-        #Display empty fields as empty with Submit button enabled
-        #If no fields are required then submit button should be disabled
-        #If user changes any info in the form then submit button should become enabled
+        # Get existing data from database and display everything to the user
+        # Display empty fields as empty with Submit button enabled
+        # If no fields are required then submit button should be disabled
+        # If user changes any info in the form then submit button should become enabled
         if request.method == 'GET':
             selectedTimeZone = "UTC"
             if request.user.profile.time_zone != '':
@@ -133,9 +138,9 @@ def users_profile(request):
             context = {
                 'user': request.user,
                 'timezones': pytz.common_timezones,
-                'selectedTimeZone' : selectedTimeZone
+                'selectedTimeZone': selectedTimeZone
             }
-            return render(request, 'home/profile.html',context)
+            return render(request, 'home/profile.html', context)
         elif request.method == 'POST':
             user = User.objects.get(id=request.user.id)
             user.profile.time_zone = request.POST.get('userTimezone')
@@ -156,13 +161,21 @@ def users_jobs(request):
         if request.method == 'POST':
             form = JobForm(request.POST or None)
             form.instance.user = request.user
+            print(request)
+            print(request.POST)
+            print(request.FILES)
             if form.is_valid():
                 if request.POST.get("URL"):
-                    # test the gdrive link first
+                    check_gdrive(request.POST.get("URL"))
                     form.instance.url2audio = request.POST.get("URL")
-                else:
-                    filename = filename_gen(str(request.user))
+                elif "audiofile" in request.FILES:
+                    extension = os.path.splitext(str(request.FILES['audiofile']))[1]
+                    filename = filename_gen(str(request.user), extension)
                     default_storage.save(filename, request.FILES['audiofile'])
+                    form.instance.url2audio = url_gen(filename)
+                elif "recorded" in request.FILES:
+                    filename = filename_gen(str(request.user), ".wav")
+                    default_storage.save(filename, request.FILES['recorded'])
                     form.instance.url2audio = url_gen(filename)
                 form.save()
                 messages.success(request, ('Your Job has been created successfully'))
@@ -195,8 +208,14 @@ def users_instructions(request):
 
 
 # Helpers
-def filename_gen(user):
-    return str(datetime.datetime.now().timestamp()).replace('.', '-') + "-" + user + ".mp3"
+def check_gdrive(url):
+    response = requests.get(url)
+    if 'drive.google.com' not in response.url or 'ServiceLogin' in response.url:
+        print("Invalid URL: " + url)
+
+
+def filename_gen(user, ext):
+    return str(datetime.datetime.now().timestamp()).replace('.', '-') + "-" + user + ext
 
 
 def url_gen(filename):
