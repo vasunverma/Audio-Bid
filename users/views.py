@@ -22,7 +22,6 @@ from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 
-
 def user_login(request):
     form = AuthenticationForm()
     if request.method == "POST":
@@ -187,10 +186,12 @@ def users_jobs(request):
                 messages.error(request, ('Error creating Job. Please try again'))
             return render(request, 'jobs/jobs.html')
         
+
         elif request.method=='GET':
+            
             post_list = Job.objects.all()
+            page = request.GET.get('page','1')
             paginator = Paginator(post_list, 2)
-            page = request.GET.get('page')
             try:
                 posts = paginator.page(page)
             except PageNotAnInteger:

@@ -17,25 +17,8 @@ $(function () {
         <div class="col-4">
             <div class="list-group" id="list-tab" role="tablist">
                 <div class="card-header">
-                    <h4>Jobs<button class="btn btn-primary" type="button" data-toggle="modal" data-target="#filterModal" >Apply filters</button></h4>
-                    <div class="modal" id="filterModal">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <div class="modal-title">Filter jobs on its status</div>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                        <span class="btn btn-secondary float-right mt-2">
-                                            {{myFilter.form}}</span>
-                                        <button type="submit" class="btn btn-primary">Apply</button>
-                                        
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <h4>Jobs<span class="btn btn-secondary float-right mt-2">
+                        {{myFilter.form}}</span></h4>
                 </div>
                 {% for job in posts %}
                 <a href="#list-job{{job.id}}" role="tab"> {{job.name}}

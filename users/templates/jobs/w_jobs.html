@@ -19,10 +19,9 @@ $(function () {
                 <div class="card-header">
                     <h4>Jobs<span class="btn btn-secondary float-right mt-2">
                         {{myFilter.form}}</span></h4>
-
                 </div>
                 {% for job in posts %}
-                <a href="#list-job1" role="tab"> {{job.name}}
+                <a href="#list-job{{job.id}}" role="tab"> {{job.name}}
                     <span class="badge badge-primary float-right mt-2">{{job.status}}</span></a>
                 {% endfor %}
                 <div>
@@ -52,15 +51,17 @@ $(function () {
             </div>
             <div class="card-body">
                 <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="list-job1" role="tabpanel">
-                        <h5 class="card-title">Job1</h5>
+                    {% for job in posts %}
+                    <div class="tab-pane fade show active" id="list-job{{job.id}}" role="tabpanel">
+                        <h5 class="card-title">{{job.name}}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
                         <p class="card-text">Some quick example text to build on the card title and make up the bulk of
                             the card's content.</p>
                         <a href="#" class="card-link">Card link</a>
                         <a href="#" class="card-link">Another link</a>
                     </div>
-                    <div class="tab-pane fade" id="list-job2" role="tabpanel">
+                    {% endfor %}
+                    <!--<div class="tab-pane fade" id="list-job2" role="tabpanel">
                         <h5 class="card-title">Job2</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
                         <p class="card-text">Some quick example text to build on the card title and make up the bulk of
@@ -92,7 +93,7 @@ $(function () {
                             the card's content.</p>
                         <a href="#" class="card-link">Card link</a>
                         <a href="#" class="card-link">Another link</a>
-                    </div>
+                    </div>-->
                 </div>
             </div>
         </div>
