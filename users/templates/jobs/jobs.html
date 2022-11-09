@@ -7,8 +7,11 @@ $(function () {
     container: 'body'
   })
 })
+
 </script>
-{% endblock %}
+<script src="/static/js/recorder.js"></script>
+<script src="/static/js/audio-recorder.js"></script>
+{% endblock %} 
 {% block title %} Jobs Page {% endblock title%}
 {% block content %}
 
@@ -61,40 +64,6 @@ $(function () {
                         <a href="#" class="card-link">Another link</a>
                     </div>
                     {% endfor %}
-                    
-                    <!--<div class="tab-pane fade" id="list-job2" role="tabpanel">
-                        <h5 class="card-title">Job2</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="card-link">Card link</a>
-                        <a href="#" class="card-link">Another link</a>
-                    </div>
-                    <div class="tab-pane fade" id="list-job3" role="tabpanel">
-                        <h5 class="card-title">Job3</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="card-link">Card link</a>
-                        <a href="#" class="card-link">Another link</a>
-                    </div>
-                    <div class="tab-pane fade" id="list-job4" role="tabp
-                    anel">
-                        <h5 class="card-title">Job4</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="card-link">Card link</a>
-                        <a href="#" class="card-link">Another link</a>
-                    </div>
-                    <div class="tab-pane fade" id="list-job5" role="tabpanel">
-                        <h5 class="card-title">Job5</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="card-link">Card link</a>
-                        <a href="#" class="card-link">Another link</a>
-                    </div>-->
                 </div>
             </div>
         </div>
@@ -115,8 +84,8 @@ $(function () {
                         {% csrf_token %}
                         <div class="form-group">
                             <div class="mb-3">
-                                <label for="name">Job title:</label>
-                                <textarea class="form-control" id="name" name="name" rows="3"></textarea>
+                                <label for="name">Title:</label>
+                                <textarea class="form-control" id="name" name="name" rows="1"></textarea>
                             </div>
                             <div class="mb-3">
                                 <label for="description">Description:</label>
@@ -158,8 +127,5 @@ $(function () {
     </div>
     
 </div>
-{% block script %}
-<script src="/static/js/recorder.js"></script>
-<script src="/static/js/audio-recorder.js"></script>
-{% endblock %}
+
 {% endblock %}

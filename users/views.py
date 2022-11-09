@@ -158,7 +158,6 @@ def users_profile(request):
     else:
         return redirect('login_url')
 
-
 def users_jobs(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
@@ -201,8 +200,8 @@ def users_jobs(request):
 
             myFilter = JobFilter()
             #page=myFilter.queryset
-
-            if request.user.profile.role == 'creator':
+            if request.user.profile.role=='creator':
+                print("Hi")
                 return render(request, 'jobs/jobs.html', {'page':page,'posts':posts, 'myFilter':myFilter})
             else:
                 return render(request, 'jobs/w_jobs.html', {'page':page,'posts':posts, 'myFilter':myFilter})
