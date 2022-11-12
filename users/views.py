@@ -17,7 +17,10 @@ from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
-
+from django.views.generic import TemplateView
+from chartjs.views.lines import BaseLineChartView
+import datetime
+from .models import Job
 
 def user_login(request):
     form = AuthenticationForm()
@@ -220,3 +223,45 @@ def filename_gen(user, ext):
 
 def url_gen(filename):
     return "https://" + os.environ['bucket_name'] + ".s3." + os.environ['aws_region'] + ".amazonaws.com/" + filename
+
+class LineChartJSONView(BaseLineChartView):
+    def get_labels(self):
+        """Return 7 labels for the x-axis."""
+        today = datetime.date.today()
+        week_ago = today - datetime.timedelta(days=7)
+        start =week_ago
+        k = 7
+        res = []
+        for day in range(k):
+            date = (start + datetime.timedelta(days = day)).isoformat()
+            res.append(date)
+        return res
+
+    def get_providers(self):
+        """Return names of datasets."""
+        return ["Jobs"]
+
+    def get_data(self):
+        """Return 3 datasets to plot."""
+        today = datetime.date.today()
+        week_ago = today - datetime.timedelta(days=7)
+        start =week_ago
+        res=[]
+        rows, cols=1,7
+        for i in range(rows):
+            col = []
+            for day in range(cols):
+                date = (start + datetime.timedelta(days = day)).isoformat()
+                num_jobs = Job.objects.filter(Q(created_date__startswith=date)).count()
+                col.append(num_jobs)
+            res.append(col)
+        print(res)
+        return res
+        # date = datetime.date.today().isoformat()
+        # num_jobs = Job.objects.filter(Q(created_date__startswith=date)).count()
+        # print(num_jobs)
+        # return [[75, 44, 92, 11, 44, 95, 35]]
+
+
+line_chart = TemplateView.as_view(template_name='line_chart.html')
+line_chart_json = LineChartJSONView.as_view()

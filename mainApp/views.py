@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 import pytz
 
-
 def home(request):
     if request.user.is_authenticated:
         user = User.objects.get(id=request.user.id)
