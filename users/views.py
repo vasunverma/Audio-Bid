@@ -17,7 +17,9 @@ from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
-
+from django.views.generic import TemplateView
+# from chartjs.views.lines import BaseLineChartView
+from .models import Job
 
 def user_login(request):
     form = AuthenticationForm()
@@ -29,6 +31,8 @@ def user_login(request):
             login(request, user)
             messages.success(request, f' Successfully logged in as {user.username}!')
             return redirect('home')
+            # num_jobs = Job.objects.filter(Q(id=request.user.id)).count()
+            # return render(request, 'home', {'num_jobs':num_jobs})
         except:
             if not User.objects.filter(email=email).exists():
                 messages.error(request, "Account Not found. Please sign up using the below link.")
@@ -220,3 +224,18 @@ def filename_gen(user, ext):
 
 def url_gen(filename):
     return "https://" + os.environ['bucket_name'] + ".s3." + os.environ['aws_region'] + ".amazonaws.com/" + filename
+
+# def pie_chart(request):
+#     labels = ["Completed", "Pending", "Claimed"]
+
+#     #num_created_jobs = Job.objects.filter(Q(user=request.user)).count()
+#     num_completed_jobs = Job.objects.filter(Q(user=request.user) & Q(status=2)).count()
+#     num_progress_jobs = Job.objects.filter(Q(user=request.user) & Q(status=1)).count()
+#     num_claimed_jobs = Job.objects.filter(Q(user=request.user) & Q(status=0)).count()
+
+#     data = [num_completed_jobs,num_progress_jobs,num_claimed_jobs]
+    
+#     return render(request, 'pie_chart.html', {
+#         'labels': labels,
+#         'data': data,
+#     })

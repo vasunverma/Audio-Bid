@@ -68,7 +68,7 @@ nav{
 .nav__desc{
     font-size: 1.8rem;
     text-align: left;
-    margin-top: -3rem;
+    margin-top: -1rem;
 }
 
 .nav__list li{
@@ -104,13 +104,19 @@ nav{
 /* Footer styles */
 footer{
     background-color:aquamarine;
-    padding-top: 2rem;
-    padding-bottom: 2rem;
+    padding-top: 0rem;
+    padding-bottom: 0rem;
 }
 
 .footer__wrapper{
     display: flex;
     flex-direction: row;
+    margin-right: 50px;
+}
+
+.footer__col__wrapper{
+    display: flex;
+    flex-direction: column;
 }
 
 .footer__col1{
@@ -121,6 +127,8 @@ footer{
 
 .footer__text{
     list-style-type: none;
+    display: flex;
+    justify-content: space-between;
 }
 .footer__logo{
     font-size: 1.8rem;
@@ -132,21 +140,27 @@ footer{
 .footer__col2,
 .footer__col3{
     flex: 1;
+    margin-bottom: -25px;
     list-style-type: none;
 }
 
 .footer__desc{
     max-width: 300px;
     font-size: 1.8rem;
-    margin-top: -7rem;
+    margin-top: -5rem;
     margin-bottom: 5rem;
     color: black;
 }
 
 .footer__text__title{
     font-size: 2rem;
-    margin-bottom: 2rem;
+    margin-bottom: 0rem;
     font-weight: 600;
+    margin-top: 19px;
+}
+
+.footer__link{
+    margin-right: 45px;
 }
 
 .footer__text a{
@@ -165,6 +179,7 @@ footer{
 .main__wrapper{
     display: flex;
     flex-direction: row;
+    justify-content: center;
 }
 
 .main__left__wrapper{
@@ -176,9 +191,13 @@ footer{
     font-weight: 600;
     line-height: 1.4em;
     font-size: 2.5rem;
-    margin-bottom: 2rem;
-    margin-top: -8rem;
-    text-align: left;
+    margin-bottom: 0rem;
+    margin-top: -13rem;
+    text-align: center;
+}
+
+.main__graph{
+    margin-left: 100px;
 }
 
 .main__left{
@@ -187,6 +206,7 @@ footer{
 
 .main__right{
     flex: 4;
+    margin-left: 24em;
 }
 
 .main__left__list{
