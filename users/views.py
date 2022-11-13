@@ -163,12 +163,26 @@ def users_jobs(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
             if request.POST.get("formId") == "claimJobform":
-                job_id = request.POST.get("jobIdToBeClaimed")
-                job_to_be_claimed = Job.objects.get(id=job_id)
-                job_to_be_claimed.worker_id = request.user.id
-                job_to_be_claimed.status = 1
-                job_to_be_claimed.save()
+                job_id = request.POST.get("jobId")
+                job = Job.objects.get(id=job_id)
+                job.worker_id = request.user.id
+                job.status = 1
+                job.save()
                 messages.success(request, ('Your Job has been successfully claimed!'))
+
+            elif request.POST.get("formId") == "cancelJobform":
+                job_id = request.POST.get("jobId")
+                job = Job.objects.get(id=job_id)
+                job.worker_id = 0
+                job.status = 0
+                job.save()
+                messages.success(request, ('Your Job has been successfully cancelled!'))
+
+            elif request.POST.get("formId") == "deleteJobform":
+                job_id = request.POST.get("jobId")
+                job = Job.objects.get(id=job_id)
+                job.delete()
+                messages.success(request, ('Your Job has been successfully deleted!'))
 
             else:
                 form = JobForm(request.POST or None)
@@ -202,6 +216,8 @@ def users_jobs(request):
                 post_list = Job.objects.filter(Q(worker_id=request.user.id))
                 post_list = list(chain(post_list, Job.objects.filter(Q(worker_id=0))))
 
+            myFilter = JobFilter(request.GET, queryset = Job.objects.all())
+            post_list = myFilter.qs
             page = request.GET.get('page', '1')
             paginator = Paginator(post_list, 10)
             try:
@@ -217,7 +233,6 @@ def users_jobs(request):
                 'COMPLETED': 'badge-success',
                 'CANCELLED': 'badge-danger'
             }
-            myFilter = JobFilter()
             for job in posts:
                 job.status = job.status_choices[job.status][1]
                 job.status_badge = badge_classes[job.status]
@@ -226,7 +241,9 @@ def users_jobs(request):
             return render(request, 'jobs/jobs.html', {'page': page,
                                                       'posts': posts,
                                                       'myFilter': myFilter,
-                                                      'creator': is_creator})
+                                                      'creator': is_creator,
+                                                      'user_id_str': str(request.user.id),
+                                                      'user_id': request.user.id})
     else:
         return redirect('login_url')
 
