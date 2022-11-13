@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.files.storage import default_storage
-from .forms import JobForm
+#from .forms import JobForm
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail, BadHeaderError
 from django.contrib.auth.forms import PasswordResetForm
@@ -17,6 +17,9 @@ from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
+from .forms import JobDescFilterForm
+from .models import Job
+from .filters import JobFilter
 
 
 def user_login(request):
@@ -155,33 +158,19 @@ def users_profile(request):
     else:
         return redirect('login_url')
 
-
 def users_jobs(request):
     if request.user.is_authenticated:
-        if request.method == 'POST':
-            form = JobForm(request.POST or None)
-            form.instance.user = request.user
-            print(request)
-            print(request.POST)
-            print(request.FILES)
-            if form.is_valid():
-                if request.POST.get("URL"):
-                    check_gdrive(request.POST.get("URL"))
-                    form.instance.url2audio = request.POST.get("URL")
-                elif "audiofile" in request.FILES:
-                    extension = os.path.splitext(str(request.FILES['audiofile']))[1]
-                    filename = filename_gen(str(request.user), extension)
-                    default_storage.save(filename, request.FILES['audiofile'])
-                    form.instance.url2audio = url_gen(filename)
-                elif "recorded" in request.FILES:
-                    filename = filename_gen(str(request.user), ".wav")
-                    default_storage.save(filename, request.FILES['recorded'])
-                    form.instance.url2audio = url_gen(filename)
-                form.save()
-                messages.success(request, ('Your Job has been created successfully'))
-            else:
-                messages.error(request, ('Error creating Job. Please try again'))
-        return render(request, 'jobs/jobs.html')
+        if request.method == 'GET':
+            job_filter = JobFilter(request.GET, queryset = Job.objects.all())
+            context = {
+                'form': job_filter.form,
+                'jobs': job_filter.qs
+            }
+            return render(request, 'jobs/jobs.html', context)    
+            #all_entries = Job.objects.all()
+            #print(all_entries)
+            #return render(request, 'jobs/jobs.html', {'jobs':all_entries})  
+            #return render(request, 'jobs/jobs.html', {"all_entries":all_entries}) 
     else:
         return redirect('login_url')
 

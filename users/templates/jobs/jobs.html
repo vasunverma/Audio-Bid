@@ -1,64 +1,48 @@
 {% extends "home/baseHome.html" %}
-{% load static %}
+{% load static %} 
 {% block title %} Jobs Page {% endblock title%}
 {% block content %}
+<!-- <form action="{% url 'jobs_url' %}" method="get">
+    {{ form }}
+    <input type="submit" value="submit" class="btn btn-primary" />
+</form> -->
+<!-- {% for job in jobs %}
+<tr>
+    <td>{{ job.user }}</td>
+    <td>{{ job.price }}</td>
+    <td>{{ job.description }}</td>
+</tr>
+{% endfor %} -->
 <div class="container">
-    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#myModal">Create Job</button>
-
-    <div class="modal" id="myModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div class="modal-title">Provide Job Details</div>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form method="post" action="{%url 'jobs_url'%}" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <div class="mb-3">
-                                <label for="description">Description:</label>
-                                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="price">Job Price:</label>
-                                <input type="text" class="form-control" name="price" id="price"/>
-                            </div>
-                            <div class="mb-3">
-                                <label for="end_date">End date:</label>
-                                <input type="date" id="end_date" name="end_date" value="2022-10-27" min="2022-10-27">
-                            </div>
-                            <div class="mb-3">
-                                <label for="URL" class="form-label">Google Drive URL:</label>
-                                <input class="form-control" type="url" id="URL" name="URL">
-                            </div>
-                            <div>[OR]</div>
-                            <div class="mb-3">
-                                <label for="audiofile" class="form-label">Upload Audio File</label>
-                                <input class="form-control" type="file" id="audiofile" name="audiofile" accept="audio/*">
-                            </div>
-                            <div>[OR]</div>
-                            <div class="mb-3">
-                                <i id="red-dot" class="fa fa-circle text-danger-glow blink" style="display:none"></i>
-                                <button type="button" class="btn btn-secondary" id="start-rec">Start Recording</button>
-                                <button type="button" class="btn btn-secondary" id="stop-rec" style="display:none">Stop Recording</button>
-                            </div>
-                            <div class="mb-3">
-                                <input type="file" id="recorded" name="recorded" style="display:none">
-                                <audio src="" id="record-file" controls></audio>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </form>
-                </div>
-            </div>
+    <div class="row">
+        <div class="col-3">
+            <h1>Filter tab</h1>
+            <form action="{% url 'jobs_url' %}" method="get">
+                {{ form }}
+                <input type="submit" value="submit" class="btn btn-primary" />
+            </form>
+        </div>
+        <div class="col-9">
+            <h1>Job List</h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Price</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in jobs %}
+                    <tr>
+                        <td>{{ job.user }}</td>
+                        <td>{{ job.price }}</td>
+                        <td>{{ job.description }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
-{% block script %}
-<script src="/static/js/recorder.js"></script>
-<script src="/static/js/audio-recorder.js"></script>
-{% endblock %}
 {% endblock %}

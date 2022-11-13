@@ -1,0 +1,121 @@
+diff --git a/users/templates/home/baseHome.html b/users/templates/home/baseHome.html
+index af40ee8..8499521 100644
+--- a/users/templates/home/baseHome.html
++++ b/users/templates/home/baseHome.html
+@@ -42,8 +42,10 @@
+             <div class="nav__wrapper">
+                 <div class = "nav__logo">
+                     <a href="{% url 'home' %}" class = "logo">AudioBid Portal</a>
+-                    <p class="nav__desc">Voice Memo Transcription Made Easy</p>
+                 </div>
++                <div><p class="nav__desc">Voice Memo Transcription Made Easy</p></div>
++            </div>
++            <div class="nav__list__container">
+                 <nav>
+                     <ul class="nav__list">
+                         <div class="nav__list__wrapper">
+diff --git a/users/templates/jobs/jobs.html b/users/templates/jobs/jobs.html
+index 327e607..50fee2e 100644
+--- a/users/templates/jobs/jobs.html
++++ b/users/templates/jobs/jobs.html
+@@ -2,10 +2,10 @@
+ {% load static %} 
+ {% block title %} Jobs Page {% endblock title%}
+ {% block content %}
+-<form action="{% url 'jobs_url' %}" method="get">
++<!-- <form action="{% url 'jobs_url' %}" method="get">
+     {{ form }}
+     <input type="submit" value="submit" class="btn btn-primary" />
+-</form>
++</form> -->
+ <!-- {% for job in jobs %}
+ <tr>
+     <td>{{ job.user }}</td>
+@@ -13,23 +13,36 @@
+     <td>{{ job.description }}</td>
+ </tr>
+ {% endfor %} -->
+-<h1>Job List</h1>
+-<table class="table">
+-    <thead>
+-        <tr>
+-            <th>User</th>
+-            <th>Price</th>
+-            <th>Description</th>
+-        </tr>
+-    </thead>
+-    <tbody>
+-        {% for job in jobs %}
+-        <tr>
+-            <td>{{ job.user }}</td>
+-            <td>{{ job.price }}</td>
+-            <td>{{ job.description }}</td>
+-        </tr>
+-        {% endfor %}
+-    </tbody>
+-</table>
++<div class="container">
++    <div class="row">
++        <div class="col-3">
++            <h1>Filter tab</h1>
++            <form action="{% url 'jobs_url' %}" method="get">
++                {{ form }}
++                <input type="submit" value="submit" class="btn btn-primary" />
++            </form>
++        </div>
++        <div class="col-9">
++            <h1>Job List</h1>
++            <table class="table">
++                <thead>
++                    <tr>
++                        <th>User</th>
++                        <th>Price</th>
++                        <th>Description</th>
++                    </tr>
++                </thead>
++                <tbody>
++                    {% for job in jobs %}
++                    <tr>
++                        <td>{{ job.user }}</td>
++                        <td>{{ job.price }}</td>
++                        <td>{{ job.description }}</td>
++                    </tr>
++                    {% endfor %}
++                </tbody>
++            </table>
++        </div>
++    </div>
++</div>
+ {% endblock %}
+\ No newline at end of file
+diff --git a/users/views.py b/users/views.py
+index e5e740d..7e2fc36 100644
+--- a/users/views.py
++++ b/users/views.py
+@@ -19,6 +19,7 @@ from django.contrib.auth.tokens import default_token_generator
+ from django.utils.encoding import force_bytes
+ from .forms import JobDescFilterForm
+ from .models import Job
++from .filters import JobFilter
+ 
+ 
+ def user_login(request):
+@@ -160,15 +161,10 @@ def users_profile(request):
+ def users_jobs(request):
+     if request.user.is_authenticated:
+         if request.method == 'GET':
+-            description = request.GET.get('description')
+-            all_jobs = Job.objects.all()
+-            if description:
+-                jobs = all_jobs.filter(description__icontains=description)
+-            else:
+-                jobs = all_jobs
++            job_filter = JobFilter(request.GET, queryset = Job.objects.all())
+             context = {
+-                'form': JobDescFilterForm(),
+-                'jobs': jobs
++                'form': job_filter.form,
++                'jobs': job_filter.qs
+             }
+             return render(request, 'jobs/jobs.html', context)    
+             #all_entries = Job.objects.all()

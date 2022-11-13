@@ -3,10 +3,13 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Job
 
-class JobForm(forms.ModelForm):
-    class Meta:
-        model = Job
-        fields = ['price', 'end_date', 'description']
+# class JobForm(forms.ModelForm):
+#     class Meta:
+#         model = Job
+#         fields = ['price', 'end_date', 'description']
+
+class JobDescFilterForm(forms.Form):
+    description = forms.CharField()
 
 
 

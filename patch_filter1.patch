@@ -1,0 +1,257 @@
+diff --git a/audiobidV1/.env b/audiobidV1/.env
+index 68b1751..66f878a 100644
+--- a/audiobidV1/.env
++++ b/audiobidV1/.env
+@@ -1,9 +1,9 @@
+ secret_key='\VALUE HERE\'
+-db_name='\VALUE HERE\'
+-db_user='\VALUE HERE\'
+-db_pass='\VALUE HERE\'
+-db_host='\VALUE HERE\'
+-db_port='\VALUE HERE\'
++db_name='audioBidDB'
++db_user='postgres'
++db_pass='Lakshmi@123'
++db_host='127.0.0.1'
++db_port='5432'
+ bucket_name='\VALUE HERE\'
+ aws_region='\VALUE HERE\'
+ aws_id='\VALUE HERE\'
+diff --git a/audiobidV1/settings.py b/audiobidV1/settings.py
+index 5598995..3011489 100644
+--- a/audiobidV1/settings.py
++++ b/audiobidV1/settings.py
+@@ -51,6 +51,7 @@ INSTALLED_APPS = [
+     'allauth.socialaccount',
+     'allauth.socialaccount.providers.google',  # for Google OAuth 2.0
+     'storages',
++    'django_filters'
+ ]
+ 
+ SOCIALACCOUNT_LOGIN_ON_GET = True  # Flag to skip intermediate google login page and go directly to google sign-in pop-up
+diff --git a/users/forms.py b/users/forms.py
+index 3434205..3c7f81b 100644
+--- a/users/forms.py
++++ b/users/forms.py
+@@ -3,10 +3,13 @@ from django.contrib.auth.forms import UserCreationForm
+ from django.contrib.auth.models import User
+ from .models import Job
+ 
+-class JobForm(forms.ModelForm):
+-    class Meta:
+-        model = Job
+-        fields = ['price', 'end_date', 'description']
++# class JobForm(forms.ModelForm):
++#     class Meta:
++#         model = Job
++#         fields = ['price', 'end_date', 'description']
++
++class JobDescFilterForm(forms.Form):
++    description = forms.CharField()
+ 
+ 
+ 
+diff --git a/users/models.py b/users/models.py
+index 3919180..5f1ba35 100644
+--- a/users/models.py
++++ b/users/models.py
+@@ -15,15 +15,15 @@ class Profile(models.Model):
+ class Job(models.Model):
+     user = models.ForeignKey(User, on_delete=models.CASCADE)
+     price = models.DecimalField(max_digits=19, decimal_places=10)
+-    created_date = models.DateTimeField(auto_now_add=True)
+-    end_date = models.DateTimeField()
+-    description = models.TextField()
+-    url2audio = models.TextField()
+-    worker_id = models.CharField(max_length=100, default='0')
+-    status_choices = [  # 0 = not started, 1 = in progress, 2 = completed, 3 = cancelled
+-        (0, 'CLAIMED'),
+-        (1, 'INPROGRESS'),
+-        (2, 'COMPLETED'),
+-        (3, 'CANCELLED')
+-    ]
+-    status = models.IntegerField(choices=status_choices, default=0)
++    #created_date = models.DateTimeField(auto_now_add=True)
++    #end_date = models.DateTimeField()
++    description = models.CharField(max_length=100)
++    #url2audio = models.TextField()
++    #worker_id = models.CharField(max_length=100, default='0')
++    # status_choices = [  # 0 = not started, 1 = in progress, 2 = completed, 3 = cancelled
++    #     (0, 'CLAIMED'),
++    #     (1, 'INPROGRESS'),
++    #     (2, 'COMPLETED'),
++    #     (3, 'CANCELLED')
++    # ]
++    # status = models.IntegerField(choices=status_choices, default=0)
+diff --git a/users/templates/jobs/jobs.html b/users/templates/jobs/jobs.html
+index 28e1a86..327e607 100644
+--- a/users/templates/jobs/jobs.html
++++ b/users/templates/jobs/jobs.html
+@@ -1,64 +1,35 @@
+ {% extends "home/baseHome.html" %}
+-{% load static %}
++{% load static %} 
+ {% block title %} Jobs Page {% endblock title%}
+ {% block content %}
+-<div class="container">
+-    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#myModal">Create Job</button>
+-
+-    <div class="modal" id="myModal">
+-        <div class="modal-dialog">
+-            <div class="modal-content">
+-                <div class="modal-header">
+-                    <div class="modal-title">Provide Job Details</div>
+-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+-                        <span aria-hidden="true">&times;</span>
+-                    </button>
+-                </div>
+-                <div class="modal-body">
+-                    <form method="post" action="{%url 'jobs_url'%}" enctype="multipart/form-data">
+-                        {% csrf_token %}
+-                        <div class="form-group">
+-                            <div class="mb-3">
+-                                <label for="description">Description:</label>
+-                                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+-                            </div>
+-                            <div class="mb-3">
+-                                <label for="price">Job Price:</label>
+-                                <input type="text" class="form-control" name="price" id="price"/>
+-                            </div>
+-                            <div class="mb-3">
+-                                <label for="end_date">End date:</label>
+-                                <input type="date" id="end_date" name="end_date" value="2022-10-27" min="2022-10-27">
+-                            </div>
+-                            <div class="mb-3">
+-                                <label for="URL" class="form-label">Google Drive URL:</label>
+-                                <input class="form-control" type="url" id="URL" name="URL">
+-                            </div>
+-                            <div>[OR]</div>
+-                            <div class="mb-3">
+-                                <label for="audiofile" class="form-label">Upload Audio File</label>
+-                                <input class="form-control" type="file" id="audiofile" name="audiofile" accept="audio/*">
+-                            </div>
+-                            <div>[OR]</div>
+-                            <div class="mb-3">
+-                                <i id="red-dot" class="fa fa-circle text-danger-glow blink" style="display:none"></i>
+-                                <button type="button" class="btn btn-secondary" id="start-rec">Start Recording</button>
+-                                <button type="button" class="btn btn-secondary" id="stop-rec" style="display:none">Stop Recording</button>
+-                            </div>
+-                            <div class="mb-3">
+-                                <input type="file" id="recorded" name="recorded" style="display:none">
+-                                <audio src="" id="record-file" controls></audio>
+-                            </div>
+-                        </div>
+-                        <button type="submit" class="btn btn-primary">Save</button>
+-                    </form>
+-                </div>
+-            </div>
+-        </div>
+-    </div>
+-</div>
+-{% block script %}
+-<script src="/static/js/recorder.js"></script>
+-<script src="/static/js/audio-recorder.js"></script>
+-{% endblock %}
++<form action="{% url 'jobs_url' %}" method="get">
++    {{ form }}
++    <input type="submit" value="submit" class="btn btn-primary" />
++</form>
++<!-- {% for job in jobs %}
++<tr>
++    <td>{{ job.user }}</td>
++    <td>{{ job.price }}</td>
++    <td>{{ job.description }}</td>
++</tr>
++{% endfor %} -->
++<h1>Job List</h1>
++<table class="table">
++    <thead>
++        <tr>
++            <th>User</th>
++            <th>Price</th>
++            <th>Description</th>
++        </tr>
++    </thead>
++    <tbody>
++        {% for job in jobs %}
++        <tr>
++            <td>{{ job.user }}</td>
++            <td>{{ job.price }}</td>
++            <td>{{ job.description }}</td>
++        </tr>
++        {% endfor %}
++    </tbody>
++</table>
+ {% endblock %}
+\ No newline at end of file
+diff --git a/users/views.py b/users/views.py
+index 473ea95..e5e740d 100644
+--- a/users/views.py
++++ b/users/views.py
+@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login, logout
+ from django.contrib import messages
+ from django.contrib.auth.forms import AuthenticationForm
+ from django.core.files.storage import default_storage
+-from .forms import JobForm
++#from .forms import JobForm
+ from django.shortcuts import render, redirect
+ from django.core.mail import send_mail, BadHeaderError
+ from django.contrib.auth.forms import PasswordResetForm
+@@ -17,6 +17,8 @@ from django.db.models.query_utils import Q
+ from django.utils.http import urlsafe_base64_encode
+ from django.contrib.auth.tokens import default_token_generator
+ from django.utils.encoding import force_bytes
++from .forms import JobDescFilterForm
++from .models import Job
+ 
+ 
+ def user_login(request):
+@@ -155,33 +157,24 @@ def users_profile(request):
+     else:
+         return redirect('login_url')
+ 
+-
+ def users_jobs(request):
+     if request.user.is_authenticated:
+-        if request.method == 'POST':
+-            form = JobForm(request.POST or None)
+-            form.instance.user = request.user
+-            print(request)
+-            print(request.POST)
+-            print(request.FILES)
+-            if form.is_valid():
+-                if request.POST.get("URL"):
+-                    check_gdrive(request.POST.get("URL"))
+-                    form.instance.url2audio = request.POST.get("URL")
+-                elif "audiofile" in request.FILES:
+-                    extension = os.path.splitext(str(request.FILES['audiofile']))[1]
+-                    filename = filename_gen(str(request.user), extension)
+-                    default_storage.save(filename, request.FILES['audiofile'])
+-                    form.instance.url2audio = url_gen(filename)
+-                elif "recorded" in request.FILES:
+-                    filename = filename_gen(str(request.user), ".wav")
+-                    default_storage.save(filename, request.FILES['recorded'])
+-                    form.instance.url2audio = url_gen(filename)
+-                form.save()
+-                messages.success(request, ('Your Job has been created successfully'))
++        if request.method == 'GET':
++            description = request.GET.get('description')
++            all_jobs = Job.objects.all()
++            if description:
++                jobs = all_jobs.filter(description__icontains=description)
+             else:
+-                messages.error(request, ('Error creating Job. Please try again'))
+-        return render(request, 'jobs/jobs.html')
++                jobs = all_jobs
++            context = {
++                'form': JobDescFilterForm(),
++                'jobs': jobs
++            }
++            return render(request, 'jobs/jobs.html', context)    
++            #all_entries = Job.objects.all()
++            #print(all_entries)
++            #return render(request, 'jobs/jobs.html', {'jobs':all_entries})  
++            #return render(request, 'jobs/jobs.html', {"all_entries":all_entries}) 
+     else:
+         return redirect('login_url')
+ 
