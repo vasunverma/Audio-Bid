@@ -1,10 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 import pytz
-#import sys
 from users.models import Job
 from django.db.models.query_utils import Q
-#sys.path.insert(1, '/audiobidV1/users/models')
 
 def home(request):
     if request.user.is_authenticated:
