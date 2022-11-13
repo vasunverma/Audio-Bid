@@ -190,3 +190,29 @@ AWS_STORAGE_BUCKET_NAME = os.environ['bucket_name']
 AWS_DEFAULT_ACL = None
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# Logging - Uncomment when using development env and set DEBUG to True
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'file': {
+#             'level': 'DEBUG',
+#             'class': 'logging.FileHandler',
+#             'filename': BASE_DIR / 'debug.log',
+#         },
+#     },
+#     'loggers': {
+#         '': {
+#             'handlers': ['file'],
+#             'level': 'DEBUG', 
+#             'propagate': True,
+#         },
+#         'django': {
+#             'handlers': ['file'],
+#             # Change it to INFO if you donot want to output everything
+#             'level': 'INFO',
+#             'propagate': True,
+#         },
+#     },
+# }

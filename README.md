@@ -32,4 +32,9 @@
 ### AWS S3
 1. Create a bucket with an S3-access IAM role
 2. Set necessary parameters in .env file
-
+### LOGGING
+1. To enable logging, uncomment the Logging code in env file and set DEBUG = True
+2. To use logger to log details, add this lines to the top of your file:<br />
+    `import logging`<br />
+    `logger = logging.getLogger(__name__)`
+3. To use it, write `logger.debug('Add what you want to print')`
