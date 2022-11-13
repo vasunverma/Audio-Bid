@@ -85,20 +85,6 @@ nav{
 
 .nav__list li:hover .nav__link{
     color: green;
-} 
-
-.btn{
-    color: green;
-    font-family: 'Poppins';
-    font-weight: 500;
-    border-radius: 8px;
-    font-size: 1.4rem;
-    padding: 1.2rem 2rem;
-}
-
-.primary-btn{
-    color: white;
-    background-color: green;
 }
 
 /* Footer styles */
@@ -201,16 +187,4 @@ footer{
     text-align: center;
     font-size: 50px;
     padding-bottom: 50px;
-}
-
-.text-danger-glow {
-  color: #ff4141;
-  text-shadow: 0 0 10px #f00, 0 0 15px #f00, 0 0 20px #f00, 0 0 25px #f00, 0 0 30px #f00, 0 0 35px #f00, 0 0 40px #f00;
-}
-.blink {
-  animation: blinker 1s cubic-bezier(.5, 0, 1, 1) infinite alternate;
-}
-@keyframes blinker {
-  from { opacity: 1; }
-  to { opacity: 0; }
 }

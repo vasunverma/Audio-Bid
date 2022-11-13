@@ -2,12 +2,15 @@ import os
 import requests
 import datetime
 import pytz
-
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.files.storage import default_storage
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import JobForm
+from .models import Job
+from .models import Profile
+from .filters import JobFilter
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail, BadHeaderError
 from django.contrib.auth.forms import PasswordResetForm
@@ -17,7 +20,12 @@ from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
-
+from itertools import chain
+from users.models import Job
+from django.http import JsonResponse
+from django.core import serializers
+import logging
+logger = logging.getLogger(__name__)
 
 def user_login(request):
     form = AuthenticationForm()
@@ -127,10 +135,6 @@ def users_reset_password(request):
 
 def users_profile(request):
     if request.user.is_authenticated:
-        # Get existing data from database and display everything to the user
-        # Display empty fields as empty with Submit button enabled
-        # If no fields are required then submit button should be disabled
-        # If user changes any info in the form then submit button should become enabled
         if request.method == 'GET':
             selectedTimeZone = "UTC"
             if request.user.profile.time_zone != '':
@@ -155,15 +159,83 @@ def users_profile(request):
     else:
         return redirect('login_url')
 
-
 def users_jobs(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
-            form = JobForm(request.POST or None)
-            form.instance.user = request.user
-            print(request)
-            print(request.POST)
-            print(request.FILES)
+            if request.POST.get("formId") == "claimJobform":
+                job_id = request.POST.get("jobIdToBeClaimed")
+                job_to_be_claimed = Job.objects.get(id=job_id)
+                job_to_be_claimed.worker_id = request.user.id
+                job_to_be_claimed.status = 1
+                job_to_be_claimed.save()
+                messages.success(request, ('Your Job has been successfully claimed!'))
+
+            else:
+                form = JobForm(request.POST or None)
+                form.instance.user = request.user
+                if form.is_valid():
+                    if request.POST.get("URL"):
+                        check_gdrive(request.POST.get("URL"))
+                        form.instance.url2audio = request.POST.get("URL")
+                    elif "audiofile" in request.FILES:
+                        extension = os.path.splitext(str(request.FILES['audiofile']))[1]
+                        filename = filename_gen(str(request.user), extension)
+                        default_storage.save(filename, request.FILES['audiofile'])
+                        form.instance.url2audio = url_gen(filename)
+                    elif "recorded" in request.FILES:
+                        filename = filename_gen(str(request.user), ".wav")
+                        default_storage.save(filename, request.FILES['recorded'])
+                        form.instance.url2audio = url_gen(filename)
+                    form.save()
+                    messages.success(request, ('Your Job has been created successfully'))
+                else:
+                    messages.error(request, ('Error creating Job. Please try again'))
+
+            return redirect('jobs_url')
+
+        elif request.method == 'GET':
+            is_creator = False
+            if request.user.profile.role == 'creator':
+                post_list = Job.objects.filter(Q(user_id=request.user.id))
+                is_creator = True
+            else:
+                post_list = Job.objects.filter(Q(worker_id=request.user.id))
+                post_list = list(chain(post_list, Job.objects.filter(Q(worker_id=0))))
+
+            page = request.GET.get('page', '1')
+            paginator = Paginator(post_list, 10)
+            try:
+                posts = paginator.page(page)
+            except PageNotAnInteger:
+                posts = paginator.page(1)
+            except EmptyPage:
+                posts = paginator.page(paginator.num_pages)
+
+            badge_classes = {
+                'AVAILABLE': 'badge-primary',
+                'INPROGRESS': 'badge-warning',
+                'COMPLETED': 'badge-success',
+                'CANCELLED': 'badge-danger'
+            }
+            myFilter = JobFilter()
+            for job in posts:
+                job.status = job.status_choices[job.status][1]
+                job.status_badge = badge_classes[job.status]
+                job.price = "{:.2f}".format(job.price)
+
+            return render(request, 'jobs/jobs.html', {'page': page,
+                                                      'posts': posts,
+                                                      'myFilter': myFilter,
+                                                      'creator': is_creator})
+    else:
+        return redirect('login_url')
+
+
+def users_edit_job(request, id):
+    if request.user.is_authenticated:
+        job = Job.objects.get(id=id)
+        if request.method == 'POST':
+            form = JobForm(request.POST, instance=job)
             if form.is_valid():
                 if request.POST.get("URL"):
                     check_gdrive(request.POST.get("URL"))
@@ -178,14 +250,22 @@ def users_jobs(request):
                     default_storage.save(filename, request.FILES['recorded'])
                     form.instance.url2audio = url_gen(filename)
                 form.save()
-                messages.success(request, ('Your Job has been created successfully'))
+                messages.success(request, ('Your Job has been updated successfully'))
+                return redirect('jobs_url')
             else:
-                messages.error(request, ('Error creating Job. Please try again'))
-        return render(request, 'jobs/jobs.html')
+                messages.error(request, ('Error updating Job. Please try again'))
+        else:
+            return JsonResponse({
+                "name": job.name,
+                "description": job.description,
+                "end_date": job.end_date.strftime("%Y-%m-%d"),
+                "price": "{0:.2f}".format(job.price)
+
+            }, status=200)   
     else:
         return redirect('login_url')
-
-
+    
+    
 def users_reviews(request):
     if request.user.is_authenticated:
         return render(request, 'Reviews/reviews.html')

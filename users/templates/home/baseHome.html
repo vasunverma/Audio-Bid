@@ -21,7 +21,6 @@
     {% block personalcss %}
     {% endblock %}
 
-    {% block script %}{% endblock %}
     <title>{% block title %} {% endblock %} </title>
 </head>
 <body>
@@ -54,9 +53,9 @@
                             <li><a href="{% url 'payments_url' %}" class="nav__link">Payments</a></li>
                             <li><a href="{% url 'profile_url' %}" class="nav__link">Profile</a></li>
                             <li><a href="{% url 'instructions_url' %}" class="nav__link">Instructions</a></li>
-                            <li><a href="{% url 'logout' %}" class="btn primary-btn">Log Out</a></li>
+                            <li><a href="{% url 'logout' %}" class="btn btn-primary btn-lg">Log Out</a></li>
                             {% else %}
-                            <li><a href="{% url 'login_url' %}" class="btn primary-btn">Login</a> <a href="{% url 'signup_url' %}" class="btn primary-btn">Sign Up</a></li>
+                            <li><a href="{% url 'login_url' %}" class="btn btn-primary btn-lg">Login</a> <a href="{% url 'signup_url' %}" class="btn btn-success btn-lg">Sign Up</a></li>
                             {% endif %}
                         </div>
                     </ul>
@@ -67,6 +66,7 @@
     <!--End of nav section-->
     {% block content %}{% endblock %}
     <!--Footer section-->
+    <br><br>
     <footer>
         <div class="container">
             <div class="footer__wrapper">
@@ -100,8 +100,9 @@
         </div>
     </footer>
     <!--End of footer-->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="http://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
+    {% block script %}{% endblock %}
 </body>
 </html>
