@@ -249,10 +249,9 @@ def users_edit_job(request, id):
                     filename = filename_gen(str(request.user), ".wav")
                     default_storage.save(filename, request.FILES['recorded'])
                     form.instance.url2audio = url_gen(filename)
-                logger.debug("I am trying saving function")
                 form.save()
                 messages.success(request, ('Your Job has been updated successfully'))
-                return redirect('home')
+                return redirect('jobs_url')
             else:
                 messages.error(request, ('Error updating Job. Please try again'))
         else:
