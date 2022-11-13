@@ -1,30 +1,5 @@
 {% extends "home/baseHome.html" %}
 {% load static %}
-{% block script %}
-<script type="text/javascript">
-  function reply_click(clicked_id)
-  {
-      var element = document.getElementById("modal_body_claim_job");
-      element.innerHTML = '';
-      var job_id = clicked_id;
-      const input = document.createElement("input");
-      input.id = "jobIdToBeClaimed";
-      input.name = "jobIdToBeClaimed";
-      input.value = job_id;
-      input.type = "hidden";
-      element.appendChild(input);
-
-      var tag = document.createElement("p");
-      var text = document.createTextNode("Are you sure you want to claim this job?");
-      tag.appendChild(text);
-      element.appendChild(tag);
-
-
-  }
-</script>
-<script src="/static/js/recorder.js"></script>
-<script src="/static/js/audio-recorder.js"></script>
-{% endblock %} 
 {% block title %} Jobs Page {% endblock title%}
 {% block content %}
 
@@ -87,7 +62,7 @@
                         <h4 class="card-title">Due Date: {{job.end_date}}</h4>
                         <br>
                         <br>
-                        {% if job.worker_id == "0" %}
+                        {% if job.worker_id == "0" and not creator %}
                         <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#confirmClaimJob" onClick="reply_click({{job.id}})">Claim Job</button>
                         {% endif %}
                     </div>
@@ -177,7 +152,30 @@
             </div>
         </div>
     </div>
-    
 </div>
+{% block script %}
+<script type="text/javascript">
+  function reply_click(clicked_id)
+  {
+      var element = document.getElementById("modal_body_claim_job");
+      element.innerHTML = '';
+      var job_id = clicked_id;
+      const input = document.createElement("input");
+      input.id = "jobIdToBeClaimed";
+      input.name = "jobIdToBeClaimed";
+      input.value = job_id;
+      input.type = "hidden";
+      element.appendChild(input);
 
+      var tag = document.createElement("p");
+      var text = document.createTextNode("Are you sure you want to claim this job?");
+      tag.appendChild(text);
+      element.appendChild(tag);
+
+
+  }
+</script>
+<script src="/static/js/recorder.js"></script>
+<script src="/static/js/audio-recorder.js"></script>
+{% endblock %}
 {% endblock %}
