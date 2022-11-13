@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',  # for Google OAuth 2.0
     'storages',
     'chartjs',
+    'django_filters',
 ]
 
 SOCIALACCOUNT_LOGIN_ON_GET = True  # Flag to skip intermediate google login page and go directly to google sign-in pop-up
@@ -171,7 +172,7 @@ ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_REQUIRED = True
 
-SITE_ID = 4  # Keeping on incrementing this if you get an error while using google auth
+SITE_ID = 5  # Keeping on incrementing this if you get an error while using google auth
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -191,3 +192,29 @@ AWS_STORAGE_BUCKET_NAME = os.environ['bucket_name']
 AWS_DEFAULT_ACL = None
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# Logging - Uncomment when using development env and set DEBUG to True
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'file': {
+#             'level': 'DEBUG',
+#             'class': 'logging.FileHandler',
+#             'filename': BASE_DIR / 'debug.log',
+#         },
+#     },
+#     'loggers': {
+#         '': {
+#             'handlers': ['file'],
+#             'level': 'DEBUG', 
+#             'propagate': True,
+#         },
+#         'django': {
+#             'handlers': ['file'],
+#             # Change it to INFO if you donot want to output everything
+#             'level': 'INFO',
+#             'propagate': True,
+#         },
+#     },
+# }

@@ -1,0 +1,52 @@
+.modal-content{
+    border-radius: 10px;
+}
+
+#submitBtn{
+    text-align: right;
+}
+
+#editSaveBtn, #createSaveBtn{
+    height: 40px;
+    width: 60px;
+    border-radius: 20px;
+}
+
+#editDropDown, #DropDown{
+    margin-bottom: 15px;
+}
+
+#div3, #divc{
+    display: flex;
+}
+
+#edit-record-file, #record-file{
+    border-radius: 15px;
+}
+
+#edit-start-rec, #start-rec{
+    border-radius: 10px;
+    height: 30px;
+    margin-top: 5px;
+    margin-right: 20px;
+}
+
+#edit-stop-rec, #stop-rec{
+    border-radius: 10px;
+    height: 30px;
+    margin-top: 5px;
+    margin-right: 20px;
+}
+
+#edit-red-dot, #red-dot{
+    color: red;
+}
+
+.blink {
+    animation: blinker 1.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;  
+}
+
+@keyframes blinker {  
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
