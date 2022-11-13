@@ -2,7 +2,6 @@ import os
 import requests
 import datetime
 import pytz
-
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
@@ -22,6 +21,11 @@ from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from itertools import chain
+from users.models import Job
+from django.http import JsonResponse
+from django.core import serializers
+import logging
+logger = logging.getLogger(__name__)
 
 def user_login(request):
     form = AuthenticationForm()
@@ -131,10 +135,6 @@ def users_reset_password(request):
 
 def users_profile(request):
     if request.user.is_authenticated:
-        # Get existing data from database and display everything to the user
-        # Display empty fields as empty with Submit button enabled
-        # If no fields are required then submit button should be disabled
-        # If user changes any info in the form then submit button should become enabled
         if request.method == 'GET':
             selectedTimeZone = "UTC"
             if request.user.profile.time_zone != '':
@@ -230,6 +230,42 @@ def users_jobs(request):
     else:
         return redirect('login_url')
 
+
+def users_edit_job(request, id):
+    if request.user.is_authenticated:
+        job = Job.objects.get(id=id)
+        if request.method == 'POST':
+            form = JobForm(request.POST, instance=job)
+            if form.is_valid():
+                if request.POST.get("URL"):
+                    check_gdrive(request.POST.get("URL"))
+                    form.instance.url2audio = request.POST.get("URL")
+                elif "audiofile" in request.FILES:
+                    extension = os.path.splitext(str(request.FILES['audiofile']))[1]
+                    filename = filename_gen(str(request.user), extension)
+                    default_storage.save(filename, request.FILES['audiofile'])
+                    form.instance.url2audio = url_gen(filename)
+                elif "recorded" in request.FILES:
+                    filename = filename_gen(str(request.user), ".wav")
+                    default_storage.save(filename, request.FILES['recorded'])
+                    form.instance.url2audio = url_gen(filename)
+                form.save()
+                messages.success(request, ('Your Job has been updated successfully'))
+                return redirect('jobs_url')
+            else:
+                messages.error(request, ('Error updating Job. Please try again'))
+        else:
+            return JsonResponse({
+                "name": job.name,
+                "description": job.description,
+                "end_date": job.end_date.strftime("%Y-%m-%d"),
+                "price": "{0:.2f}".format(job.price)
+
+            }, status=200)   
+    else:
+        return redirect('login_url')
+    
+    
 def users_reviews(request):
     if request.user.is_authenticated:
         return render(request, 'Reviews/reviews.html')
