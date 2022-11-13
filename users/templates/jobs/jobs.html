@@ -16,7 +16,7 @@
                         <!--<span class="btn btn-secondary float-right mt-2">{{myFilter.form}}</span>-->
                         <span class="btn btn-secondary float-right mt-2 ml-2">Apply Filter</span>
                         {% if creator %}
-                        <button class="btn-info btn btn-create-modal mt-2 float-right" type="button" data-toggle="modal" data-target="#myModal">Create</button>
+                        <button class="btn-info btn btn-create-modal mt-2 float-right" type="button" data-toggle="modal" data-target="#myModal">Create Job</button>
                         {% endif %}
                     </h2>
                 </a>
@@ -57,7 +57,7 @@
                     </div>
                     {% for job in posts %}
                     <div class="tab-pane fade show" id="job_{{job.id}}" role="tabpanel">
-                        {% if creator %}
+                        {% if creator and job.status != 'COMPLETED' %}
                         <button type="button" class="btn-info btn btn-modal float-right" id="{{job.id}}" data-toggle="modal" data-target="#EditModal">Edit Job</button>
                         {% endif %}
                         <h2 class="card-title"><strong>Job Title: {{job.name}}</strong></h2>
@@ -71,6 +71,7 @@
                         <h4 class="card-title">Due Date: {{job.end_date}}</h4>
                         <br>
                         <br>
+                        <div class="d-flex justify-content-between">
                         {% if job.worker_id == "0" and not creator %}
                         <button class="btn btn-danger btn-lg" type="button" data-toggle="modal" data-target="#confirmClaimJob"
                                 onClick="reply_click({{job.id}}, 'modal_body_claim_job', 'Are you sure you want to claim this job?')">Claim Job</button>
@@ -78,18 +79,22 @@
                         {% if job.worker_id == user_id_str or job.user_id == user_id %}
                         <a class="btn btn-success btn-lg" href="{{job.url2audio}}" target="_blank" role="button">Download Audio File</a>
                         {% endif %}
-                        {% if job.worker_id == user_id_str %}
-                        <span class="float-right mt-2">
+                        {% if job.worker_id == user_id_str and job.status == 'INPROGRESS'%}
+                            <button class="btn btn-primary btn-lg" type="button" data-toggle="modal" data-target="#confirmUploadTranscript"
+                                    onClick="reply_click({{job.id}}, 'modal_body_upload_transcript', 'Select a file to upload')">Upload Transcript</button>
                             <button class="btn btn-danger btn-lg" type="button" data-toggle="modal" data-target="#confirmCancelJob"
                                     onClick="reply_click({{job.id}}, 'modal_body_cancel_job', 'Are you sure you want to cancel this job?')">Cancel Job</button>
-                        </span>
                         {% endif %}
                         {% if job.user_id == user_id %}
-                        <span class="float-right mt-2">
+                            {% if job.url2Transcript != null %}
+                            <a class="btn btn-primary btn-lg" href="{{job.url2Transcript}}" target="_blank" role="button">Download Transcript File</a>
+                            {% endif %}
+                            {% if job.status != 'COMPLETED' %}
                             <button class="btn btn-danger btn-lg" type="button" data-toggle="modal" data-target="#confirmDeleteJob"
                                     onClick="reply_click({{job.id}}, 'modal_body_delete_job', 'Are you sure you want to delete this job?')">Delete Job</button>
-                        </span>
+                            {% endif %}
                         {% endif %}
+                        </div>
                     </div>
                     {% endfor %}
                 </div>
@@ -160,10 +165,28 @@
         </form>
     </div>
 
+    <div class="modal" id="confirmUploadTranscript">
+        <form method="post" action="{%url 'jobs_url'%}" id="uploadTranscriptform" enctype="multipart/form-data">
+            <input name="formId" value="uploadTranscriptform" type="hidden"/>
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="modal_body_upload_transcript"></div>
+                    <div class="modal-footer">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" name="uploadTranscriptform-submit">Upload Transcript</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
     <!--CREATE JOB MODAL-->
-    {% if creator %}
-    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#myModal">Create Job</button>
-    {% endif %}
     <div class="modal" id="myModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -301,6 +324,7 @@
   {
       var element = document.getElementById(element_to_get);
       element.innerHTML = '';
+
       var job_id = clicked_id;
       const input = document.createElement("input");
       input.id = "jobId";
@@ -313,6 +337,15 @@
       var text = document.createTextNode(text_to_display);
       tag.appendChild(text);
       element.appendChild(tag);
+
+      if(element_to_get == "modal_body_upload_transcript"){
+          const textFileInput = document.createElement("input");
+          textFileInput.classList.add("form-control");
+          textFileInput.type = "file";
+          textFileInput.id = "transcriptFile";
+          textFileInput.name = "transcriptFile";
+          element.appendChild(textFileInput);
+      }
   }
 </script>
 <script src="/static/js/create-job.js"></script>
