@@ -1,13 +1,26 @@
 {% extends "home/baseHome.html" %}
 {% load static %}
 {% block script %}
-    <script type="text/javascript">
-$(function () {
-  $('.example-popover').popover({
-    container: 'body'
-  })
-})
+<script type="text/javascript">
+  function reply_click(clicked_id)
+  {
+      var element = document.getElementById("modal_body_claim_job");
+      element.innerHTML = '';
+      var job_id = clicked_id;
+      const input = document.createElement("input");
+      input.id = "jobIdToBeClaimed";
+      input.name = "jobIdToBeClaimed";
+      input.value = job_id;
+      input.type = "hidden";
+      element.appendChild(input);
 
+      var tag = document.createElement("p");
+      var text = document.createTextNode("Are you sure you want to claim this job?");
+      tag.appendChild(text);
+      element.appendChild(tag);
+
+
+  }
 </script>
 <script src="/static/js/recorder.js"></script>
 <script src="/static/js/audio-recorder.js"></script>
@@ -19,13 +32,17 @@ $(function () {
     <div class="card-deck">
         <div class="col-4">
             <div class="list-group" id="list-tab" role="tablist">
-                <div class="card-header">
-                    <h4>Jobs<span class="btn btn-secondary float-right mt-2">
-                        {{myFilter.form}}</span></h4>
-                </div>
+                <a class="card-header">
+                    <h4>Jobs
+                        <!--<span class="btn btn-secondary float-right mt-2">{{myFilter.form}}</span>-->
+                        <span class="btn btn-secondary float-right mt-2">Apply Filter</span>
+                    </h4>
+                </a>
                 {% for job in posts %}
-                <a href="#list-job{{job.id}}" role="tab"> {{job.name}}
-                    <span class="badge badge-primary float-right mt-2">{{job.status}}</span></a>
+                <a class="list-group-item list-group-item-action" id="list-job{{job.id}}" data-toggle="list"
+                   href="#job_{{job.id}}" role="tab">{{job.name}}
+                    <span class="badge {{job.status_badge}} float-right mt-2">{{job.status}}</span>
+                </a>
                 {% endfor %}
                 <div>
                     <nav aria-label="Page navigation example" >
@@ -48,20 +65,31 @@ $(function () {
                 </div>
             </div>
         </div>
-        <div class="card text-center">
-            <div class="card-header">
+        <div class="card">
+            <div class="card-header text-center">
                 <h4>Job Details</h4>
             </div>
             <div class="card-body">
                 <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="activeTab" role="tabpanel">
+                        <h2 class="card-title text-center">Select a job to view its details</h2>
+                    </div>
                     {% for job in posts %}
-                    <div class="tab-pane fade show active" id="list-job{{job.id}}" role="tabpanel">
-                        <h5 class="card-title">{{job.name}}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="card-link">Card link</a>
-                        <a href="#" class="card-link">Another link</a>
+                    <div class="tab-pane fade show" id="job_{{job.id}}" role="tabpanel">
+                        <h2 class="card-title"><strong>Job Title: {{job.name}}</strong></h2>
+                        <br>
+                        <h3 class="card-title">Job Description: {{job.description}}</h3>
+                        <br>
+                        <h4 class="card-title">Job Price: <strong>$</strong>{{job.price}}</h4>
+                        <br>
+                        <h4 class="card-title">Created on: {{job.created_date}}</h4>
+                        <br>
+                        <h4 class="card-title">Due Date: {{job.end_date}}</h4>
+                        <br>
+                        <br>
+                        {% if job.worker_id == "0" %}
+                        <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#confirmClaimJob" onClick="reply_click({{job.id}})">Claim Job</button>
+                        {% endif %}
                     </div>
                     {% endfor %}
                 </div>
@@ -69,7 +97,31 @@ $(function () {
         </div>
     </div>
 
+    <div class="modal" id="confirmClaimJob">
+        <form method="post" action="{%url 'jobs_url'%}" id="claimJobform">
+            <input name="formId" value="claimJobform" type="hidden"/>
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="modal_body_claim_job"></div>
+                    <div class="modal-footer">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" name="claimJobForm-submit">Claim Job</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    {% if creator %}
     <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#myModal">Create Job</button>
+    {% endif %}
     <div class="modal" id="myModal">
         <div class="modal-dialog">
             <div class="modal-content">

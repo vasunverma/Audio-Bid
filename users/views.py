@@ -21,6 +21,7 @@ from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
+from itertools import chain
 
 def user_login(request):
     form = AuthenticationForm()
@@ -161,36 +162,48 @@ def users_profile(request):
 def users_jobs(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
-            form = JobForm(request.POST or None)
-            form.instance.user = request.user
-            print(request)
-            print(request.POST)
-            print(request.FILES)
-            if form.is_valid():
-                if request.POST.get("URL"):
-                    check_gdrive(request.POST.get("URL"))
-                    form.instance.url2audio = request.POST.get("URL")
-                elif "audiofile" in request.FILES:
-                    extension = os.path.splitext(str(request.FILES['audiofile']))[1]
-                    filename = filename_gen(str(request.user), extension)
-                    default_storage.save(filename, request.FILES['audiofile'])
-                    form.instance.url2audio = url_gen(filename)
-                elif "recorded" in request.FILES:
-                    filename = filename_gen(str(request.user), ".wav")
-                    default_storage.save(filename, request.FILES['recorded'])
-                    form.instance.url2audio = url_gen(filename)
-                form.save()
-                messages.success(request, ('Your Job has been created successfully'))
-            else:
-                messages.error(request, ('Error creating Job. Please try again'))
-            return render(request, 'jobs/jobs.html')
-        
+            if request.POST.get("formId") == "claimJobform":
+                job_id = request.POST.get("jobIdToBeClaimed")
+                job_to_be_claimed = Job.objects.get(id=job_id)
+                job_to_be_claimed.worker_id = request.user.id
+                job_to_be_claimed.status = 1
+                job_to_be_claimed.save()
+                messages.success(request, ('Your Job has been successfully claimed!'))
 
-        elif request.method=='GET':
-            
-            post_list = Job.objects.all()
-            page = request.GET.get('page','1')
-            paginator = Paginator(post_list, 2)
+            else:
+                form = JobForm(request.POST or None)
+                form.instance.user = request.user
+                if form.is_valid():
+                    if request.POST.get("URL"):
+                        check_gdrive(request.POST.get("URL"))
+                        form.instance.url2audio = request.POST.get("URL")
+                    elif "audiofile" in request.FILES:
+                        extension = os.path.splitext(str(request.FILES['audiofile']))[1]
+                        filename = filename_gen(str(request.user), extension)
+                        default_storage.save(filename, request.FILES['audiofile'])
+                        form.instance.url2audio = url_gen(filename)
+                    elif "recorded" in request.FILES:
+                        filename = filename_gen(str(request.user), ".wav")
+                        default_storage.save(filename, request.FILES['recorded'])
+                        form.instance.url2audio = url_gen(filename)
+                    form.save()
+                    messages.success(request, ('Your Job has been created successfully'))
+                else:
+                    messages.error(request, ('Error creating Job. Please try again'))
+
+            return redirect('jobs_url')
+
+        elif request.method == 'GET':
+            is_creator = False
+            if request.user.profile.role == 'creator':
+                post_list = Job.objects.filter(Q(user_id=request.user.id))
+                is_creator = True
+            else:
+                post_list = Job.objects.filter(Q(worker_id=request.user.id))
+                post_list = list(chain(post_list, Job.objects.filter(Q(worker_id=0))))
+
+            page = request.GET.get('page', '1')
+            paginator = Paginator(post_list, 10)
             try:
                 posts = paginator.page(page)
             except PageNotAnInteger:
@@ -198,13 +211,22 @@ def users_jobs(request):
             except EmptyPage:
                 posts = paginator.page(paginator.num_pages)
 
+            badge_classes = {
+                'AVAILABLE': 'badge-primary',
+                'INPROGRESS': 'badge-warning',
+                'COMPLETED': 'badge-success',
+                'CANCELLED': 'badge-danger'
+            }
             myFilter = JobFilter()
-            #page=myFilter.queryset
-            if request.user.profile.role=='creator':
-                print("Hi")
-                return render(request, 'jobs/jobs.html', {'page':page,'posts':posts, 'myFilter':myFilter})
-            else:
-                return render(request, 'jobs/w_jobs.html', {'page':page,'posts':posts, 'myFilter':myFilter})
+            for job in posts:
+                job.status = job.status_choices[job.status][1]
+                job.status_badge = badge_classes[job.status]
+                job.price = "{:.2f}".format(job.price)
+
+            return render(request, 'jobs/jobs.html', {'page': page,
+                                                      'posts': posts,
+                                                      'myFilter': myFilter,
+                                                      'creator': is_creator})
     else:
         return redirect('login_url')
 
