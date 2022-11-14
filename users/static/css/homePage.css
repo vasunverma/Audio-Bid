@@ -113,8 +113,11 @@ footer{
 
 .footer__text{
     list-style-type: none;
-    display: flex;
-    justify-content: space-between;
+    display: flex; 
+    flex-direction: row;
+    /* justify-content:right; */
+    align-content: right;
+
 }
 .footer__logo{
     font-size: 1.8rem;
@@ -125,9 +128,10 @@ footer{
 
 .footer__col2,
 .footer__col3{
-    flex: 1;
+    
     margin-bottom: -25px;
     list-style-type: none;
+    align-items: flex-start;
 }
 
 .footer__desc{
@@ -147,6 +151,9 @@ footer{
 
 .footer__link{
     margin-right: 45px;
+    justify-content:right;
+    text-align: right;
+    flex: 1;
 }
 
 .footer__text a{

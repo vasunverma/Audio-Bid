@@ -26,17 +26,17 @@
     <div class="container">
       {% if user.profile.role == 'worker' %}
         <div class="main__wrapper">
-          <div class="main__center">
+          <div class="main__left">
             <div class="main__welcome">
               <h1 class="main__heading">Welcome {{ user.first_name }}!</h1>
               <ul class="main__left__list">
                 <li><h1 class="main_list_element">Claimed Jobs: {{ num_claimed_jobs }}</h1></li>
                 <li><h1 class="main_list_element">Completed Jobs: {{num_completed_jobs}}</h1></li>
-                <li><h1 class="main_list_element">In Progress Jobs: {{num_progress_jobs}}</h1></li>
+                <li><h1 class="main_list_element">In progress Jobs: {{num_progress_jobs}}</h1></li>
               </ul> 
             </div>
-            <div id="container" style="width: 75%;">
-              <canvas id="pie-chart"></canvas>
+            <div id="container" style="width: 40%;" class="main__pie">
+              <canvas id="pie-chart" width="200" height="200"></canvas>
             </div>
             <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script><script>
               var config = {
@@ -53,7 +53,6 @@
                   responsive: true
                 }
               };
-
               window.onload = function() {
                 var ctx = document.getElementById('pie-chart').getContext('2d');
                 window.myPie = new Chart(ctx, config);
@@ -63,26 +62,28 @@
         </div>
       {% elif user.profile.role == 'creator' %}
         <div class="main__wrapper">
-          <div class="main__center">
+          <div class="main__left" >
+            <h1 class="main__heading">Welcome {{ user.first_name }}!</h1>
             <div class="main__welcome">
-              <h1 class="main__heading">Welcome {{ user.first_name }}!</h1>
               <ul class="main__left__list">
-                <li><h1 class="main_list_element">Created Jobs: {{ num_created_jobs }}</h1></li>
-                <li><h1 class="main_list_element">Completed Jobs: {{num_completed_jobs}}</h1></li>
-                <li><h1 class="main_list_element">In Progress Jobs: {{num_progress_jobs}}</h1></li>
-                <li><h1 class="main_list_element">Claimed Jobs: {{num_claimed_jobs}}</h1></li>
+                <li><h1 class="main__list__element">Created Jobs: {{ num_created_jobs }}</h1></li>
+                <li><h1 class="main__list__element">Completed Jobs: {{num_completed_jobs}}</h1></li>
+                <li><h1 class="main__list__element">In progress Jobs: {{num_progress_jobs}}</h1></li>
+                <li><h1 class="main__list__element">Claimed Jobs: {{num_claimed_jobs}}</h1></li>
               </ul> 
             </div>
-            <div id="container" style="width: 75%;">
-              <canvas id="pie-chart"></canvas>
+            <div id="container" style="width: 40%;" class="main__piechart__container">
+              <canvas id="pie-chart" ></canvas>
             </div>
-            <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script><script>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+            
+            <script>
               var config = {
                 type: 'pie',
                 data: {
                   datasets: [{
                     data: [{{num_completed_jobs}}, {{num_progress_jobs}}, {{num_claimed_jobs}}],
-                    backgroundColor: ['#696969', '#808080', '#A9A9A9', '#C0C0C0', '#D3D3D3'],
+                    backgroundColor: ['#00FFFF', '#F0FFFF', '#0000FF'],
                     label: 'Jobs'
                   }],
                   labels: ['Completed','In Progress','Claimed']
