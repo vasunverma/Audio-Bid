@@ -175,8 +175,22 @@ footer{
     justify-content: center;
 }
 
+.main__welcome{
+    display:flex;
+    flex-direction: row;
+    flex:1;
+}
+
 .main__left__wrapper{
     max-width: 360px;
+}
+
+.main__piechart__container{
+    flex:1;
+    display:flex;
+    position:relative;
+    height: 200px;
+    width: 200px;
 }
 
 .main__heading{
@@ -194,7 +208,9 @@ footer{
 }
 
 .main__left{
-    flex: 3;
+    flex:1;
+    display: flex;
+    flex-direction: row;
 }
 
 .main__right{
@@ -204,6 +220,7 @@ footer{
 
 .main__left__list{
     list-style-type: none;
+    flex:1;
 }
 .main__list__element{
     font-size: 2rem;
@@ -214,4 +231,10 @@ footer{
     text-align: center;
     font-size: 50px;
     padding-bottom: 50px;
+}
+
+#pie-chart{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

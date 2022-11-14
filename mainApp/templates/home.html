@@ -27,16 +27,16 @@
       {% if user.profile.role == 'worker' %}
         <div class="main__wrapper">
           <div class="main__left">
+            <h1 class="main__heading">Welcome {{ user.first_name }}!</h1>
             <div class="main__welcome">
-              <h1 class="main__heading">Welcome {{ user.first_name }}!</h1>
               <ul class="main__left__list">
                 <li><h1 class="main_list_element">Claimed Jobs: {{ num_claimed_jobs }}</h1></li>
                 <li><h1 class="main_list_element">Completed Jobs: {{num_completed_jobs}}</h1></li>
                 <li><h1 class="main_list_element">In progress Jobs: {{num_progress_jobs}}</h1></li>
               </ul> 
             </div>
-            <div id="container" style="width: 40%;" class="main__pie">
-              <canvas id="pie-chart" width="200" height="200"></canvas>
+            <div id="container" style="width: 40%;" class="main__piechart__container">
+              <canvas id="pie-chart"></canvas>
             </div>
             <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script><script>
               var config = {
@@ -44,7 +44,7 @@
                 data: {
                   datasets: [{
                     data: [{{num_completed_jobs}}, {{num_progress_jobs}}, {{num_claimed_jobs}}],
-                    backgroundColor: ['#696969', '#808080', '#A9A9A9', '#C0C0C0', '#D3D3D3'],
+                    backgroundColor: ['#00FFFF', '#F0FFFF', '#0000FF'],
                     label: 'Jobs'
                   }],
                   labels: ['Completed','In Progress','Claimed']
@@ -72,7 +72,7 @@
                 <li><h1 class="main__list__element">Claimed Jobs: {{num_claimed_jobs}}</h1></li>
               </ul> 
             </div>
-            <div id="container" style="width: 40%;" class="main__piechart__container">
+            <div id="container" style="width: 20%;" class="main__piechart__container">
               <canvas id="pie-chart" ></canvas>
             </div>
             <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
@@ -82,11 +82,11 @@
                 type: 'pie',
                 data: {
                   datasets: [{
-                    data: [{{num_completed_jobs}}, {{num_progress_jobs}}, {{num_claimed_jobs}}],
-                    backgroundColor: ['#00FFFF', '#F0FFFF', '#0000FF'],
+                    data: [{{ num_created_jobs }}, {{num_completed_jobs}}, {{num_progress_jobs}}, {{num_claimed_jobs}}],
+                    backgroundColor: ['#008080','#00FFFF', '#F0FFFF', '#0000FF'],
                     label: 'Jobs'
                   }],
-                  labels: ['Completed','In Progress','Claimed']
+                  labels: ['Created','Completed','In Progress','Claimed']
                 },
                 options: {
                   responsive: true
