@@ -167,6 +167,7 @@ def users_jobs(request):
                 job = Job.objects.get(id=job_id)
                 job.worker_id = request.user.id
                 job.status = 1
+                job.claim_date = datetime.datetime.now()
                 job.save()
                 messages.success(request, ('Your Job has been successfully claimed!'))
 
@@ -183,6 +184,17 @@ def users_jobs(request):
                 job = Job.objects.get(id=job_id)
                 job.delete()
                 messages.success(request, ('Your Job has been successfully deleted!'))
+
+            elif request.POST.get("formId") == "uploadTranscriptform":
+                job_id = request.POST.get("jobId")
+                job = Job.objects.get(id=job_id)
+                extension = os.path.splitext(str(request.FILES['transcriptFile']))[1]
+                filename = filename_gen(str(request.user), extension)
+                default_storage.save(filename, request.FILES['transcriptFile'])
+                job.url2Transcript = url_gen(filename)
+                job.status = 2
+                job.save()
+                messages.success(request, ('Your Transcript has been successfully uploaded!'))
 
             else:
                 form = JobForm(request.POST or None)
