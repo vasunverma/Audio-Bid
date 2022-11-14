@@ -6,63 +6,76 @@
 {% block content %}
 	<h2 class="profileTitle">User Profile</h2>
 	<section id="main">
-	    <div class="container" id="formAlign" >
-	        <div class="main__wrapper">
-	            <div class="main__left">
-	                <div class="card cardb">
-	                    <div class="card-body" >
-	                        <form method="post" action="{%url 'profile_url'%}">
-	                            {% csrf_token %}
-	                            <div class="button-input-group">
-		                            <div class="form-group">
-	                                    <label for="fname" class="col-lg-12" >First Name:</label>
-	                                    <div class="col-lg-12">
-		                                    <input type="text"  name="fname" aria-label="First name" placeholder="First name"
-		                                                    class="form-control form-control-lg"
-		                                                    value="{{user.first_name}}" id="fname" disabled>
-	                                    </div>
-	                                    <label for="lname" class="col-lg-12" >Last Name:</label>
-									    <div class="col-lg-12">
-									      <input type="text" name="lname" aria-label="Last name" placeholder="Last name"
-									                         class="form-control form-control-lg"
-									                         value="{{user.last_name}}" disabled id="lname">
-									    </div>
-	                                    <label for="username" class="col-lg-12" >Username:</label>
-	                                    <div class="col-lg-12">
-									      <input type="text" name="username" class="form-control form-control-lg" placeholder="Username"
-									                         aria-label="Username" value="{{user}}" disabled id="username">
-	                                    </div>
-	                                    <label for="inlineRadioOptions" class="col-lg-12" >User Role:</label>
-									    <div class="col-lg-12">
-									     <input type="text" name="inlineRadioOptions" class="form-control form-control-lg" placeholder="role"
-									                         aria-label="role" value="{{user.profile.role}}" disabled id="inlineRadioOptions">
-									    </div>
-	                                    <label for="email" class="col-lg-12" >Email ID:</label>
-									    <div class="col-lg-12">
-									     <input type="email" name="email" class="form-control form-control-lg" placeholder="Email"
-									                         aria-label="email" value="{{user.email}}" disabled id="email">
-									    </div>
-			                            <div class="col-lg-12">
-	                                        <label  class="col-lg-12"  for="inputGroupSelect01">Time zone:</label>
-				                            <select name="userTimezone" class="form-control form-control-lg optionClass" id="inputGroupSelect01">
-							                    <option value="{{selectedTimeZone}}" selected>{{ selectedTimeZone }} </option>
-							                    {% for tz in timezones %}
-							                    <option value="{{ tz }}"{% if tz == TIME_ZONE %}{% endif %}>{{ tz }}</option>
-							                    {% endfor %}
-				                            </select>
-	                                    </div>
-	                                </div>
-	                            </div>
-		                        <div class="group button-group" >
-					                <button class="btn primary-btn">
-					                  <span>Save Changes</span>
-					                </button>
-		                        </div>
-	                        </form>
+		<form method="post" action="{%url 'profile_url'%}">
+			{% csrf_token %}
+			<div class="button-input-group">
+				<div class="container rounded bg-white mt-5 mb-5">
+                    <div class="row">
+                        <div class="col-md-4 border-right">
+                            <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+	                            <img class="rounded-circle mt-5" width="150px" src="/static/images/profile-anon.png" class = "user-pic"/>
+	                            <h3 class="font-weight-bold">{{user.first_name}}</h3><h3 class="text-black-50">{{user.email}}</h3>
+	                            <span> </span>
+                            </div>
+                        </div>
+	                    <div class="col-md-8">
+		                    <div class="pt-5">
+				                <div class="row mt-2">
+					                <div class="col-md-6">
+						                <label for="fname" class="firname">First Name:</label>
+						                <input type="text"  name="fname" aria-label="First name" placeholder="First name"
+						                       class="form-control form-control-lg"
+						                       value="{{user.first_name}}" id="fname" disabled>
+					                </div>
+					                <div class="col-md-6">
+						                <label for="lname" class="firname" >Last Name:</label>
+						                <input type="text" name="lname" aria-label="Last name" placeholder="Last name"
+						                       class="form-control form-control-lg"
+						                       value="{{user.last_name}}" disabled id="lname">
+					                </div>
+				                </div>
+		                    </div>
+		                    <div class="row mt-3">
+				                <div class="col-md-12">
+					                <label for="username" class="lbl">Username:</label>
+					                <div class="col-lg-13">
+						                <input type="text" name="username" class="form-control form-control-lg" placeholder="Username"
+						                       aria-label="Username" value="{{user}}" disabled id="username">
+					                </div>
+				                </div>
+				                <div class="col-md-12">
+					                <label for="inlineRadioOptions" class="lbl" >User Role:</label>
+					                <div class="col-lg-13">
+						                <input type="text" name="inlineRadioOptions" class="form-control form-control-lg" placeholder="role"aria-label="role" value="{{user.profile.role}}" disabled id="inlineRadioOptions">
+					                </div>
+				                </div>
+				                <div class="col-md-12">
+					                <label for="email" class="lbl" >Email ID:</label>
+					                <div class="col-lg-13">
+						                <input type="email" name="email" class="form-control form-control-lg" placeholder="Email"
+						                       aria-label="email" value="{{user.email}}" disabled id="email">
+					                </div>
+				                </div>
+				                <div class="col-md-12">
+					                <label  class="lbl"  for="inputGroupSelect01">Time zone:</label>
+					                <select name="userTimezone" class="form-control form-control-lg optionClass" id="inputGroupSelect01">
+						                <option value="{{selectedTimeZone}}" selected>{{ selectedTimeZone }} </option>
+						                {% for tz in timezones %}
+						                <option value="{{ tz }}"{% if tz == TIME_ZONE %}{% endif %}>{{ tz }}</option>
+						                {% endfor %}
+					                </select>
+				                </div>
+		                    </div>
+		                    <div style="margin-top:40px;" class="group button-group" >
+				                <button class="btn btn-primary btn-lg">
+					                <span>Save Changes</span>
+				                </button>
+		                    </div>
+		                    <br><br>
 	                    </div>
-					</div>
-	            </div>
-	        </div>
-	    </div>
+                    </div>
+				</div>
+			</div>
+		</form>
 	</section>
 {% endblock content %}
