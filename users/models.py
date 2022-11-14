@@ -17,8 +17,10 @@ class Job(models.Model):
     price = models.DecimalField(max_digits=19, decimal_places=10)
     created_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField()
+    claim_date = models.DateTimeField(null=True)
     description = models.TextField()
     url2audio = models.TextField()
+    url2Transcript = models.TextField(null=True)
     worker_id = models.CharField(max_length=100, default='0')
     status_choices = [  # 0 = not started, 1 = in progress, 2 = completed, 3 = cancelled
         (0, 'AVAILABLE'),
