@@ -12,7 +12,8 @@
 }
 
 .col-lg-12 {
-    padding-top:3px;
+    font-weight: 500;
+    text-align:center;
 }
 
 #formAlign {
@@ -37,4 +38,27 @@ label {
 
 .cardb{
 border-radius: 15px;
+width:500px;
+margin-left:115;
 }
+.lbl{
+align-items:center;
+font-weight: 500;
+margin-top:8px;
+margin-bottom:8px;
+}
+
+body {
+    background: rgb(240, 248, 255)
+}
+
+.labels {
+    font-size: 11px
+}
+
+.firname{
+font-weight: 500;
+margin-top:8px;
+margin-bottom:8px;
+}
+
