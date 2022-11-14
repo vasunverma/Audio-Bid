@@ -21,6 +21,7 @@ section{
 }
 
 .container{
+    position: relative;
     max-width: 1200px;
     width: 90%;
     margin: 0 auto;
@@ -188,3 +189,74 @@ footer{
     font-size: 50px;
     padding-bottom: 50px;
 }
+
+.user-pic {
+    width: 50px;
+    height: 50px;
+    border:1px solid;
+    cursor: pointer;
+    border-radius: 70%;
+    margin-left: 0px;
+   }
+   .sub-menu-wrap{
+   position: absolute;
+   top: 100%;
+   width: 320px;
+   margin-left:200px;
+   max-height:0px;
+   overflow:hidden;
+   transition: max-height 0.5s;
+   }
+   .sub-menu-wrap.open-menu{
+   max-height: 400px;
+   }
+   
+   .sub-menu{
+   background: #fff;
+   padding:20px;
+   width:200px;
+   margin:10px;
+   }
+   
+   .user-info{
+   display:flex;
+   align-items: center;
+   }
+   .user-info h3{
+   font-weight: 1000;
+   margin-right: 50px;
+   }
+   .user-info img{
+   margin-right:20px;
+   }
+   .sub-menu hr{
+   border:0;
+   height: 1px;
+   width: 100%;
+   background: #ccc;
+   margin: 15px 0 10px;
+   }
+   .sub-menu-link{
+   display:flex;
+   align-items: center;
+   text-decoration:none;
+   color: #525252;
+   margin: 12px 0;
+   }
+   .sub-menu-link p{
+   width:100%;
+   align-items:center;
+   }
+   
+   .sub-menu-link:hover p{
+   font-weight:600;
+   color: #383838;
+   text-decoration: underline;
+   }
+   .edit-profile{
+   text-align:center;
+   
+   }
+   .edit-profile li {
+   margin-top:-30px;
+   }
