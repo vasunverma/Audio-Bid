@@ -1,4 +1,5 @@
 import os
+import re
 import requests
 import datetime
 import pytz
@@ -323,7 +324,8 @@ def check_gdrive(url):
 
 
 def filename_gen(user, ext):
-    return str(datetime.datetime.now().timestamp()).replace('.', '-') + "-" + user + ext
+    u = re.sub('\W+','', user)
+    return str(datetime.datetime.now().timestamp()).replace('.', '-') + "-" + u + ext
 
 
 def url_gen(filename):
