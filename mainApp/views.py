@@ -19,7 +19,7 @@ def home(request):
                 elif jobs.status == 2:
                     num_completed_jobs +=1
         elif request.user.profile.role == 'worker':
-            workerJobs = Job.objects.filter(Q(worker_id=request.user))
+            workerJobs = Job.objects.filter(Q(worker_id=request.user.id))
             num_created_jobs, num_open_jobs, num_progress_jobs, num_completed_jobs = 0, 0, 0, 0
             for jobs in workerJobs:
                 if jobs.status == 1:
