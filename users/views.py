@@ -41,8 +41,6 @@ def user_login(request):
             login(request, user)
             messages.success(request, f' Successfully logged in as {user.username}!')
             return redirect('home')
-            # num_jobs = Job.objects.filter(Q(id=request.user.id)).count()
-            # return render(request, 'home', {'num_jobs':num_jobs})
         except:
             if not User.objects.filter(email=email).exists():
                 messages.error(request, "Account Not found. Please sign up using the below link.")
