@@ -224,19 +224,27 @@
                             </select>
 
                             <div class="mb-3 drop-down-show-hide" id="diva">
-    
                                 <input class="form-control" type="url" id="URL" name="URL">
                             </div>
     
                             <div class="mb-3 drop-down-show-hide" id="divb">
-    
                                 <input class="form-control" type="file" id="audiofile" name="audiofile" accept="audio/*">
                             </div>
     
-                            <div class="mb-3 drop-down-show-hide" id="divc">
-                                <i id="red-dot" class="fa fa-circle text-danger-glow blink" style="display:none"></i>
-                                <button type="button" class="btn-success" id="start-rec">Start Recording</button>
-                                <button type="button" class="btn-danger" id="stop-rec" style="display:none">Stop Recording</button>
+                            <div class="mb-3 drop-down-show-hide" id="divc"> 
+                                <button type="button" class="btn-success rec-btn" id="start-rec">
+                                    <i class="fa fa-record-circle"></i> Start
+                                </button>
+                                <button type="button" class="btn-info rec-btn" id="pause-rec" style="display:none">
+                                    <i class="fa fa-pause-circle"></i> Pause
+                                </button>
+                                <button type="button" class="btn-warning rec-btn" id="resume-rec" style="display:none">
+                                    <i class="fa fa-play-circle"></i> Resume
+                                </button>
+                                <button type="button" class="btn-secondary rec-btn" id="stop-rec" style="display:none">
+                                    <i class="fa fa-stop-circle"></i> Stop
+                                    <i id="red-dot" class="fa fa-circle text-danger-glow blink" style="display:none"></i>
+                                </button>
                                 <input type="file" id="recorded" name="recorded" style="display:none">
                                 <audio src="" id="record-file" controls></audio>
                             </div>
@@ -290,19 +298,27 @@
                         </select>
 
                         <div class="mb-3 drop-down-show-hide" id="div1">
-
                             <input class="form-control" type="url" id="edit-URL" name="URL">
                         </div>
 
                         <div class="mb-3 drop-down-show-hide" id="div2">
-
                             <input class="form-control" type="file" id="edit-audiofile" name="audiofile" accept="audio/*">
                         </div>
 
                         <div class="mb-3 drop-down-show-hide" id="div3">
-                            <i id="edit-red-dot" class="fa fa-circle text-danger-glow blink" style="display:none"></i>
-                            <button type="button" class="btn-success" id="edit-start-rec">Start Recording</button>
-                            <button type="button" class="btn-danger" id="edit-stop-rec" style="display:none">Stop Recording</button>
+                            <button type="button" class="btn-success rec-btn" id="edit-start-rec">
+                                <i class="fa fa-record-circle"></i> Start
+                            </button>
+                            <button type="button" class="btn-info rec-btn" id="edit-pause-rec" style="display:none">
+                                <i class="fa fa-pause-circle"></i> Pause
+                            </button>
+                            <button type="button" class="btn-warning rec-btn" id="edit-resume-rec" style="display:none">
+                                <i class="fa fa-play-circle"></i> Resume
+                            </button>
+                            <button type="button" class="btn-secondary rec-btn" id="edit-stop-rec" style="display:none">
+                                <i class="fa fa-stop-circle"></i> Stop
+                                <i id="edit-red-dot" class="fa fa-circle text-danger-glow blink" style="display:none"></i>
+                            </button>
                             <input type="file" id="edit-recorded" name="recorded" style="display:none">
                             <audio src="" id="edit-record-file" controls></audio>
                         </div>
@@ -320,37 +336,8 @@
 {% endblock %}
 
 {% block script %}
-<script type="text/javascript">
-  function reply_click(clicked_id, element_to_get, text_to_display)
-  {
-      var element = document.getElementById(element_to_get);
-      element.innerHTML = '';
-
-      var job_id = clicked_id;
-      const input = document.createElement("input");
-      input.id = "jobId";
-      input.name = "jobId";
-      input.value = job_id;
-      input.type = "hidden";
-      element.appendChild(input);
-
-      var tag = document.createElement("p");
-      var text = document.createTextNode(text_to_display);
-      tag.appendChild(text);
-      element.appendChild(tag);
-
-      if(element_to_get == "modal_body_upload_transcript"){
-          const textFileInput = document.createElement("input");
-          textFileInput.classList.add("form-control");
-          textFileInput.type = "file";
-          textFileInput.id = "transcriptFile";
-          textFileInput.name = "transcriptFile";
-          element.appendChild(textFileInput);
-      }
-  }
-</script>
+<script src="/static/js/job.js"></script>
+<script src="/static/js/recorder.js"></script>
 <script src="/static/js/create-job.js"></script>
 <script src="/static/js/edit-job.js"></script>
-<script src="/static/js/recorder.js"></script>
-<script src="/static/js/audio-recorder.js"></script>
 {% endblock %}
