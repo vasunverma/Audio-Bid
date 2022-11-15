@@ -49,7 +49,7 @@
                             {% if user.is_authenticated %}
                             <li><a href="{% url 'home' %}" class="nav__link">Home</a></li>
                             <li><a href="{% url 'jobs_url' %}" class="nav__link">Jobs</a></li>
-                            <li><a href="{% url 'reviews_url' %}" class="nav__link">Reviews</a></li>
+                            
                             <li><img src="/static/images/profile-anon.png" class = "user-pic" id="nav-pic"/></li>
                             
 
@@ -98,30 +98,33 @@
                         An audio transcription job portal.
                     </p>
                 </div>
-                <div class="footer__col2">
-                    <h3 class = "footer__text__title">Links</h3>
-                    <ol class="footer__text">
+
+                    <div class="footer__col2">
+                        <h3 class = "footer__text__title">Links</h3>
+                        <ol class="footer__text">
                             <li><a href="{% url 'home' %}" class="footer__link">Home</a></li>
-                            <li><a href="{% url 'jobs_url' %}" class="footer__link">Jobs</a></li>
-                            <li><a href="{% url 'reviews_url' %}" class="footer__link">Reviews</a></li>
-                            <li><a href="{% url 'payments_url' %}" class="footer__link">Payments</a></li>
-                            <li><a href="{% url 'instructions_url' %}" class="footer__link">Instructions</a></li>
-                    </ol>
-                </div>
-                <div class="footer__col3">
-                    <h3 class="footer__text__title">Contact</h3>
-                    <ol class="footer__text">
-                        <li><a href="tel:+000000" class="footer__link">+1 234-567-8990</a></li>
-                        <li><a href="mailto:cloud6@tamu.edu" class="footer__link">cloud6@tamu.edu</a></li>
-                        <li><a href="#" class="footer__link">College Station, TX</a></li>
-                    </ol>
-                </div>
+                                <li><a href="{% url 'jobs_url' %}" class="footer__link">Jobs</a></li>
+                                <!-- <li><a href="{% url 'reviews_url' %}" class="footer__link">Reviews</a></li>
+                                <li><a href="{% url 'payments_url' %}" class="footer__link">Payments</a></li>
+                                <li><a href="{% url 'instructions_url' %}" class="footer__link">Instructions</a></li> -->
+                        </ol>
+                    </div>
+                    <div class="footer__col3">
+                        <h3 class="footer__text__title">Contact</h3>
+                        <ol class="footer__text">
+                            <li><a href="tel:+000000" class="footer__link">+1 234-567-8990</a></li>
+                            <li><a href="mailto:cloud6@tamu.edu" class="footer__link">cloud6@tamu.edu</a></li>
+                            <li><a href="#" class="footer__link">College Station, TX</a></li>
+                        </ol>
+                    </div>
+
             </div>
         </div>
     </footer>
     <!--End of footer-->
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
     <script src="/static/js/base-home.js"></script>
     {% block script %}{% endblock %}
 </body>

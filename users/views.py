@@ -20,12 +20,16 @@ from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
+from django.views.generic import TemplateView
+from .models import Job
 from itertools import chain
 from users.models import Job
 from django.http import JsonResponse
 from django.core import serializers
 import logging
 logger = logging.getLogger(__name__)
+import datetime
+from .models import Job
 
 def user_login(request):
     form = AuthenticationForm()
