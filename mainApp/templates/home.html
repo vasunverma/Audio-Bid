@@ -1,25 +1,77 @@
 {% extends "home/baseHome.html" %}
 {% load static %}
+
 {% block css %}
     <link rel="stylesheet" href="/static/css/homePage.css"/>
 {% endblock %}
+
 {% block script %}
-{% if MissingInfo %}
-    <script type="text/javascript">
-    window.onload = function () {
-        OpenBootstrapPopup();
+
+
+  {% if MissingInfo %}
+      <script type="text/javascript">
+      window.onload = function () {
+          OpenBootstrapPopup();
+      };
+      function OpenBootstrapPopup() {
+          $("#exampleModal").modal('show');
+      }
+  </script>
+  {% endif %}
+
+  <script>
+    var wconfig = {
+      type: 'pie',
+      data: {
+        datasets: [
+        {
+          data: [{{num_completed_jobs}}, {{num_progress_jobs}}],
+          backgroundColor: ['#00FFFF', '#F0FFFF', '#0000FF'],
+          borderColor: 'black',
+          label: 'Jobs'
+        }],
+        labels: ['Completed','In Progress']
+      },
+      options: {
+        responsive: true
+      }
     };
-    function OpenBootstrapPopup() {
-        $("#exampleModal").modal('show');
-    }
-</script>
-{% endif %}
+
+    var cconfig = {
+      type: 'pie',
+      data: {
+        datasets: [{
+          data: [{{ num_created_jobs }}, {{num_completed_jobs}}, {{num_progress_jobs}}, {{num_open_jobs}}],
+          backgroundColor: ['#008080','#00FFFF', '#F0FFFF', '#0000FF'],
+          borderColor: 'black',
+          label: 'Jobs'
+        }],
+        labels: ['Created','Completed','In Progress','Available']
+      },
+      options: {
+        responsive: true
+      }
+    };
+
+    window.onload = function() {
+      var ctx = document.getElementById('pie-chart').getContext('2d');
+      if({{num_created_jobs}} == 0){
+        window.myPie = new Chart(ctx, wconfig);
+      }else{
+        window.myPie = new Chart(ctx, cconfig);
+      }
+    };
+
+  </script>
+
 {% endblock %}
+
 {% block title %} Audio Bid {% endblock title%}
 {% block content %}
 {% load socialaccount %}
 {% load tz %}
 {% get_current_timezone as TIME_ZONE %}
+
 <!--Main section-->
 {% if user.is_authenticated %}
 <section id="main" class="loggedIn">
@@ -30,34 +82,14 @@
             <h1 class="main__heading">Welcome {{ user.first_name }}!</h1>
             <div class="main__welcome">
               <ul class="main__left__list">
-                <li><h1 class="main_list_element">Claimed Jobs: {{ num_claimed_jobs }}</h1></li>
-                <li><h1 class="main_list_element">Completed Jobs: {{num_completed_jobs}}</h1></li>
                 <li><h1 class="main_list_element">In progress Jobs: {{num_progress_jobs}}</h1></li>
+                <li><h1 class="main_list_element">Completed Jobs: {{num_completed_jobs}}</h1></li>     
               </ul> 
             </div>
-            <div id="container" style="width: 40%;" class="main__piechart__container">
+            <div id="container" style="width: 20%;" class="main__piechart__container">
               <canvas id="pie-chart"></canvas>
             </div>
-            <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script><script>
-              var config = {
-                type: 'pie',
-                data: {
-                  datasets: [{
-                    data: [{{num_completed_jobs}}, {{num_progress_jobs}}, {{num_claimed_jobs}}],
-                    backgroundColor: ['#00FFFF', '#F0FFFF', '#0000FF'],
-                    label: 'Jobs'
-                  }],
-                  labels: ['Completed','In Progress','Claimed']
-                },
-                options: {
-                  responsive: true
-                }
-              };
-              window.onload = function() {
-                var ctx = document.getElementById('pie-chart').getContext('2d');
-                window.myPie = new Chart(ctx, config);
-              };
-            </script>
+            
           </div>
         </div>
       {% elif user.profile.role == 'creator' %}
@@ -67,37 +99,15 @@
             <div class="main__welcome">
               <ul class="main__left__list">
                 <li><h1 class="main__list__element">Created Jobs: {{ num_created_jobs }}</h1></li>
-                <li><h1 class="main__list__element">Completed Jobs: {{num_completed_jobs}}</h1></li>
                 <li><h1 class="main__list__element">In progress Jobs: {{num_progress_jobs}}</h1></li>
-                <li><h1 class="main__list__element">Claimed Jobs: {{num_claimed_jobs}}</h1></li>
+                <li><h1 class="main__list__element">Available Jobs: {{num_open_jobs}}</h1></li>
+                <li><h1 class="main__list__element">Completed Jobs: {{num_completed_jobs}}</h1></li>              
               </ul> 
             </div>
             <div id="container" style="width: 20%;" class="main__piechart__container">
               <canvas id="pie-chart" ></canvas>
             </div>
-            <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
-            
-            <script>
-              var config = {
-                type: 'pie',
-                data: {
-                  datasets: [{
-                    data: [{{ num_created_jobs }}, {{num_completed_jobs}}, {{num_progress_jobs}}, {{num_claimed_jobs}}],
-                    backgroundColor: ['#008080','#00FFFF', '#F0FFFF', '#0000FF'],
-                    label: 'Jobs'
-                  }],
-                  labels: ['Created','Completed','In Progress','Claimed']
-                },
-                options: {
-                  responsive: true
-                }
-              };
 
-              window.onload = function() {
-                var ctx = document.getElementById('pie-chart').getContext('2d');
-                window.myPie = new Chart(ctx, config);
-              };
-            </script>
           </div>
         </div>
       {% endif %}
