@@ -1,4 +1,5 @@
 import os
+import re
 import requests
 import datetime
 import pytz
@@ -20,12 +21,16 @@ from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
+from django.views.generic import TemplateView
+from .models import Job
 from itertools import chain
 from users.models import Job
 from django.http import JsonResponse
 from django.core import serializers
 import logging
 logger = logging.getLogger(__name__)
+import datetime
+from .models import Job
 
 def user_login(request):
     form = AuthenticationForm()
@@ -113,16 +118,16 @@ def users_reset_password(request):
                     email_template_name = "registration/password/password_reset_email.txt"
                     c = {
                         "email": user.email,
-                        'domain': '127.0.0.1:8000',
-                        'site_name': 'Website',
+                        'domain': 'audiobid.herokuapp.com',
+                        'site_name': 'Audio Bid',
                         "uid": urlsafe_base64_encode(force_bytes(user.pk)),
                         "user": user,
                         'token': default_token_generator.make_token(user),
-                        'protocol': 'http',
+                        'protocol': 'https',
                     }
                     email = render_to_string(email_template_name, c)
                     try:
-                        send_mail(subject, email, 'admin@example.com', [user.email], fail_silently=False)
+                        send_mail(subject, email, 'audiobidservice@gmail.com', [user.email], fail_silently=False)
                     except BadHeaderError:
                         messages.error(request, "Error occurred while sending reset email.")
                         return render(request, 'registration/password/password_reset.html')
@@ -167,6 +172,7 @@ def users_jobs(request):
                 job = Job.objects.get(id=job_id)
                 job.worker_id = request.user.id
                 job.status = 1
+                job.claim_date = datetime.datetime.now()
                 job.save()
                 messages.success(request, ('Your Job has been successfully claimed!'))
 
@@ -183,6 +189,17 @@ def users_jobs(request):
                 job = Job.objects.get(id=job_id)
                 job.delete()
                 messages.success(request, ('Your Job has been successfully deleted!'))
+
+            elif request.POST.get("formId") == "uploadTranscriptform":
+                job_id = request.POST.get("jobId")
+                job = Job.objects.get(id=job_id)
+                extension = os.path.splitext(str(request.FILES['transcriptFile']))[1]
+                filename = filename_gen(str(request.user), extension)
+                default_storage.save(filename, request.FILES['transcriptFile'])
+                job.url2Transcript = url_gen(filename)
+                job.status = 2
+                job.save()
+                messages.success(request, ('Your Transcript has been successfully uploaded!'))
 
             else:
                 form = JobForm(request.POST or None)
@@ -312,7 +329,8 @@ def check_gdrive(url):
 
 
 def filename_gen(user, ext):
-    return str(datetime.datetime.now().timestamp()).replace('.', '-') + "-" + user + ext
+    u = re.sub('\W+','', user)
+    return str(datetime.datetime.now().timestamp()).replace('.', '-') + "-" + u + ext
 
 
 def url_gen(filename):

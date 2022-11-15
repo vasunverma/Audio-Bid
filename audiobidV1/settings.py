@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',  # for Google OAuth 2.0
     'storages',
+    'chartjs',
     'django_filters',
 ]
 
@@ -152,7 +153,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Redirect url for Login and Logout
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django_ses.SESBackend'
+AWS_SES_REGION_NAME = os.environ['aws_ses_region_name']
+AWS_SES_REGION_ENDPOINT = os.environ['aws_ses_region_endpoint']
+
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -171,7 +176,7 @@ ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_REQUIRED = True
 
-SITE_ID = 5  # Keeping on incrementing this if you get an error while using google auth
+SITE_ID = 5  # Keeping on incrementing this if you get an error while using google auth 
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {

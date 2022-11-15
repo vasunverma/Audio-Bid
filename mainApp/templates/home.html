@@ -1,46 +1,116 @@
 {% extends "home/baseHome.html" %}
 {% load static %}
+
 {% block css %}
     <link rel="stylesheet" href="/static/css/homePage.css"/>
 {% endblock %}
+
 {% block script %}
-{% if MissingInfo %}
-    <script type="text/javascript">
-    window.onload = function () {
-        OpenBootstrapPopup();
+
+
+  {% if MissingInfo %}
+      <script type="text/javascript">
+      window.onload = function () {
+          OpenBootstrapPopup();
+      };
+      function OpenBootstrapPopup() {
+          $("#exampleModal").modal('show');
+      }
+  </script>
+  {% endif %}
+
+  <script>
+    var wconfig = {
+      type: 'pie',
+      data: {
+        datasets: [
+        {
+          data: [{{num_completed_jobs}}, {{num_progress_jobs}}],
+          backgroundColor: ['#00FFFF', '#F0FFFF', '#0000FF'],
+          borderColor: 'black',
+          label: 'Jobs'
+        }],
+        labels: ['Completed','In Progress']
+      },
+      options: {
+        responsive: true
+      }
     };
-    function OpenBootstrapPopup() {
-        $("#exampleModal").modal('show');
-    }
-</script>
-{% endif %}
+
+    var cconfig = {
+      type: 'pie',
+      data: {
+        datasets: [{
+          data: [{{ num_created_jobs }}, {{num_completed_jobs}}, {{num_progress_jobs}}, {{num_open_jobs}}],
+          backgroundColor: ['#008080','#00FFFF', '#F0FFFF', '#0000FF'],
+          borderColor: 'black',
+          label: 'Jobs'
+        }],
+        labels: ['Created','Completed','In Progress','Available']
+      },
+      options: {
+        responsive: true
+      }
+    };
+
+    window.onload = function() {
+      var ctx = document.getElementById('pie-chart').getContext('2d');
+      if({{num_created_jobs}} == 0){
+        window.myPie = new Chart(ctx, wconfig);
+      }else{
+        window.myPie = new Chart(ctx, cconfig);
+      }
+    };
+
+  </script>
+
 {% endblock %}
+
 {% block title %} Audio Bid {% endblock title%}
 {% block content %}
 {% load socialaccount %}
 {% load tz %}
 {% get_current_timezone as TIME_ZONE %}
+
 <!--Main section-->
 {% if user.is_authenticated %}
 <section id="main" class="loggedIn">
     <div class="container">
+      {% if user.profile.role == 'worker' %}
         <div class="main__wrapper">
-            <div class="main__left">
-                <div class="main__left__wrapper">
-                    <h1 class="main__heading">Welcome, {{ user.first_name }} </h1>
-                    <ul class="main__left__list">
-                        <li><a href="#" class="main__list__element">Pending Tasks: 10</a></li>
-                        <li><a href="#" class="main__list__element">Completed Tasks: 5</a></li>
-                        <li><a href="#" class="main__list__element">Review Tasks: 5</a></li>
-                    </ul>
-                </div>
+          <div class="main__left">
+            <h1 class="main__heading">Welcome {{ user.first_name }}!</h1>
+            <div class="main__welcome">
+              <ul class="main__left__list">
+                <li><h1 class="main_list_element">In progress Jobs: {{num_progress_jobs}}</h1></li>
+                <li><h1 class="main_list_element">Completed Jobs: {{num_completed_jobs}}</h1></li>     
+              </ul> 
             </div>
-            <div class="main__right">
-                <div class="main__right__wrapper">
-                    <h1 class="main__heading">Progress this month</h1>
-                </div>
+            <div id="container" style="width: 20%;" class="main__piechart__container">
+              <canvas id="pie-chart"></canvas>
             </div>
+            
+          </div>
         </div>
+      {% elif user.profile.role == 'creator' %}
+        <div class="main__wrapper">
+          <div class="main__left" >
+            <h1 class="main__heading">Welcome {{ user.first_name }}!</h1>
+            <div class="main__welcome">
+              <ul class="main__left__list">
+                <li><h1 class="main__list__element">Created Jobs: {{ num_created_jobs }}</h1></li>
+                <li><h1 class="main__list__element">In progress Jobs: {{num_progress_jobs}}</h1></li>
+                <li><h1 class="main__list__element">Available Jobs: {{num_open_jobs}}</h1></li>
+                <li><h1 class="main__list__element">Completed Jobs: {{num_completed_jobs}}</h1></li>              
+              </ul> 
+            </div>
+            <div id="container" style="width: 20%;" class="main__piechart__container">
+              <canvas id="pie-chart" ></canvas>
+            </div>
+
+          </div>
+        </div>
+      {% endif %}
     </div>
   <!-- Modal -->
   <div class="modal fade" data-backdrop="static" id="exampleModal" tabindex="-1" role="dialog"
@@ -115,7 +185,7 @@
 {% else %}
 <section id="main">
     <div class="container">
-      <h1 id="mainTitle">Welcome to Audio Bid</h1>
+      <h1 id="mainTitle">Welcome to AudioBid !!</h1>
       <h1 >A web application which will auction off small jobs to a pool of online workers.
           The jobs will be posted online by the creators, to be claimed by the workers at the given price.
           Under the claimed jobs section, all the claimed jobs will be visible to the creators,

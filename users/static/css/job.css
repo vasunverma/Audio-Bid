@@ -21,29 +21,32 @@
 }
 
 #edit-record-file, #record-file{
-    border-radius: 15px;
+    height: 30px;
 }
 
-#edit-start-rec, #start-rec{
+/* #edit-start-rec, #start-rec{
     border-radius: 10px;
     height: 30px;
-    margin-top: 5px;
-    margin-right: 20px;
+    margin: 5px;
 }
 
 #edit-stop-rec, #stop-rec{
     border-radius: 10px;
     height: 30px;
-    margin-top: 5px;
-    margin-right: 20px;
-}
+    margin: 5px;
+} */
 
-#edit-red-dot, #red-dot{
-    color: red;
+.rec-btn {
+    width: 70px;
+    height: 30px;
+    margin-right: 5px;
+    border-radius: 10px;
 }
 
 .blink {
+    color: red;
     animation: blinker 1.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;  
+    display: inline;
 }
 
 @keyframes blinker {  
