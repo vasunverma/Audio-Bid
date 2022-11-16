@@ -253,6 +253,7 @@ def users_jobs(request):
                 job.status = job.status_choices[job.status][1]
                 job.status_badge = badge_classes[job.status]
                 job.price = "{:.2f}".format(job.price)
+                job.age = (datetime.datetime.utcnow().date() - job.created_date.date()).days
 
             return render(request, 'jobs/jobs.html', {'page': page,
                                                       'posts': posts,
