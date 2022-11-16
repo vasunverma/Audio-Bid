@@ -10,9 +10,29 @@
 <div class="wrapper">
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        <h1 class="filter-heading">Filter tab</h1>
         <form action="{% url 'jobs_url' %}" method="get">
-            {{ myFilter.form }}
-            <input type="submit" value="submit" class="btn btn-primary" />
+            <div class="filter-fields">
+                <label for="{{ myFilter.form.created_date.id_for_label }}" class="filter-date-label">Created Date:</label>
+                {{ myFilter.form.created_date }}
+                <label for="{{ myFilter.form.end_date.id_for_label }}" class="filter-date-label">End Date:</label>
+                {{ myFilter.form.end_date }}
+                <label for="{{ myFilter.form.price.id_for_label }}" class="filter-date-label">Price:</label>
+                <br>
+                <div class="filter-price">
+                    {{ myFilter.form.price }}
+                    <h1 class="filter-hyphen">--</h1>
+                </div>
+                <br>
+                <div class="filter-status">
+                    <label for="{{ myFilter.form.status.id_for_label }}" class="filter-date-label">Status:</label>
+                    <div class="filter-status-dropdown">
+                        {{ myFilter.form.status }}
+                    </div>
+                </div>  
+            </div>
+            <input type="reset" value="Reset" class="btn-submit">
+            <input type="submit" value="Submit" class="btn-submit" />
         </form>
     </div>
     <div class="container">
@@ -22,7 +42,9 @@
                     <a class="card-header">
                         <h2>Jobs
                             <!--<span class="btn btn-secondary float-right mt-2">{{myFilter.form}}</span>-->
-                            <span class="btn btn-secondary float-right mt-2 ml-2">Apply Filter</span>
+                            <button class="openbtn" onclick="openNav()" type="button" >
+                                <i class="fas fa-align-left"></i>
+                                <span>Apply Filters</span>
                             {% if creator %}
                             <button class="btn-info btn btn-create-modal mt-2 float-right" type="button" data-toggle="modal" data-target="#myModal">Create Job</button>
                             {% endif %}
@@ -349,4 +371,16 @@
 <script src="/static/js/recorder.js"></script>
 <script src="/static/js/create-job.js"></script>
 <script src="/static/js/edit-job.js"></script>
+<script>
+    function openNav() {
+      document.getElementById("mySidebar").style.width = "250px";
+      document.getElementById("main").style.marginLeft = "250px";
+    }
+    
+    function closeNav() {
+      document.getElementById("mySidebar").style.width = "0";
+      document.getElementById("main").style.marginLeft= "0";
+    }
+</script>
+
 {% endblock %}
