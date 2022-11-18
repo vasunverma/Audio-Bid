@@ -11,6 +11,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import JobForm
 from .models import Job
 from .models import Profile
+from .models import ReviewRating
 from .filters import JobFilter
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail, BadHeaderError
@@ -31,6 +32,8 @@ import logging
 logger = logging.getLogger(__name__)
 import datetime
 from .models import Job
+from .models import Job, Comment
+from .forms import CommentForm
 
 def user_login(request):
     form = AuthenticationForm()
@@ -201,6 +204,25 @@ def users_jobs(request):
                 job.save()
                 messages.success(request, ('Your Transcript has been successfully uploaded!'))
 
+            elif request.POST.get("formId") == "reviewJobform":
+                job_id = request.POST.get("jobId")
+                job = Job.objects.get(id=job_id)
+                form = ReviewRating.objects.get(job_id=job_id)
+                form.creator_id = request.user.id
+                form.worker_id = job.worker_id
+                form.subject = request.POST.get("subject")
+                form.review = request.POST.get("review")
+                form.rating = request.POST.get("rating")
+                form.create_at = datetime.datetime.utcnow()
+                form.save()
+                messages.success(request, ('Your review has been successfully saved!'))
+
+            elif request.POST.get("formId") == "commentForm":
+                job_id = request.POST.get("jobId")
+                job = Job.objects.get(id=job_id)
+                Comment.objects.create(name=request.user.first_name, content=request.POST.get("content"), job=job)
+                messages.success(request, ('Your comment has been successfully saved!'))
+
             else:
                 form = JobForm(request.POST or None)
                 form.instance.user = request.user
@@ -218,6 +240,7 @@ def users_jobs(request):
                         default_storage.save(filename, request.FILES['recorded'])
                         form.instance.url2audio = url_gen(filename)
                     form.save()
+                    ReviewRating.objects.create(job_id=form.instance.id)
                     messages.success(request, ('Your Job has been created successfully'))
                 else:
                     messages.error(request, ('Error creating Job. Please try again'))
@@ -249,10 +272,18 @@ def users_jobs(request):
                 'CANCELLED': 'badge-danger'
             }
             myFilter = JobFilter()
+
             for job in posts:
+                job.review = ReviewRating.objects.get(job_id=job.id)
                 job.status = job.status_choices[job.status][1]
                 job.status_badge = badge_classes[job.status]
                 job.price = "{:.2f}".format(job.price)
+                job.isRatingEmpty = (job.review.rating is None)
+                job.comment_data = Comment.objects.filter(Q(job_id=job.id))
+                job.comment_data.count = len(job.comment_data)
+                for comment in job.comment_data:
+                    print(comment.content)
+
 
             return render(request, 'jobs/jobs.html', {'page': page,
                                                       'posts': posts,

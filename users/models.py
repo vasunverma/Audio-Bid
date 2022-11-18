@@ -29,3 +29,30 @@ class Job(models.Model):
         (3, 'CANCELLED')
     ]
     status = models.IntegerField(choices=status_choices, default=0)
+
+
+class ReviewRating(models.Model):
+    job_id = models.BigIntegerField(default='-1')
+    creator_id = models.CharField(max_length=100, default='0')
+    worker_id = models.CharField(max_length=100, default='0')
+    subject = models.CharField(max_length=100, blank=True)
+    review = models.TextField(max_length=500, blank=True)
+    rating = models.FloatField(null=True)
+    number_of_ratings = models.IntegerField(default='0')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.subject
+
+class Comment(models.Model):
+    name = models.CharField(max_length=50, blank=True)
+    content = models.TextField()
+    job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-created',)
+
+    def __str__(self):
+        return 'Comment by {}'.format(self.name)
