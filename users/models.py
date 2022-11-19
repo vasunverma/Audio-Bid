@@ -26,7 +26,7 @@ class Job(models.Model):
         (0, 'AVAILABLE'),
         (1, 'INPROGRESS'),
         (2, 'COMPLETED'),
-        (3, 'CANCELLED')
+        (3, 'INREVIEW')
     ]
     status = models.IntegerField(choices=status_choices, default=0)
 

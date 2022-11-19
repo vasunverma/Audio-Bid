@@ -1,0 +1,351 @@
+{% extends "home/baseHome.html" %}
+{% load static %}
+{% block title %} Jobs Page {% endblock title%}
+{% block content %}
+
+{% block personalcss %}
+<link rel="stylesheet" href="/static/css/job.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-{{width}}">
+            <div class="card-header text-center">
+                <h2>Job Details</h2>
+            </div>
+            <div class="card card-body">
+                <div class="tab-content" id="nav-tabContent">
+                    {% if creator and job.user_id == user_id%}
+                    {% if job.status == 'AVAILABLE' or job.status == 'INPROGRESS' %}
+                    <button type="button" class="btn-info btn btn-modal float-right" id="{{job.id}}" data-toggle="modal" data-target="#EditModal">Edit Job</button>
+                    {% endif %}
+                    {% if job.status == 'INREVIEW' %}
+                    <button class="btn btn-primary btn-lg float-right" type="button" data-toggle="modal" data-target="#confirmAcceptJob"
+                                onClick="reply_click({{job.id}}, 'modal_body_accept_job', '')">Accept Job</button>
+                    {% endif %}
+                    {% endif %}
+                    <h2 class="card-title"><strong>Job Title: {{job.name}}</strong></h2>
+                    <br>
+                    <h3 class="card-title"><strong>Job Description: </strong><br>{{job.description}}</h3>
+                    <br>
+                    <h4 class="card-title"><strong>Job Price: $</strong>{{job.price}}</h4>
+                    <br>
+                    <h4 class="card-title"><strong>Created on: </strong>{{job.created_date}}</h4>
+                    <br>
+                    <h4 class="card-title"><strong>Due Date: </strong>{{job.end_date}}</h4>
+                    <br>
+                    <h4 class="card-title"><strong>Job Status: </strong><span class="badge {{job.status_badge}}">{{job.status}}</span></h4>
+                    <br>
+                    <br>
+                    <div class="d-flex justify-content-between">
+                    {% if job.worker_id == "0" and not creator %}
+                    <button class="btn btn-danger btn-lg" type="button" data-toggle="modal" data-target="#confirmClaimJob"
+                            onClick="reply_click({{job.id}}, 'modal_body_claim_job', 'Are you sure you want to claim this job?')">Claim Job</button>
+                    {% endif %}
+                    {% if job.worker_id == user_id_str or job.user_id == user_id %}
+                    <a class="btn btn-success btn-lg" href="{{job.url2audio}}" target="_blank" role="button">Download Audio File</a>
+                    {% endif %}
+                    {% if job.worker_id == user_id_str and job.status == 'INPROGRESS'%}
+                        <button class="btn btn-primary btn-lg" type="button" data-toggle="modal" data-target="#confirmUploadTranscript"
+                                onClick="reply_click({{job.id}}, 'modal_body_upload_transcript', 'Select a file to upload')">Upload Transcript</button>
+                        <button class="btn btn-danger btn-lg" type="button" data-toggle="modal" data-target="#confirmCancelJob"
+                                onClick="reply_click({{job.id}}, 'modal_body_cancel_job', 'Are you sure you want to cancel this job?')">Cancel Job</button>
+                    {% endif %}
+                    {% if job.user_id == user_id %}
+                        {% if job.url2Transcript != null %}
+                        <a class="btn btn-primary btn-lg" href="{{job.url2Transcript}}" target="_blank" role="button">Download Transcript File</a>
+                        {% endif %}
+                        {% if job.status == 'AVAILABLE' or job.status == 'INPROGRESS' %}
+                        <button class="btn btn-danger btn-lg" type="button" data-toggle="modal" data-target="#confirmDeleteJob"
+                                onClick="reply_click({{job.id}}, 'modal_body_delete_job', 'Are you sure you want to delete this job?')">Delete Job</button>
+                        {% endif %}
+                        {% if job.status == 'INREVIEW' and job.isRatingEmpty == True%}
+                        <button class="btn btn-danger btn-lg" type="button" data-toggle="modal" data-target="#reviewJob"
+                                onClick="reply_click({{job.id}}, 'modal_body_review_job', '')">Review Job</button>
+                        {% endif %}
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if job.isRatingEmpty != True %}
+        <div class="col">
+            <div class="card-header text-center">
+                <h2>Job Review</h2>
+            </div>
+            <div class="card card-body">
+                <h4><strong>Job Creator said<br></strong>{{job.review.review}}</h4>
+                <hr>
+                <div class="row">
+                    <div class="col-12">
+                        <h4>
+                            Comment(s)
+                            <span class="badge badge-dark float-right">{{ job.comment_data.count }}</span>
+                        </h4>
+                    </div>
+                    {% for comment in  job.comment_data %}
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-12">
+                                <strong>{{ comment.name }}</strong> said<br>
+                                <h5>{{ comment.content }}</h5>
+                                <h6><span class="text-muted float-right mt-2">{{ comment.created }}</span></h6>
+                            </div>
+                        </div>
+                    <hr>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% if job.status != 'COMPLETED'%}
+                <div class="row">
+                    <div class="col">
+                        <h3>Leave a comment</h3>
+                        <form method='POST' action="{% url 'detail_job_url'%}?id={{job.id}}" id="commentForm">
+                            <input name="jobId" value="{{job.id}}" type="hidden"/>
+                            <input name="formId" value="commentForm" type="hidden"/>
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <span class="ml-2"></span>
+                                <textarea class="form-control {% if form.content.errors %}is-invalid{% endif %}" id="id_content"
+                                          name="content" rows="4" placeholder="Please type a comment here and click reply"></textarea>
+                            </div>
+                            <button class="btn btn-primary ml-2" type="submit">Reply</button>
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="modal" id="reviewJob">
+        <form method="post" action="{% url 'detail_job_url'%}?id={{job.id}}" id="reviewJobform">
+            <input name="formId" value="reviewJobform" type="hidden"/>
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Write Your Review</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="modal_body_review_job">
+						            Review Title:
+						            <input type="text" class="form-control" name="subject" id="subject">
+						            <br>
+						            Review:
+						            <textarea name="review" id="review" rows="4" class="form-control"></textarea>
+						            <br>
+                    </div>
+                    <div class="modal-footer">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" name="reviewJobform-submit">Review Job</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+        <div class="modal" id="confirmAcceptJob">
+        <form method="post" action="{% url 'detail_job_url'%}?id={{job.id}}" id="acceptJobform">
+            <input name="formId" value="acceptJobform" type="hidden"/>
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="modal_body_accept_job">
+                        <h4>How do you rate this job?</h4>
+						            <div class="rate">
+							              <input type="radio" name="rating" id="rating10" value="5" required /><label for="rating10" title="5"></label>
+							              <input type="radio" name="rating" id="rating9" value="4.5" required /><label for="rating9" title="4.5" class="half"></label>
+							              <input type="radio" name="rating" id="rating8" value="4" required /><label for="rating8" title="4"></label>
+							              <input type="radio" name="rating" id="rating7" value="3.5" required /><label for="rating7" title="3.5" class="half"></label>
+							              <input type="radio" name="rating" id="rating6" value="3" required /><label for="rating6" title="3"></label>
+							              <input type="radio" name="rating" id="rating5" value="2.5" required /><label for="rating5" title="2.5" class="half"></label>
+							              <input type="radio" name="rating" id="rating4" value="2" required /><label for="rating4" title="2"></label>
+							              <input type="radio" name="rating" id="rating3" value="1.5" required /><label for="rating3" title="1.5" class="half"></label>
+							              <input type="radio" name="rating" id="rating2" value="1" required /><label for="rating2" title="1"></label>
+							              <input type="radio" name="rating" id="rating1" value="0.5" required /><label for="rating1" title="0.5" class="half"></label>
+						            </div>
+                    </div>
+                    <div class="modal-footer">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" name="claimJobForm-submit">Accept Job</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="modal" id="confirmClaimJob">
+        <form method="post" action="{% url 'detail_job_url'%}?id={{job.id}}" id="claimJobform">
+            <input name="formId" value="claimJobform" type="hidden"/>
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="modal_body_claim_job"></div>
+                    <div class="modal-footer">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" name="claimJobForm-submit">Claim Job</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal" id="confirmCancelJob">
+        <form method="post" action="{% url 'detail_job_url'%}?id={{job.id}}" id="cancelJobform">
+            <input name="formId" value="cancelJobform" type="hidden"/>
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="modal_body_cancel_job"></div>
+                    <div class="modal-footer">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" name="cancelJobform-submit">Cancel Job</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal" id="confirmDeleteJob">
+        <form method="post" action="{% url 'detail_job_url'%}?id={{job.id}}" id="deleteJobform">
+            <input name="formId" value="deleteJobform" type="hidden"/>
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="modal_body_delete_job"></div>
+                    <div class="modal-footer">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" name="deleteJobform-submit">Delete Job</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal" id="confirmUploadTranscript">
+        <form method="post" action="{% url 'detail_job_url'%}?id={{job.id}}" id="uploadTranscriptform" enctype="multipart/form-data">
+            <input name="formId" value="uploadTranscriptform" type="hidden"/>
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="modal_body_upload_transcript"></div>
+                    <div class="modal-footer">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" name="uploadTranscriptform-submit">Upload Transcript</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!--EDIT JOB MODAL-->
+    <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Edit Job Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-form" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <div class="mb-3">
+                            <label for="name">Title:</label>
+                            <input type="text" class="form-control" id="edit-name" name="name" required/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description">Description:</label>
+                            <textarea class="form-control" id="edit-description" name="description" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="price">Job Price:</label>
+                            <input type="text" class="form-control" name="price" id="edit-price" required/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="end_date">End date:</label>
+                            <input type="date" id="edit_end_date" name="end_date" required>
+                        </div>
+
+                        <select id="editDropDown" required>
+                            <option value="">Choose Audio Option</option>
+                            <option value="div1">Google Drive URL</option>
+                            <option value="div2">Upload Audio File</option>
+                            <option value="div3">Record Audio</option>
+                        </select>
+
+                        <div class="mb-3 drop-down-show-hide" id="div1">
+                            <input class="form-control" type="url" id="edit-URL" name="URL">
+                        </div>
+
+                        <div class="mb-3 drop-down-show-hide" id="div2">
+                            <input class="form-control" type="file" id="edit-audiofile" name="audiofile" accept="audio/*">
+                        </div>
+
+                        <div class="mb-3 drop-down-show-hide" id="div3">
+                            <button type="button" class="btn-success rec-btn" id="edit-start-rec">
+                                <i class="fa fa-record-circle"></i> Start
+                            </button>
+                            <button type="button" class="btn-info rec-btn" id="edit-pause-rec" style="display:none">
+                                <i class="fa fa-pause-circle"></i> Pause
+                            </button>
+                            <button type="button" class="btn-warning rec-btn" id="edit-resume-rec" style="display:none">
+                                <i class="fa fa-play-circle"></i> Resume
+                            </button>
+                            <button type="button" class="btn-secondary rec-btn" id="edit-stop-rec" style="display:none">
+                                <i class="fa fa-stop-circle"></i> Stop
+                                <i id="edit-red-dot" class="fa fa-circle text-danger-glow blink" style="display:none"></i>
+                            </button>
+                            <input type="file" id="edit-recorded" name="recorded" style="display:none">
+                            <audio src="" id="edit-record-file" controls></audio>
+                        </div>
+                    </div>
+                        <div id="submitBtn">
+                            <button type="submit" class="btn btn-primary editSaveBtn">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script src="/static/js/job.js"></script>
+<script src="/static/js/recorder.js"></script>
+<script src="/static/js/create-job.js"></script>
+<script src="/static/js/edit-job.js"></script>
+{% endblock %}
