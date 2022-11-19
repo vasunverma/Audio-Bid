@@ -167,60 +167,25 @@ def users_profile(request):
 def users_jobs(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
-            if request.POST.get("formId") == "claimJobform":
-                job_id = request.POST.get("jobId")
-                job = Job.objects.get(id=job_id)
-                job.worker_id = request.user.id
-                job.status = 1
-                job.claim_date = datetime.datetime.now()
-                job.save()
-                messages.success(request, ('Your Job has been successfully claimed!'))
-
-            elif request.POST.get("formId") == "cancelJobform":
-                job_id = request.POST.get("jobId")
-                job = Job.objects.get(id=job_id)
-                job.worker_id = 0
-                job.status = 0
-                job.save()
-                messages.success(request, ('Your Job has been successfully cancelled!'))
-
-            elif request.POST.get("formId") == "deleteJobform":
-                job_id = request.POST.get("jobId")
-                job = Job.objects.get(id=job_id)
-                job.delete()
-                messages.success(request, ('Your Job has been successfully deleted!'))
-
-            elif request.POST.get("formId") == "uploadTranscriptform":
-                job_id = request.POST.get("jobId")
-                job = Job.objects.get(id=job_id)
-                extension = os.path.splitext(str(request.FILES['transcriptFile']))[1]
-                filename = filename_gen(str(request.user), extension)
-                default_storage.save(filename, request.FILES['transcriptFile'])
-                job.url2Transcript = url_gen(filename)
-                job.status = 2
-                job.save()
-                messages.success(request, ('Your Transcript has been successfully uploaded!'))
-
+            form = JobForm(request.POST or None)
+            form.instance.user = request.user
+            if form.is_valid():
+                if request.POST.get("URL"):
+                    check_gdrive(request.POST.get("URL"))
+                    form.instance.url2audio = request.POST.get("URL")
+                elif "audiofile" in request.FILES:
+                    extension = os.path.splitext(str(request.FILES['audiofile']))[1]
+                    filename = filename_gen(str(request.user), extension)
+                    default_storage.save(filename, request.FILES['audiofile'])
+                    form.instance.url2audio = url_gen(filename)
+                elif "recorded" in request.FILES:
+                    filename = filename_gen(str(request.user), ".wav")
+                    default_storage.save(filename, request.FILES['recorded'])
+                    form.instance.url2audio = url_gen(filename)
+                form.save()
+                messages.success(request, ('Your Job has been created successfully'))
             else:
-                form = JobForm(request.POST or None)
-                form.instance.user = request.user
-                if form.is_valid():
-                    if request.POST.get("URL"):
-                        check_gdrive(request.POST.get("URL"))
-                        form.instance.url2audio = request.POST.get("URL")
-                    elif "audiofile" in request.FILES:
-                        extension = os.path.splitext(str(request.FILES['audiofile']))[1]
-                        filename = filename_gen(str(request.user), extension)
-                        default_storage.save(filename, request.FILES['audiofile'])
-                        form.instance.url2audio = url_gen(filename)
-                    elif "recorded" in request.FILES:
-                        filename = filename_gen(str(request.user), ".wav")
-                        default_storage.save(filename, request.FILES['recorded'])
-                        form.instance.url2audio = url_gen(filename)
-                    form.save()
-                    messages.success(request, ('Your Job has been created successfully'))
-                else:
-                    messages.error(request, ('Error creating Job. Please try again'))
+                messages.error(request, ('Error creating Job. Please try again'))
 
             return redirect('jobs_url')
 
@@ -264,6 +229,81 @@ def users_jobs(request):
     else:
         return redirect('login_url')
 
+def users_detail_job(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            if request.POST.get("formId") == "claimJobform":
+                job_id = request.POST.get("jobId")
+                job = Job.objects.get(id=job_id)
+                job.worker_id = str(request.user.id)
+                job.status = 1
+                job.claim_date = datetime.datetime.now()
+                job.save()
+                messages.success(request, ('Your Job has been successfully claimed!'))
+
+            elif request.POST.get("formId") == "cancelJobform":
+                job_id = request.POST.get("jobId")
+                job = Job.objects.get(id=job_id)
+                job.worker_id = '0'
+                job.status = 0
+                job.save()
+                messages.success(request, ('Your Job has been successfully cancelled!'))
+
+            elif request.POST.get("formId") == "deleteJobform":
+                job_id = request.POST.get("jobId")
+                job = Job.objects.get(id=job_id)
+                job.delete()
+                messages.success(request, ('Your Job has been successfully deleted!'))
+                return redirect('jobs_url')
+
+            elif request.POST.get("formId") == "uploadTranscriptform":
+                job_id = request.POST.get("jobId")
+                job = Job.objects.get(id=job_id)
+                extension = os.path.splitext(str(request.FILES['transcriptFile']))[1]
+                filename = filename_gen(str(request.user), extension)
+                default_storage.save(filename, request.FILES['transcriptFile'])
+                job.url2Transcript = url_gen(filename)
+                job.status = 2
+                job.save()
+                messages.success(request, ('Your Transcript has been successfully uploaded!'))
+
+            badge_classes = {
+                'AVAILABLE': 'badge-primary',
+                'INPROGRESS': 'badge-warning',
+                'COMPLETED': 'badge-success',
+                'CANCELLED': 'badge-danger'
+            }
+            job.price = "{:.2f}".format(job.price)
+            job.status = job.status_choices[job.status][1]
+            job.status_badge = badge_classes[job.status]
+            job.age = (datetime.datetime.utcnow().date() - job.created_date.date()).days
+            return render(request, 'jobs/jobs_details.html', {'job': job,
+                                                              'creator': False,
+                                                              'user_id_str': str(request.user.id),
+                                                              'user_id': request.user.id})
+
+        elif request.method == 'GET':
+            is_creator = False
+            if request.user.profile.role == 'creator':
+                is_creator = True
+
+            badge_classes = {
+                'AVAILABLE': 'badge-primary',
+                'INPROGRESS': 'badge-warning',
+                'COMPLETED': 'badge-success',
+                'CANCELLED': 'badge-danger'
+            }
+            job = Job.objects.get(id=request.GET.get('id'))
+            job.price = "{:.2f}".format(job.price)
+            job.status = job.status_choices[job.status][1]
+            job.status_badge = badge_classes[job.status]
+            job.age = (datetime.datetime.utcnow().date() - job.created_date.date()).days
+            return render(request, 'jobs/jobs_details.html', {'job': job,
+                                                              'creator': is_creator,
+                                                              'user_id_str': str(request.user.id),
+                                                              'user_id': request.user.id})
+    else:
+        return redirect('login_url')
 
 def users_edit_job(request, id):
     if request.user.is_authenticated:
@@ -285,7 +325,10 @@ def users_edit_job(request, id):
                     form.instance.url2audio = url_gen(filename)
                 form.save()
                 messages.success(request, ('Your Job has been updated successfully'))
-                return redirect('jobs_url')
+                return render(request, 'jobs/jobs_details.html', {'job': job,
+                                                                  'creator': True,
+                                                                  'user_id_str': str(request.user.id),
+                                                                  'user_id': request.user.id})
             else:
                 messages.error(request, ('Error updating Job. Please try again'))
         else:

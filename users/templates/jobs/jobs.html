@@ -9,29 +9,37 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-4">
+        <div class="col-12">
             <div class="list-group" id="list-tab" role="tablist">
-                <a class="card-header">
-                    <h2>Jobs
-                        <!--<span class="btn btn-secondary float-right mt-2">{{myFilter.form}}</span>-->
-                        <span class="btn btn-secondary float-right mt-2 ml-2">Apply Filter</span>
-                        {% if creator %}
-                        <button class="btn-info btn btn-create-modal mt-2 float-right" type="button" data-toggle="modal" data-target="#myModal">Create Job</button>
-                        {% endif %}
-                    </h2>
-                </a>
-                {% for job in posts %}
-                <a class="list-group-item list-group-item-action flex-column align-items-start" id="list-job{{job.id}}" data-toggle="list"
-                   href="#job_{{job.id}}" role="tab">
-                    <div class="d-flex justify-content-between">
-                        <h3 class="mb-1">{{job.name}}</h3>
-                        <small><h5>{{job.age}} days ago</h5></small>
-                    </div>
-                    <br>
-                    <small class="float-left mt-2" ><h5>{{job.price}}</h5></small>
-                    <h5><span class="badge {{job.status_badge}} float-right mt-2">{{job.status}}</span></h5>
-                </a>
-                {% endfor %}
+                <h2>Jobs
+                    <!--<span class="btn btn-secondary float-right mt-2">{{myFilter.form}}</span>-->
+                    <span class="btn btn-secondary float-right mt-2 ml-2">Apply Filter</span>
+                    {% if creator %}
+                    <button class="btn-info btn btn-create-modal mt-2 float-right" type="button" data-toggle="modal" data-target="#myModal">Create Job</button>
+                    {% endif %}
+                </h2>
+                <table class="table table-hover">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Age</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for job in posts %}
+                    <tr class='clickable-row'>
+                        <th scope="row">{{job.id}}</th>
+                        <td><a href="{% url 'detail_job_url'%}?id={{job.id}}" target="_blank">{{job.name}}</a></td>
+                        <td>{{job.price}}</td>
+                        <td>{{job.age}}</td>
+                        <td><span class="badge {{job.status_badge}}">{{job.status}}</span></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
                 <div>
                     <nav aria-label="Page navigation example" >
                         <ul class="pagination">
@@ -53,144 +61,6 @@
                 </div>
             </div>
         </div>
-        <div class="col-8">
-            <div class="card-header text-center">
-                <h2>Job Details</h2>
-            </div>
-            <div class="card card-body">
-                <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="activeTab" role="tabpanel">
-                        <h2 class="card-title text-center">Select a job to view its details</h2>
-                    </div>
-                    {% for job in posts %}
-                    <div class="tab-pane fade show" id="job_{{job.id}}" role="tabpanel">
-                        {% if creator and job.status != 'COMPLETED' %}
-                        <button type="button" class="btn-info btn btn-modal float-right" id="{{job.id}}" data-toggle="modal" data-target="#EditModal">Edit Job</button>
-                        {% endif %}
-                        <h2 class="card-title"><strong>Job Title: {{job.name}}</strong></h2>
-                        <br>
-                        <h3 class="card-title"><strong>Job Description: </strong><br>{{job.description}}</h3>
-                        <br>
-                        <h4 class="card-title"><strong>Job Price: $</strong>{{job.price}}</h4>
-                        <br>
-                        <h4 class="card-title"><strong>Created on: </strong>{{job.created_date}}</h4>
-                        <br>
-                        <h4 class="card-title"><strong>Due Date: </strong>{{job.end_date}}</h4>
-                        <br>
-                        <br>
-                        <div class="d-flex justify-content-between">
-                        {% if job.worker_id == "0" and not creator %}
-                        <button class="btn btn-danger btn-lg" type="button" data-toggle="modal" data-target="#confirmClaimJob"
-                                onClick="reply_click({{job.id}}, 'modal_body_claim_job', 'Are you sure you want to claim this job?')">Claim Job</button>
-                        {% endif %}
-                        {% if job.worker_id == user_id_str or job.user_id == user_id %}
-                        <a class="btn btn-success btn-lg" href="{{job.url2audio}}" target="_blank" role="button">Download Audio File</a>
-                        {% endif %}
-                        {% if job.worker_id == user_id_str and job.status == 'INPROGRESS'%}
-                            <button class="btn btn-primary btn-lg" type="button" data-toggle="modal" data-target="#confirmUploadTranscript"
-                                    onClick="reply_click({{job.id}}, 'modal_body_upload_transcript', 'Select a file to upload')">Upload Transcript</button>
-                            <button class="btn btn-danger btn-lg" type="button" data-toggle="modal" data-target="#confirmCancelJob"
-                                    onClick="reply_click({{job.id}}, 'modal_body_cancel_job', 'Are you sure you want to cancel this job?')">Cancel Job</button>
-                        {% endif %}
-                        {% if job.user_id == user_id %}
-                            {% if job.url2Transcript != null %}
-                            <a class="btn btn-primary btn-lg" href="{{job.url2Transcript}}" target="_blank" role="button">Download Transcript File</a>
-                            {% endif %}
-                            {% if job.status != 'COMPLETED' %}
-                            <button class="btn btn-danger btn-lg" type="button" data-toggle="modal" data-target="#confirmDeleteJob"
-                                    onClick="reply_click({{job.id}}, 'modal_body_delete_job', 'Are you sure you want to delete this job?')">Delete Job</button>
-                            {% endif %}
-                        {% endif %}
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal" id="confirmClaimJob">
-        <form method="post" action="{%url 'jobs_url'%}" id="claimJobform">
-            <input name="formId" value="claimJobform" type="hidden"/>
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Confirm</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body" id="modal_body_claim_job"></div>
-                    <div class="modal-footer">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger" name="claimJobForm-submit">Claim Job</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <div class="modal" id="confirmCancelJob">
-        <form method="post" action="{%url 'jobs_url'%}" id="cancelJobform">
-            <input name="formId" value="cancelJobform" type="hidden"/>
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Confirm</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body" id="modal_body_cancel_job"></div>
-                    <div class="modal-footer">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger" name="cancelJobform-submit">Cancel Job</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <div class="modal" id="confirmDeleteJob">
-        <form method="post" action="{%url 'jobs_url'%}" id="deleteJobform">
-            <input name="formId" value="deleteJobform" type="hidden"/>
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Confirm</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body" id="modal_body_delete_job"></div>
-                    <div class="modal-footer">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger" name="deleteJobform-submit">Delete Job</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <div class="modal" id="confirmUploadTranscript">
-        <form method="post" action="{%url 'jobs_url'%}" id="uploadTranscriptform" enctype="multipart/form-data">
-            <input name="formId" value="uploadTranscriptform" type="hidden"/>
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Confirm</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body" id="modal_body_upload_transcript"></div>
-                    <div class="modal-footer">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger" name="uploadTranscriptform-submit">Upload Transcript</button>
-                    </div>
-                </div>
-            </div>
-        </form>
     </div>
 
     <!--CREATE JOB MODAL-->
@@ -275,7 +145,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
-                </div>  
+                </div>
                 <div class="modal-body">
                     <form id="edit-form" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
