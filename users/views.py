@@ -304,6 +304,12 @@ def users_detail_job(request):
                 form = ReviewRating.objects.get(job_id=job_id)
                 form.rating = request.POST.get("rating")
                 form.save()
+
+                worker = User.objects.get(id=job.worker_id)
+                worker.profile.number_of_ratings = worker.profile.number_of_ratings + 1
+                worker.profile.rating = (worker.profile.rating + float(form.rating))/worker.profile.number_of_ratings
+                worker.save()
+
                 messages.success(request, 'Your Job has been successfully accepted!')
 
             job.price = "{:.2f}".format(job.price)
