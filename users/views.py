@@ -312,6 +312,22 @@ def users_detail_job(request):
 
                 messages.success(request, 'Your Job has been successfully accepted!')
 
+            elif request.POST.get("formId") == "discardJobform":
+                job_id = request.POST.get("jobId")
+                job = Job.objects.get(id=job_id)
+                job.worker_id = '0'
+                job.status = 0
+                job.url2Transcript = None
+                job.save()
+                review = ReviewRating.objects.get(job_id=job.id)
+                review.subject = ""
+                review.review = ""
+                review.creator_id = '0'
+                review.worker_id = '0'
+                review.save()
+                Comment.objects.filter(Q(job_id=job.id)).delete()
+                messages.success(request, 'Your Job has been successfully discarded and available for new workers to accept!')
+
             job.price = "{:.2f}".format(job.price)
             job.status = job.status_choices[job.status][1]
             job.status_badge = badge_classes[job.status]
