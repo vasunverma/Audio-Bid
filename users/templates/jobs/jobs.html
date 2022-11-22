@@ -70,7 +70,34 @@
                         <br>
                         <h4 class="card-title">Due Date: {{job.end_date}}</h4>
                         <br>
+	                    <div class = "text-editor-header">
+		                    <input type = "number" id="font_size" min = "1" max = "100" value = "14" onclick="f1(this)">
+		                    <button type="button"  class="btn" data-element = "bold">
+			                    <i class="fa fa-bold"></i>
+		                    </button>
+		                    <button type="button" class="btn" data-element = "italic">
+			                    <i class="fa fa-italic"></i>
+		                    </button>
+		                    <button type="button"  class="btn " data-element = "underline">
+			                    <i class="fa fa-underline"></i>
+		                    </button>
+		                    <button type="button" class="btn" data-element = "justifyLeft">
+			                    <i class="fa fa-align-left"></i>
+		                    </button>
+		                    <button type="button" class="btn" data-element = "justifyCenter">
+			                    <i class="fa fa-align-center"></i>
+		                    </button>
+		                    <button type="button" class="btn" data-element = "justifyRight">
+			                    <i class="fa fa-align-right"></i>
+		                    </button>
+	                    </div>
+<!--	                    <textarea id="textarea" placeholder="Type Your Text Here..."></textarea>-->
+	                    <div class = "content_" id="content"  contenteditable="true"></div>
+	                    <br>
+	                    <input placeholder="Filename.ext" id="filename" >
+	                    <button id="download">Download File</button>
                         <br>
+	                    <br>
                         <div class="d-flex justify-content-between">
                         {% if job.worker_id == "0" and not creator %}
                         <button class="btn btn-danger btn-lg" type="button" data-toggle="modal" data-target="#confirmClaimJob"
@@ -340,4 +367,5 @@
 <script src="/static/js/recorder.js"></script>
 <script src="/static/js/create-job.js"></script>
 <script src="/static/js/edit-job.js"></script>
+<script src="/static/js/text-editor.js"></script>
 {% endblock %}
