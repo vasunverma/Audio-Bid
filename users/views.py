@@ -198,6 +198,8 @@ def users_jobs(request):
                 post_list = Job.objects.filter(Q(worker_id=request.user.id))
                 post_list = list(chain(post_list, Job.objects.filter(Q(worker_id=0))))
 
+            myFilter = JobFilter(request.GET, queryset = Job.objects.all())
+            post_list = myFilter.qs
             page = request.GET.get('page', '1')
             paginator = Paginator(post_list, 10)
             try:
@@ -213,7 +215,6 @@ def users_jobs(request):
                 'COMPLETED': 'badge-success',
                 'INREVIEW': 'badge-danger'
             }
-            myFilter = JobFilter()
             for job in posts:
                 job.status = job.status_choices[job.status][1]
                 job.status_badge = badge_classes[job.status]

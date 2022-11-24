@@ -8,13 +8,43 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 {% endblock %}
 
+<!--Sidebar-->
+<div class="wrapper">
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        <h1 class="filter-heading">Filter tab</h1>
+        <form action="{% url 'jobs_url' %}" method="get">
+            <div class="filter-fields">
+                <label for="{{ myFilter.form.created_date.id_for_label }}" class="filter-date-label">Created Date:</label>
+                {{ myFilter.form.created_date }}
+                <label for="{{ myFilter.form.end_date.id_for_label }}" class="filter-date-label">End Date:</label>
+                {{ myFilter.form.end_date }}
+                <label for="{{ myFilter.form.price.id_for_label }}" class="filter-date-label">Price:</label>
+                <br>
+                <div class="filter-price">
+                    {{ myFilter.form.price }}
+                    <h1 class="filter-hyphen">--</h1>
+                </div>
+                <br>
+                <div class="filter-status">
+                    <label for="{{ myFilter.form.status.id_for_label }}" class="filter-date-label">Status:</label>
+                    <div class="filter-status-dropdown">
+                        {{ myFilter.form.status }}
+                    </div>
+                </div>  
+            </div>
+            <input type="reset" value="Reset" class="btn-submit"/>
+            <input type="submit" value="Submit" class="btn-submit" />
+        </form>
+    </div>
+</div>
 <div class="container">
     <div class="row">
         <div class="col-12">
             <div class="list-group" id="list-tab" role="tablist">
                 <h2>Jobs
                     <!--<span class="btn btn-secondary float-right mt-2">{{myFilter.form}}</span>-->
-                    <span class="btn btn-secondary float-right mt-2 ml-2">Apply Filter</span>
+                    <span class="btn btn-secondary float-right mt-2 ml-2 openbtn" onclick="openNav()" type="button" >Apply Filter</span>
                     {% if creator %}
                     <button class="btn-info btn btn-create-modal mt-2 float-right" type="button" data-toggle="modal" data-target="#myModal">Create Job</button>
                     {% endif %}
@@ -108,41 +138,41 @@
                                 <option value="divc">Record Audio</option>
                             </select>
 
-                            <div class="mb-3 drop-down-show-hide" id="diva">
-                                <input class="form-control" type="url" id="URL" name="URL">
+                                <div class="mb-3 drop-down-show-hide" id="diva">
+                                    <input class="form-control" type="url" id="URL" name="URL">
+                                </div>
+        
+                                <div class="mb-3 drop-down-show-hide" id="divb">
+                                    <input class="form-control" type="file" id="audiofile" name="audiofile" accept="audio/*">
+                                </div>
+        
+                                <div class="mb-3 drop-down-show-hide" id="divc"> 
+                                    <button type="button" class="btn-success rec-btn" id="start-rec">
+                                        <i class="fa fa-record-circle"></i> Start
+                                    </button>
+                                    <button type="button" class="btn-info rec-btn" id="pause-rec" style="display:none">
+                                        <i class="fa fa-pause-circle"></i> Pause
+                                    </button>
+                                    <button type="button" class="btn-warning rec-btn" id="resume-rec" style="display:none">
+                                        <i class="fa fa-play-circle"></i> Resume
+                                    </button>
+                                    <button type="button" class="btn-secondary rec-btn" id="stop-rec" style="display:none">
+                                        <i class="fa fa-stop-circle"></i> Stop
+                                        <i id="red-dot" class="fa fa-circle text-danger-glow blink" style="display:none"></i>
+                                    </button>
+                                    <input type="file" id="recorded" name="recorded" style="display:none">
+                                    <audio src="" id="record-file" controls></audio>
+                                </div>
                             </div>
-    
-                            <div class="mb-3 drop-down-show-hide" id="divb">
-                                <input class="form-control" type="file" id="audiofile" name="audiofile" accept="audio/*">
+                            <div id="submitBtn">
+                                <button type="submit" class="btn btn-primary" id="createSaveBtn">Save</button>
                             </div>
-    
-                            <div class="mb-3 drop-down-show-hide" id="divc"> 
-                                <button type="button" class="btn-success rec-btn" id="start-rec">
-                                    <i class="fa fa-record-circle"></i> Start
-                                </button>
-                                <button type="button" class="btn-info rec-btn" id="pause-rec" style="display:none">
-                                    <i class="fa fa-pause-circle"></i> Pause
-                                </button>
-                                <button type="button" class="btn-warning rec-btn" id="resume-rec" style="display:none">
-                                    <i class="fa fa-play-circle"></i> Resume
-                                </button>
-                                <button type="button" class="btn-secondary rec-btn" id="stop-rec" style="display:none">
-                                    <i class="fa fa-stop-circle"></i> Stop
-                                    <i id="red-dot" class="fa fa-circle text-danger-glow blink" style="display:none"></i>
-                                </button>
-                                <input type="file" id="recorded" name="recorded" style="display:none">
-                                <audio src="" id="record-file" controls></audio>
-                            </div>
-                        </div>
-                        <div id="submitBtn">
-                            <button type="submit" class="btn btn-primary" id="createSaveBtn">Save</button>
-                        </div>
-                            
-                    </form>
+                                
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
 </div>
 
@@ -152,5 +182,14 @@
 <script src="/static/js/job.js"></script>
 <script src="/static/js/recorder.js"></script>
 <script src="/static/js/create-job.js"></script>
-<script src="/static/js/edit-job.js"></script>
+<script>
+    function openNav() {
+      document.getElementById("mySidebar").style.width = "250px";
+    }
+    
+    function closeNav() {
+      document.getElementById("mySidebar").style.width = "0";
+    }
+</script>
+
 {% endblock %}
