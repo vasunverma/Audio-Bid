@@ -1,7 +1,8 @@
 {% load static %}
 {% load socialaccount %}
-<html>
+<!DOCTYPE HTML>
 <html lang="en">
+<meta charset="UTF-8">
 <head>
     {% load static %}
     <!-- Required meta tags -->
@@ -15,6 +16,21 @@
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <script>
+      tinymce.init({
+        selector: '#mytextarea',
+        plugins: [
+          'a11ychecker','advlist','advcode','advtable','autolink','checklist','export',
+          'lists','link','image','charmap','preview','anchor','searchreplace','visualblocks',
+          'powerpaste','fullscreen','formatpainter','insertdatetime','media','table','help','wordcount','ExportToDoc'
+        ],
+        toolbar: 'undo redo | formatpainter casechange blocks | bold italic backcolor | ' +
+          'alignleft aligncenter alignright alignjustify | ' +
+          'bullist numlist checklist outdent indent | removeformat | a11ycheck code table help | ExportToDoc'
+      });
+    </script>
     {% block css %}
         <link rel="stylesheet" href="/static/css/homePage.css">
     {% endblock %}

@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'chartjs',
     'django_filters',
     'django_crontab',
+    'ckeditor',
+    'tinymce'
 ]
 
 SOCIALACCOUNT_LOGIN_ON_GET = True  # Flag to skip intermediate google login page and go directly to google sign-in pop-up
