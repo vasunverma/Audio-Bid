@@ -408,7 +408,8 @@ def users_edit_job(request, id):
                 "name": job.name,
                 "description": job.description,
                 "end_date": job.end_date.strftime("%Y-%m-%d"),
-                "price": "{0:.2f}".format(job.price)
+                "price": "{0:.2f}".format(job.price),
+                "limit_price": "{0:.2f}".format(job.limit_price)
 
             }, status=200)   
     else:
