@@ -319,16 +319,23 @@
                             <label for="description">Description:</label>
                             <textarea class="form-control" id="edit-description" name="description" rows="3" required></textarea>
                         </div>
-                        <div class="mb-3">
-                            <label for="price">Job Price:</label>
-                            <input type="text" class="form-control" name="price" id="edit-price" required/>
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label for="price">Job Price:</label>
+                                <input type="text" class="form-control" name="price" id="edit-price" required/>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="price">Limit Price:</label>
+                                <input type="text" class="form-control" name="limit_price" id="edit-limit_price" required/>
+                            </div>
                         </div>
+                        <br>
                         <div class="mb-3">
                             <label for="end_date">End date:</label>
                             <input type="date" id="edit_end_date" name="end_date" required>
                         </div>
 
-                        <select id="editDropDown" required>
+                        {% comment %} <select id="editDropDown" required>
                             <option value="">Choose Audio Option</option>
                             <option value="div1">Google Drive URL</option>
                             <option value="div2">Upload Audio File</option>
@@ -359,7 +366,7 @@
                             </button>
                             <input type="file" id="edit-recorded" name="recorded" style="display:none">
                             <audio src="" id="edit-record-file" controls></audio>
-                        </div>
+                        </div> {% endcomment %}
                     </div>
                         <div id="submitBtn">
                             <button type="submit" class="btn btn-primary editSaveBtn">Save</button>
