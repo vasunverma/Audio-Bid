@@ -3,6 +3,13 @@ var gumStream, rec, input, audioContext;
 var AudioContext = window.AudioContext || window.webkitAudioContext;
 var start, pause, resume, stop, red, recording, recorded;
 
+Date.prototype.toDateInputValue = (function() {
+    var local = new Date(this);
+    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+    return local.toJSON().slice(0,10);
+});
+
+
 $(".btn-create-modal").on('click', function(e) {
     mySelect = document.getElementById('DropDown');
     mySelect.selectedIndex = 0;
@@ -26,7 +33,7 @@ $(".btn-create-modal").on('click', function(e) {
 $('.drop-down-show-hide').hide();
 
 $('#DropDown').change(function() {
-    $('.drop-down-show-hide').hide()    
+    $('.drop-down-show-hide').hide();    
     $('#' + this.value).show();
     if(this.value == "diva"){
         $("#URL").attr('required', ''); 
