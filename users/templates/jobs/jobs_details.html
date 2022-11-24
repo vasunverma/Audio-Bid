@@ -43,6 +43,23 @@
                     <h4 class="card-title"><strong>Job Status: </strong><span class="badge {{job.status_badge}}">{{job.status}}</span></h4>
                     <br>
                     <br>
+                    {% if job.worker_id == user_id_str and job.status == 'INPROGRESS' %}
+                    <form method="post" action="{% url 'detail_job_url'%}?id={{job.id}}" id="textEditorForm">
+                        {% csrf_token %}
+                        {% if job.content == None %}
+                            <textarea name="mytextarea" id="mytextarea"></textarea>
+                        {% else %}
+                            <textarea name="mytextarea" id="mytextarea">{{job.content}}</textarea>
+                        {% endif %}
+                        <br>
+                        <input name="jobId" value="{{job.id}}" type="hidden"/>
+                        <input name="formId" value="textEditorForm" type="hidden"/>
+                        <button type="submit" class="btn btn-lg btn-primary">Save Transcript for Later</button>
+                    </form>
+                    <br>
+                    <br>
+                    <br>
+                    {% endif %}
                     <div class="d-flex justify-content-between">
                     {% if job.worker_id == "0" and not creator %}
                     <button class="btn btn-danger btn-lg" type="button" data-toggle="modal" data-target="#confirmClaimJob"

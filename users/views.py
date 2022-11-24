@@ -324,6 +324,13 @@ def users_detail_job(request):
                 review.save()
                 Comment.objects.filter(Q(job_id=job.id)).delete()
                 messages.success(request, 'Your Job has been successfully discarded and available for new workers to accept!')
+            
+            elif request.POST.get("formId") == "textEditorForm":
+                job_id = request.POST.get("jobId")
+                job = Job.objects.get(id=job_id)
+                job.content = request.POST.get("mytextarea")
+                job.save()
+                messages.success(request, 'Your Transcript has been successfully saved for Later')
 
             job.price = "{:.2f}".format(job.price)
             job.status = job.status_choices[job.status][1]

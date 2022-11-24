@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=10)
@@ -26,6 +25,7 @@ class Job(models.Model):
     url2audio = models.TextField()
     url2Transcript = models.TextField(null=True)
     worker_id = models.CharField(max_length=100, default='0')
+    content = models.TextField()
     status_choices = [  # 0 = not started, 1 = in progress, 2 = completed, 3 = cancelled
         (0, 'AVAILABLE'),
         (1, 'INPROGRESS'),
