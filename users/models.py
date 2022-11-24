@@ -7,6 +7,8 @@ class Profile(models.Model):
     role = models.CharField(max_length=10)
     time_zone = models.CharField(max_length=500)
     native_auth = models.BooleanField(default=False)
+    rating = models.FloatField(default=0.0)
+    number_of_ratings = models.IntegerField(default='0')
 
     def __str__(self):
         return f'{self.user.username} Profile'
@@ -39,7 +41,6 @@ class ReviewRating(models.Model):
     subject = models.CharField(max_length=100, blank=True)
     review = models.TextField(max_length=500, blank=True)
     rating = models.FloatField(null=True)
-    number_of_ratings = models.IntegerField(default='0')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
