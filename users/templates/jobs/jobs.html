@@ -5,7 +5,9 @@
 
 {% block personalcss %}
 <link rel="stylesheet" href="/static/css/job.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 {% endblock %}
+
 <!--Sidebar-->
 <div class="wrapper">
     <div id="mySidebar" class="sidebar">
@@ -31,227 +33,110 @@
                     </div>
                 </div>  
             </div>
-            <input type="reset" value="Reset" class="btn-submit">
+            <input type="reset" value="Reset" class="btn-submit"/>
             <input type="submit" value="Submit" class="btn-submit" />
         </form>
     </div>
-    <div class="container">
-        <div class="card-deck">
-            <div class="col-4">
-                <div class="list-group" id="list-tab" role="tablist">
-                    <a class="card-header">
-                        <h2>Jobs
-                            <!--<span class="btn btn-secondary float-right mt-2">{{myFilter.form}}</span>-->
-                            <button class="openbtn" onclick="openNav()" type="button" >
-                                <i class="fas fa-align-left"></i>
-                                <span>Apply Filters</span>
-                            {% if creator %}
-                            <button class="btn-info btn btn-create-modal mt-2 float-right" type="button" data-toggle="modal" data-target="#myModal">Create Job</button>
-                            {% endif %}
-                        </h2>
-                    </a>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="list-group" id="list-tab" role="tablist">
+                <h2>Jobs
+                    <!--<span class="btn btn-secondary float-right mt-2">{{myFilter.form}}</span>-->
+                    <span class="btn btn-secondary float-right mt-2 ml-2 openbtn" onclick="openNav()" type="button" >Apply Filter</span>
+                    {% if creator %}
+                    <button class="btn-info btn btn-create-modal mt-2 float-right" type="button" data-toggle="modal" data-target="#myModal">Create Job</button>
+                    {% endif %}
+                </h2>
+                <table class="table table-hover">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Created</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
                     {% for job in posts %}
-                    <a class="list-group-item list-group-item-action" id="list-job{{job.id}}" data-toggle="list"
-                    href="#job_{{job.id}}" role="tab"><h5>{{job.name}}<span class="badge {{job.status_badge}} float-right mt-2">{{job.status}}</span></h5>
-                    </a>
+                    <tr class='clickable-row'>
+                        <th scope="row">{{job.id}}</th>
+                        <td><a href="{% url 'detail_job_url'%}?id={{job.id}}" target="_blank">{{job.name}}</a></td>
+                        <td>{{job.price}}</td>
+                        <td>{{job.age}} days ago</td>
+                        <td><span class="badge {{job.status_badge}}">{{job.status}}</span></td>
+                    </tr>
                     {% endfor %}
-                    <div>
-                        <nav aria-label="Page navigation example" >
-                            <ul class="pagination">
-                                <li class="page-item">
-                                    {% if posts.has_previous %}
-                                    <a class="page-link" href="?page={{posts.previous_page_number}}">Previous</a>
-                                    {% endif %}
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link">Page {{posts.number}} of {{posts.paginator.num_pages}}</a>
-                                </li>
-                                <li class="page-item">
-                                    {% if posts.has_next %}
-                                    <a class="page-link" href="?page={{posts.next_page_number}}">Next</a>
-                                    {% endif %}
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
+                    </tbody>
+                </table>
+                <div>
+                    <nav aria-label="Page navigation example" >
+                        <ul class="pagination">
+                            <li class="page-item">
+                                {% if posts.has_previous %}
+                                <a class="page-link" href="?page={{posts.previous_page_number}}">Previous</a>
+                                {% endif %}
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link">Page {{posts.number}} of {{posts.paginator.num_pages}}</a>
+                            </li>
+                            <li class="page-item">
+                                {% if posts.has_next %}
+                                <a class="page-link" href="?page={{posts.next_page_number}}">Next</a>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-header text-center">
-                    <h2>Job Details</h2>
+        </div>
+    </div>
+
+    <!--CREATE JOB MODAL-->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">Provide Job Details</div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="card-body">
-                    <div class="tab-content" id="nav-tabContent">
-                        <div class="tab-pane fade show active" id="activeTab" role="tabpanel">
-                            <h2 class="card-title text-center">Select a job to view its details</h2>
-                        </div>
-                        {% for job in posts %}
-                        <div class="tab-pane fade show" id="job_{{job.id}}" role="tabpanel">
-                            {% if creator and job.status != 'COMPLETED' %}
-                            <button type="button" class="btn-info btn btn-modal float-right" id="{{job.id}}" data-toggle="modal" data-target="#EditModal">Edit Job</button>
-                            {% endif %}
-                            <h2 class="card-title"><strong>Job Title: {{job.name}}</strong></h2>
-                            <br>
-                            <h3 class="card-title">Job Description: {{job.description}}</h3>
-                            <br>
-                            <h4 class="card-title">Job Price: <strong>$</strong>{{job.price}}</h4>
-                            <br>
-                            <h4 class="card-title">Created on: {{job.created_date}}</h4>
-                            <br>
-                            <h4 class="card-title">Due Date: {{job.end_date}}</h4>
-                            <br>
-                            <br>
-                            <div class="d-flex justify-content-between">
-                            {% if job.worker_id == "0" and not creator %}
-                            <button class="btn btn-danger btn-lg" type="button" data-toggle="modal" data-target="#confirmClaimJob"
-                                    onClick="reply_click({{job.id}}, 'modal_body_claim_job', 'Are you sure you want to claim this job?')">Claim Job</button>
-                            {% endif %}
-                            {% if job.worker_id == user_id_str or job.user_id == user_id %}
-                            <a class="btn btn-success btn-lg" href="{{job.url2audio}}" target="_blank" role="button">Download Audio File</a>
-                            {% endif %}
-                            {% if job.worker_id == user_id_str and job.status == 'INPROGRESS'%}
-                                <button class="btn btn-primary btn-lg" type="button" data-toggle="modal" data-target="#confirmUploadTranscript"
-                                        onClick="reply_click({{job.id}}, 'modal_body_upload_transcript', 'Select a file to upload')">Upload Transcript</button>
-                                <button class="btn btn-danger btn-lg" type="button" data-toggle="modal" data-target="#confirmCancelJob"
-                                        onClick="reply_click({{job.id}}, 'modal_body_cancel_job', 'Are you sure you want to cancel this job?')">Cancel Job</button>
-                            {% endif %}
-                            {% if job.user_id == user_id %}
-                                {% if job.url2Transcript != null %}
-                                <a class="btn btn-primary btn-lg" href="{{job.url2Transcript}}" target="_blank" role="button">Download Transcript File</a>
-                                {% endif %}
-                                {% if job.status != 'COMPLETED' %}
-                                <button class="btn btn-danger btn-lg" type="button" data-toggle="modal" data-target="#confirmDeleteJob"
-                                        onClick="reply_click({{job.id}}, 'modal_body_delete_job', 'Are you sure you want to delete this job?')">Delete Job</button>
-                                {% endif %}
-                            {% endif %}
+                <div class="modal-body">
+                    <form method="post" action="{%url 'jobs_url'%}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <div class="mb-3">
+                                <label for="name">Title:</label>
+                                <input type="text" class="form-control" id="name" name="name" required/>
                             </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal" id="confirmClaimJob">
-            <form method="post" action="{%url 'jobs_url'%}" id="claimJobform">
-                <input name="formId" value="claimJobform" type="hidden"/>
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Confirm</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body" id="modal_body_claim_job"></div>
-                        <div class="modal-footer">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger" name="claimJobForm-submit">Claim Job</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <div class="modal" id="confirmCancelJob">
-            <form method="post" action="{%url 'jobs_url'%}" id="cancelJobform">
-                <input name="formId" value="cancelJobform" type="hidden"/>
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Confirm</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body" id="modal_body_cancel_job"></div>
-                        <div class="modal-footer">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger" name="cancelJobform-submit">Cancel Job</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <div class="modal" id="confirmDeleteJob">
-            <form method="post" action="{%url 'jobs_url'%}" id="deleteJobform">
-                <input name="formId" value="deleteJobform" type="hidden"/>
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Confirm</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body" id="modal_body_delete_job"></div>
-                        <div class="modal-footer">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger" name="deleteJobform-submit">Delete Job</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <div class="modal" id="confirmUploadTranscript">
-            <form method="post" action="{%url 'jobs_url'%}" id="uploadTranscriptform" enctype="multipart/form-data">
-                <input name="formId" value="uploadTranscriptform" type="hidden"/>
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Confirm</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body" id="modal_body_upload_transcript"></div>
-                        <div class="modal-footer">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger" name="uploadTranscriptform-submit">Upload Transcript</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <!--CREATE JOB MODAL-->
-        <div class="modal" id="myModal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <div class="modal-title">Provide Job Details</div>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form method="post" action="{%url 'jobs_url'%}" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <div class="mb-3">
-                                    <label for="name">Title:</label>
-                                    <input type="text" class="form-control" id="name" name="name" required/>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="description">Description:</label>
-                                    <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
-                                </div>
-                                <div class="mb-3">
+                            <div class="mb-3">
+                                <label for="description">Description:</label>
+                                <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-6">
                                     <label for="price">Job Price:</label>
                                     <input type="text" class="form-control" name="price" id="price" required/>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="end_date">End date:</label>
-                                    <input type="date" id="end_date" name="end_date" required>
+                                <div class="col-md-6">
+                                    <label for="price">Limit Price:</label>
+                                    <input type="text" class="form-control" name="limit_price" id="limit_price" required/>
                                 </div>
-                                <select id="DropDown" required>
-                                    <option value="">Choose Audio Option</option>
-                                    <option value="diva">Google Drive URL</option>
-                                    <option value="divb">Upload Audio File</option>
-                                    <option value="divc">Record Audio</option>
-                                </select>
+                            </div>
+                            <br>
+                            <div class="mb-3">
+                                <label for="end_date">End date:</label>
+                                <input type="date" id="end_date" name="end_date" required>
+                            </div>
+                            <select id="DropDown" required>
+                                <option value="">Choose Audio Option</option>
+                                <option value="diva">Google Drive URL</option>
+                                <option value="divb">Upload Audio File</option>
+                                <option value="divc">Record Audio</option>
+                            </select>
 
                                 <div class="mb-3 drop-down-show-hide" id="diva">
                                     <input class="form-control" type="url" id="URL" name="URL">
@@ -289,79 +174,6 @@
             </div>
         </div>
 
-        <!--EDIT JOB MODAL-->
-        <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Edit Job Details</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>  
-                    <div class="modal-body">
-                        <form id="edit-form" method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <div class="mb-3">
-                                <label for="name">Title:</label>
-                                <input type="text" class="form-control" id="edit-name" name="name" required/>
-                            </div>
-                            <div class="mb-3">
-                                <label for="description">Description:</label>
-                                <textarea class="form-control" id="edit-description" name="description" rows="3" required></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="price">Job Price:</label>
-                                <input type="text" class="form-control" name="price" id="edit-price" required/>
-                            </div>
-                            <div class="mb-3">
-                                <label for="end_date">End date:</label>
-                                <input type="date" id="edit_end_date" name="end_date" required>
-                            </div>
-
-                            <select id="editDropDown" required>
-                                <option value="">Choose Audio Option</option>
-                                <option value="div1">Google Drive URL</option>
-                                <option value="div2">Upload Audio File</option>
-                                <option value="div3">Record Audio</option>
-                            </select>
-
-                            <div class="mb-3 drop-down-show-hide" id="div1">
-                                <input class="form-control" type="url" id="edit-URL" name="URL">
-                            </div>
-
-                            <div class="mb-3 drop-down-show-hide" id="div2">
-                                <input class="form-control" type="file" id="edit-audiofile" name="audiofile" accept="audio/*">
-                            </div>
-
-                            <div class="mb-3 drop-down-show-hide" id="div3">
-                                <button type="button" class="btn-success rec-btn" id="edit-start-rec">
-                                    <i class="fa fa-record-circle"></i> Start
-                                </button>
-                                <button type="button" class="btn-info rec-btn" id="edit-pause-rec" style="display:none">
-                                    <i class="fa fa-pause-circle"></i> Pause
-                                </button>
-                                <button type="button" class="btn-warning rec-btn" id="edit-resume-rec" style="display:none">
-                                    <i class="fa fa-play-circle"></i> Resume
-                                </button>
-                                <button type="button" class="btn-secondary rec-btn" id="edit-stop-rec" style="display:none">
-                                    <i class="fa fa-stop-circle"></i> Stop
-                                    <i id="edit-red-dot" class="fa fa-circle text-danger-glow blink" style="display:none"></i>
-                                </button>
-                                <input type="file" id="edit-recorded" name="recorded" style="display:none">
-                                <audio src="" id="edit-record-file" controls></audio>
-                            </div>
-                        </div>
-                            <div id="submitBtn">
-                                <button type="submit" class="btn btn-primary editSaveBtn">Save</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 {% endblock %}
@@ -370,16 +182,13 @@
 <script src="/static/js/job.js"></script>
 <script src="/static/js/recorder.js"></script>
 <script src="/static/js/create-job.js"></script>
-<script src="/static/js/edit-job.js"></script>
 <script>
     function openNav() {
       document.getElementById("mySidebar").style.width = "250px";
-      document.getElementById("main").style.marginLeft = "250px";
     }
     
     function closeNav() {
       document.getElementById("mySidebar").style.width = "0";
-      document.getElementById("main").style.marginLeft= "0";
     }
 </script>
 

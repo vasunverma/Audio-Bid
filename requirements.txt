@@ -14,3 +14,5 @@ boto3>=1.25.3
 pytz>=2022.5
 django_filter==22.1
 chartjs==1.2
+django-crontab==0.7.1
+django-ckeditor==6.5.1
