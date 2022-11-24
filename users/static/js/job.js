@@ -1,6 +1,8 @@
 function reply_click(clicked_id, element_to_get, text_to_display) {
     var element = document.getElementById(element_to_get);
-    element.innerHTML = '';
+    if(text_to_display != ""){
+        element.innerHTML = '';
+    }
 
     var job_id = clicked_id;
     const input = document.createElement("input");
@@ -10,10 +12,12 @@ function reply_click(clicked_id, element_to_get, text_to_display) {
     input.type = "hidden";
     element.appendChild(input);
 
-    var tag = document.createElement("p");
-    var text = document.createTextNode(text_to_display);
-    tag.appendChild(text);
-    element.appendChild(tag);
+    if(text_to_display != ""){
+        var tag = document.createElement("p");
+        var text = document.createTextNode(text_to_display);
+        tag.appendChild(text);
+        element.appendChild(tag);
+    }
 
     if(element_to_get == "modal_body_upload_transcript"){
         const textFileInput = document.createElement("input");
