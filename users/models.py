@@ -15,6 +15,7 @@ class Job(models.Model):
     name= models.CharField(max_length=50, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=19, decimal_places=10)
+    limit_price = models.DecimalField(max_digits=19, decimal_places=10, default=0)
     created_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField()
     claim_date = models.DateTimeField(null=True)

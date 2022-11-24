@@ -8,7 +8,7 @@ from .models import Comment
 class JobForm(forms.ModelForm):
     class Meta:
         model = Job
-        fields = ['name','price', 'end_date', 'description']
+        fields = ['name','price', 'end_date', 'description', 'limit_price']
 
 class ReviewForm(forms.ModelForm):
     class Meta:

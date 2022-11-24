@@ -1,6 +1,7 @@
 .venv/*
 .venv/pyvenv.cfg
 config.ini
+venv/
 
 # Django #
 audiobidV1/static/
