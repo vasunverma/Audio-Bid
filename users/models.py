@@ -20,6 +20,7 @@ class Job(models.Model):
     limit_price = models.DecimalField(max_digits=19, decimal_places=10, default=0)
     created_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField()
+    cron_date = models.DateTimeField(null=True)
     claim_date = models.DateTimeField(null=True)
     description = models.TextField()
     url2audio = models.TextField()
