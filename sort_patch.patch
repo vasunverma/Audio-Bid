@@ -1,0 +1,173 @@
+diff --git a/audiobidV1/.env b/audiobidV1/.env
+index d29812c..65ad40a 100644
+--- a/audiobidV1/.env
++++ b/audiobidV1/.env
+@@ -1,9 +1,9 @@
+ secret_key='\VALUE HERE\'
+-db_name='\VALUE HERE\'
+-db_user='\VALUE HERE\'
+-db_pass='\VALUE HERE\'
+-db_host='\VALUE HERE\'
+-db_port='\VALUE HERE\'
++db_name='DB1'
++db_user='postgres'
++db_pass='Lakshmi@123'
++db_host='127.0.0.1'
++db_port='5432'
+ bucket_name='\VALUE HERE\'
+ aws_region='\VALUE HERE\'
+ aws_id='\VALUE HERE\'
+diff --git a/users/static/css/job.css b/users/static/css/job.css
+index 894b273..caef19e 100644
+--- a/users/static/css/job.css
++++ b/users/static/css/job.css
+@@ -177,4 +177,24 @@ z-index: -1;
+ color: #fff;
+ background-color: #007bff;
+ border-color: #007bff;
++}
++
++.reset-button{
++margin-left: 38px;
++margin-top: 25px;
++font-size: 20px;
++border-radius: 5px;
++transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color: 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
++}
++
++.submit-button{
++margin-top: 26px;
++margin-left: 26px;
++font-size: 20px;
++border-radius: 5px;
++}
++
++.reset-button:hover {
++color: #547aa0;
++text-decoration: none;
+ }
+\ No newline at end of file
+diff --git a/users/templates/jobs/jobs.html b/users/templates/jobs/jobs.html
+index d2ae992..5bd6b41 100644
+--- a/users/templates/jobs/jobs.html
++++ b/users/templates/jobs/jobs.html
+@@ -13,7 +13,7 @@
+     <div id="mySidebar" class="sidebar">
+         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+         <h1 class="filter-heading">Filter tab</h1>
+-        <form action="{% url 'jobs_url' %}" method="get">
++        <form action="{% url 'jobs_url' %}" method="get" id="filter-form">
+             <div class="filter-fields">
+                 <label for="{{ myFilter.form.created_date.id_for_label }}" class="filter-date-label">Created Date:</label>
+                 {{ myFilter.form.created_date }}
+@@ -33,8 +33,8 @@
+                     </div>
+                 </div>  
+             </div>
+-            <input type="reset" value="Reset" class="btn-submit"/>
+-            <input type="submit" value="Submit" class="btn-submit" />
++            <input type="button" value="Reset" class="reset-button" onclick="resetForm()"/>
++            <input type="submit" value="Submit" class="submit-button" />
+         </form>
+     </div>
+ </div>
+@@ -49,14 +49,24 @@
+                     <button class="btn-info btn btn-create-modal mt-2 float-right" type="button" data-toggle="modal" data-target="#myModal">Create Job</button>
+                     {% endif %}
+                 </h2>
+-                <table class="table table-hover">
++                <table id="recordTable" class="table table-hover">
+                     <thead class="thead-dark">
+                     <tr>
+-                        <th scope="col">Id</th>
+-                        <th scope="col">Title</th>
+-                        <th scope="col">Price</th>
+-                        <th scope="col">Created</th>
+-                        <th scope="col">Status</th>
++                        <th scope="col">Id
++                            <i class="fas fa-arrow-up" type="button" onclick="sortTable(0)"></i>
++                        </th>
++                        <th scope="col">Title
++                            <i class="fas fa-arrow-up" type="button" onclick="sortTable(1)"></i>
++                        </th>
++                        <th scope="col">Price
++                            <i class="fas fa-arrow-up" type="button" onclick="sortTable(2)"></i>
++                        </th>
++                        <th scope="col">Created
++                            <i class="fas fa-arrow-up" type="button" onclick="sortTable(3)"></i>
++                        </th>
++                        <th scope="col">Status
++                            <i class="fas fa-arrow-up" type="button" onclick="sortTable(4)"></i>
++                        </th>
+                     </tr>
+                     </thead>
+                     <tbody>
+@@ -189,6 +199,66 @@
+     function closeNav() {
+       document.getElementById("mySidebar").style.width = "0";
+     }
+-</script>
+ 
++    function resetForm(){
++        document.getElementById("id_created_date").value = "";
++        document.getElementById("id_end_date").value = "";
++        document.getElementById("id_price_0").value = "";
++        document.getElementById("id_price_1").value = "";
++        document.getElementById("id_status").value = "";
++    }
++
++    function sortTable(field){
++        var table, rows, switching, i, x, y, shouldSwitch;
++        table = document.getElementById("recordTable");
++        switching = true;
++        /*Make a loop that will continue until
++        no switching has been done:*/
++        while (switching) {
++            //start by saying: no switching is done:
++            switching = false;
++            rows = table.rows;
++            /*Loop through all table rows (except the
++            first, which contains table headers):*/
++            for (i = 1; i < (rows.length - 1); i++) {
++            //start by saying there should be no switching:
++            shouldSwitch = false;
++            /*Get the two elements you want to compare,
++            one from current row and one from the next:*/
++            x = rows[i].getElementsByTagName("TD")[field];
++            y = rows[i + 1].getElementsByTagName("TD")[field];
++            //check if the two rows should switch place:
++
++            // if (field == 0 || field == 2 || field == 3)
++            // {
++            //     if (x.innerHTML > y.innerHTML) {
++            //         //if so, mark as a switch and break the loop:
++            //         shouldSwitch = true;
++            //         break;
++            //     }
++            // }
++            // else if(field == 1 || field == 4)
++            // {
++            //     if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
++            //         //if so, mark as a switch and break the loop:
++            //         shouldSwitch = true;
++            //         break;
++            //     }
++            // }
++            if (x.innerHTML > y.innerHTML) {
++                //if so, mark as a switch and break the loop:
++                shouldSwitch = true;
++                break;
++            }
++
++            }
++            if (shouldSwitch) {
++                /*If a switch has been marked, make the switch
++                and mark that a switch has been done:*/
++                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
++                switching = true;
++            }
++        }
++    }
++</script>
+ {% endblock %}
+\ No newline at end of file
