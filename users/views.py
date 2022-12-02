@@ -254,6 +254,7 @@ def users_detail_job(request):
                 job = Job.objects.get(id=job_id)
                 job.worker_id = '0'
                 job.status = 0
+                job.content = ""
                 job.save()
                 messages.success(request, 'Your Job has been successfully cancelled!')
 

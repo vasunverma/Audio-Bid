@@ -13,7 +13,7 @@
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
         <h1 class="filter-heading">Filter tab</h1>
-        <form action="{% url 'jobs_url' %}" method="get">
+        <form action="{% url 'jobs_url' %}" method="get" id="filter-form">
             <div class="filter-fields">
                 <label for="{{ myFilter.form.created_date.id_for_label }}" class="filter-date-label">Created Date:</label>
                 {{ myFilter.form.created_date }}
@@ -22,8 +22,10 @@
                 <label for="{{ myFilter.form.price.id_for_label }}" class="filter-date-label">Price:</label>
                 <br>
                 <div class="filter-price">
+                    <h1 class="filter-price-symbol1">$</h1>
                     {{ myFilter.form.price }}
                     <h1 class="filter-hyphen">--</h1>
+                    <h1 class="filter-price-symbol2">$</h1>
                 </div>
                 <br>
                 <div class="filter-status">
@@ -33,8 +35,8 @@
                     </div>
                 </div>  
             </div>
-            <input type="reset" value="Reset" class="btn-submit"/>
-            <input type="submit" value="Submit" class="btn-submit" />
+            <input type="button" value="Clear Filter" class="reset-button" onclick="resetForm()"/>
+            <input type="submit" value="Apply Filter" class="submit-button" />
         </form>
     </div>
 </div>
@@ -49,20 +51,35 @@
                     <button class="btn-info btn btn-create-modal mt-2 float-right" type="button" data-toggle="modal" data-target="#myModal">Create Job</button>
                     {% endif %}
                 </h2>
-                <table class="table table-hover">
+                <table id="recordTable" class="table table-hover">
                     <thead class="thead-dark">
                     <tr>
-                        <th scope="col">Id</th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Created</th>
-                        <th scope="col">Status</th>
+                        <th scope="col">Id
+                            <i class="fas fa-arrow-up" type="button" onclick="sortTableAsc(0)"></i>
+                            <i class="fas fa-arrow-down" type="button" onclick="sortTableDesc(0)"></i>
+                        </th>
+                        <th scope="col">Title
+                            <i class="fas fa-arrow-up" type="button" onclick="sortTableAsc(1)"></i>
+                            <i class="fas fa-arrow-down" type="button" onclick="sortTableDesc(1)"></i>
+                        </th>
+                        <th scope="col">Price
+                            <i class="fas fa-arrow-up" type="button" onclick="sortTableAsc(2)"></i>
+                            <i class="fas fa-arrow-down" type="button" onclick="sortTableDesc(2)"></i>
+                        </th>
+                        <th scope="col">Created
+                            <i class="fas fa-arrow-up" type="button" onclick="sortTableAsc(3)"></i>
+                            <i class="fas fa-arrow-down" type="button" onclick="sortTableDesc(3)"></i>
+                        </th>
+                        <th scope="col">Status
+                            <i class="fas fa-arrow-up" type="button" onclick="sortTableAsc(4)"></i>
+                            <i class="fas fa-arrow-down" type="button" onclick="sortTableDesc(4)"></i>
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for job in posts %}
                     <tr class='clickable-row'>
-                        <th scope="row">{{job.id}}</th>
+                        <td scope="row">{{job.id}}</td>
                         <td><a href="{% url 'detail_job_url'%}?id={{job.id}}" target="_blank">{{job.name}}</a></td>
                         <td>{{job.price}}</td>
                         <td>{{job.age}} days ago</td>
@@ -189,6 +206,136 @@
     function closeNav() {
       document.getElementById("mySidebar").style.width = "0";
     }
-</script>
 
+    function resetForm(){
+        document.getElementById("id_created_date").value = "";
+        document.getElementById("id_end_date").value = "";
+        document.getElementById("id_price_0").value = "";
+        document.getElementById("id_price_1").value = "";
+        document.getElementById("id_status").value = "";
+    }
+
+    function sortTableAsc(field){
+        var table, rows, switching, i, x, y, shouldSwitch;
+        table = document.getElementById("recordTable");
+        //table = "{{ allPosts }}";
+        //console.log(table.rows);
+        switching = true;
+        /*Make a loop that will continue until
+        no switching has been done:*/
+        while (switching) {
+            //start by saying: no switching is done:
+            switching = false;
+            rows = table.rows;
+            //rows = "{{ allPosts }}"
+            /*Loop through all table rows (except the
+            first, which contains table headers):*/
+            for (i = 1; i < (rows.length - 1); i++) {
+            //start by saying there should be no switching:
+            shouldSwitch = false;
+            /*Get the two elements you want to compare,
+            one from current row and one from the next:*/
+            if (field == 1)
+            {
+                x_parent = rows[i].getElementsByTagName("TD")[field];
+                x = x_parent.getElementsByTagName("a")[0];
+                y_parent = rows[i + 1].getElementsByTagName("TD")[field];
+                y = y_parent.getElementsByTagName("a")[0];
+            }
+            else
+            {
+                x = rows[i].getElementsByTagName("TD")[field];
+                y = rows[i + 1].getElementsByTagName("TD")[field];
+            }
+            
+            //console.log(x)
+            //console.log(y)
+            //check if the two rows should switch place:
+
+            if(field == 2)
+            {
+                if (parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                }     
+            }
+            else
+            { 
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+        }
+        if (shouldSwitch) {
+            /*If a switch has been marked, make the switch
+            and mark that a switch has been done:*/
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+        }
+    }
+}
+
+function sortTableDesc(field){
+        var table, rows, switching, i, x, y, shouldSwitch;
+        table = document.getElementById("recordTable");
+        switching = true;
+        /*Make a loop that will continue until
+        no switching has been done:*/
+        while (switching) {
+            //start by saying: no switching is done:
+            switching = false;
+            rows = table.rows;
+            /*Loop through all table rows (except the
+            first, which contains table headers):*/
+            for (i = 1; i < (rows.length - 1); i++) {
+            //start by saying there should be no switching:
+            shouldSwitch = false;
+            /*Get the two elements you want to compare,
+            one from current row and one from the next:*/
+            if (field == 1)
+            {
+                x_parent = rows[i].getElementsByTagName("TD")[field];
+                x = x_parent.getElementsByTagName("a")[0];
+                y_parent = rows[i + 1].getElementsByTagName("TD")[field];
+                y = y_parent.getElementsByTagName("a")[0];
+            }
+            else
+            {
+                x = rows[i].getElementsByTagName("TD")[field];
+                y = rows[i + 1].getElementsByTagName("TD")[field];
+            }
+            
+            //console.log(x)
+            //console.log(y)
+            //check if the two rows should switch place:
+
+            if(field == 2)
+            {
+                if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                }     
+            }
+            else
+            { 
+                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+        }
+        if (shouldSwitch) {
+            /*If a switch has been marked, make the switch
+            and mark that a switch has been done:*/
+            rows[i].parentNode.insertBefore(rows[i+1], rows[i]);
+            switching = true;
+        }
+    }
+}
+</script>
 {% endblock %}

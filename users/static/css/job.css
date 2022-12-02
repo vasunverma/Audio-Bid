@@ -138,7 +138,7 @@ display: flex;
 }
 
 .filter-hyphen{
-margin-left: -103px;
+margin-left: -112px;
 color: white;
 }
 
@@ -177,4 +177,40 @@ z-index: -1;
 color: #fff;
 background-color: #007bff;
 border-color: #007bff;
+}
+
+.reset-button{
+margin-left: 58px;
+margin-top: 25px;
+font-size: 20px;
+border-radius: 5px;
+}
+
+.submit-button{
+margin-top: 26px;
+margin-left: 54px;
+font-size: 20px;
+border-radius: 5px;
+}
+
+.reset-button:hover {
+color: #547aa0;
+text-decoration: none;
+}
+
+.submit-button:hover {
+color: #547aa0;
+text-decoration: none;
+}
+
+.filter-price-symbol2{
+margin-left: 1px;
+font-size: 25px;
+color: dimgray;
+}
+
+.filter-price-symbol1{
+margin-left: 11px;
+font-size: 25px;
+color: dimgray;
 }
