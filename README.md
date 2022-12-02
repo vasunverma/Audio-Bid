@@ -1,4 +1,4 @@
-# [AudioBid](https://www.audiobid.herokuapp.com)
+# [AudioBid](https://audiobid.herokuapp.com/)
 
 ## Installation
 ### Initial Project Setup
