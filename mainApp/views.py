@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 import pytz
 from users.models import Job
@@ -64,10 +64,5 @@ def home(request):
             user.profile.role = request.POST.get('inlineRadioOptions')
             user.profile.time_zone = request.POST.get('userTimezone')
             user.save()
-            render(request, 'home.html', {"MissingInfo": False,
-                                          'num_created_jobs': num_created_jobs, 
-                                          'num_completed_jobs': num_completed_jobs,
-                                          'num_progress_jobs': num_progress_jobs,
-                                          'num_claimed_jobs': num_claimed_jobs})
-
+            return redirect('home')
     return render(request, 'home.html', {"MissingInfo": False})
