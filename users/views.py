@@ -187,14 +187,13 @@ def users_jobs(request):
         elif request.method == 'GET':
             is_creator = False
             if request.user.profile.role == 'creator':
-                post_list = Job.objects.filter(Q(user_id=request.user.id))
+                myFilter = JobFilter(request.GET, queryset = Job.objects.filter(Q(user_id=request.user.id)))
+                post_list = myFilter.qs
                 is_creator = True
             else:
-                post_list = Job.objects.filter(Q(worker_id=request.user.id))
-                post_list = list(chain(post_list, Job.objects.filter(Q(worker_id=0))))
-
-            myFilter = JobFilter(request.GET, queryset = Job.objects.all())
-            post_list = myFilter.qs
+                myFilter = JobFilter(request.GET, queryset = Job.objects.filter(Q(worker_id=request.user.id)))
+                post_list = myFilter.qs
+                
             page = request.GET.get('page', '1')
             paginator = Paginator(post_list, 10)
             try:
