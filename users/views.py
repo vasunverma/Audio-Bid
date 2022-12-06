@@ -19,7 +19,6 @@ from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
-from itertools import chain
 from django.http import JsonResponse
 import logging
 logger = logging.getLogger(__name__)
@@ -160,6 +159,7 @@ def users_profile(request):
 
 def users_jobs(request):
     if request.user.is_authenticated:
+        # Create job in database and store audio file in AWS S3 for further use
         if request.method == 'POST':
             form = JobForm(request.POST or None)
             form.instance.user = request.user
@@ -184,14 +184,16 @@ def users_jobs(request):
 
             return redirect('jobs_url')
 
+        # Get all jobs from database to display rows of jobs to users
         elif request.method == 'GET':
             is_creator = False
             if request.user.profile.role == 'creator':
-                myFilter = JobFilter(request.GET, queryset = Job.objects.filter(Q(user_id=request.user.id)))
+                myFilter = JobFilter(request.GET, queryset=Job.objects.filter(Q(user_id=request.user.id)))
                 post_list = myFilter.qs
                 is_creator = True
             else:
-                myFilter = JobFilter(request.GET, queryset = Job.objects.filter(Q(worker_id=request.user.id) | Q(worker_id=0)))
+                myFilter = JobFilter(request.GET,
+                                     queryset=Job.objects.filter(Q(worker_id=request.user.id) | Q(worker_id=0)))
                 post_list = myFilter.qs
                 
             page = request.GET.get('page', '1')
@@ -225,6 +227,7 @@ def users_jobs(request):
     else:
         return redirect('login_url')
 
+# This method is responsible all the job functions/actions a user will be performing on the job
 def users_detail_job(request):
     if request.user.is_authenticated:
         badge_classes = {
@@ -235,6 +238,7 @@ def users_detail_job(request):
         }
         is_creator = (request.user.profile.role == 'creator')
         if request.method == 'POST':
+            # Claiming Job as a worker
             if request.POST.get("formId") == "claimJobform":
                 job_id = request.POST.get("jobId")
                 job = Job.objects.get(id=job_id)
@@ -244,6 +248,7 @@ def users_detail_job(request):
                 job.save()
                 messages.success(request, 'Your Job has been successfully claimed!')
 
+            # Cancelling Job as a worker
             elif request.POST.get("formId") == "cancelJobform":
                 job_id = request.POST.get("jobId")
                 job = Job.objects.get(id=job_id)
@@ -253,6 +258,7 @@ def users_detail_job(request):
                 job.save()
                 messages.success(request, 'Your Job has been successfully cancelled!')
 
+            # Deleting job as a creator
             elif request.POST.get("formId") == "deleteJobform":
                 job_id = request.POST.get("jobId")
                 job = Job.objects.get(id=job_id)
@@ -260,6 +266,7 @@ def users_detail_job(request):
                 messages.success(request, 'Your Job has been successfully deleted!')
                 return redirect('jobs_url')
 
+            # Uploading transcript as a worker
             elif request.POST.get("formId") == "uploadTranscriptform":
                 job_id = request.POST.get("jobId")
                 job = Job.objects.get(id=job_id)
@@ -271,6 +278,7 @@ def users_detail_job(request):
                 job.save()
                 messages.success(request, 'Your Transcript has been successfully uploaded!')
 
+            # Reviewing job as a creator
             elif request.POST.get("formId") == "reviewJobform":
                 job_id = request.POST.get("jobId")
                 job = Job.objects.get(id=job_id)
@@ -283,12 +291,14 @@ def users_detail_job(request):
                 form.save()
                 messages.success(request, 'Your review has been successfully saved!')
 
+            # Commenting on the review as a worker and a creator
             elif request.POST.get("formId") == "commentForm":
                 job_id = request.POST.get("jobId")
                 job = Job.objects.get(id=job_id)
                 Comment.objects.create(name=request.user.first_name, content=request.POST.get("content"), job=job)
                 messages.success(request, 'Your comment has been successfully saved!')
 
+            # Accepting job as a creator
             elif request.POST.get("formId") == "acceptJobform":
                 job_id = request.POST.get("jobId")
                 job = Job.objects.get(id=job_id)
@@ -305,6 +315,7 @@ def users_detail_job(request):
 
                 messages.success(request, 'Your Job has been successfully accepted!')
 
+            # Discarding job as a creator
             elif request.POST.get("formId") == "discardJobform":
                 job_id = request.POST.get("jobId")
                 job = Job.objects.get(id=job_id)
@@ -319,8 +330,10 @@ def users_detail_job(request):
                 review.worker_id = '0'
                 review.save()
                 Comment.objects.filter(Q(job_id=job.id)).delete()
-                messages.success(request, 'Your Job has been successfully discarded and available for new workers to accept!')
-            
+                messages.success(request,
+                                 'Your Job has been successfully discarded and available for new workers to accept!')
+
+            # Saving text from text editor as a worker
             elif request.POST.get("formId") == "textEditorForm":
                 job_id = request.POST.get("jobId")
                 job = Job.objects.get(id=job_id)
@@ -328,11 +341,11 @@ def users_detail_job(request):
                 job.save()
                 messages.success(request, 'Your Transcript has been successfully saved for Later')
 
+            # Prepping job object data to be displayed via HTML
             job.price = "{:.2f}".format(job.price)
             job.status = job.status_choices[job.status][1]
             job.status_badge = badge_classes[job.status]
             job.age = (datetime.datetime.utcnow().date() - job.created_date.date()).days
-
             job.review = ReviewRating.objects.get(job_id=job.id)
             job.isRatingEmpty = (job.review.review == '')
             job.comment_data = Comment.objects.filter(Q(job_id=job.id))
@@ -346,6 +359,7 @@ def users_detail_job(request):
                                                               'width':width})
 
         elif request.method == 'GET':
+            # Prepping job object data to be displayed via HTML
             job = Job.objects.get(id=request.GET.get('id'))
             job.price = "{:.2f}".format(job.price)
             job.status = job.status_choices[job.status][1]
