@@ -191,7 +191,7 @@ def users_jobs(request):
                 post_list = myFilter.qs
                 is_creator = True
             else:
-                myFilter = JobFilter(request.GET, queryset = Job.objects.filter(Q(worker_id=request.user.id)))
+                myFilter = JobFilter(request.GET, queryset = Job.objects.filter(Q(worker_id=request.user.id) | Q(worker_id=0)))
                 post_list = myFilter.qs
                 
             page = request.GET.get('page', '1')
