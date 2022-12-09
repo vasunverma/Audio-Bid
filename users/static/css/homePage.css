@@ -312,7 +312,7 @@ footer{
 }
 .edit-profile{
     text-align:center;
-    margin-top:-20px;
+    margin-top:-26px;
 }
 .edit-profile li {
     margin-top:-30px;
@@ -326,4 +326,12 @@ footer{
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.checked {
+  color: orange;
+}
+.rating{
+text-align:center;
+font-size:16px;
+font-weight:600;
 }

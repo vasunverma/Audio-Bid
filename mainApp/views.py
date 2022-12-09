@@ -10,7 +10,7 @@ def home(request):
         if request.user.profile.role == 'creator':
             creatorJobs = Job.objects.filter(Q(user=request.user))
             num_created_jobs = len(creatorJobs)
-            num_open_jobs, num_progress_jobs, num_completed_jobs = 0, 0, 0
+            num_open_jobs, num_progress_jobs, num_completed_jobs, num_review_jobs = 0, 0, 0, 0
             for jobs in creatorJobs:
                 if jobs.status == 0:
                     num_open_jobs +=1 
@@ -18,15 +18,18 @@ def home(request):
                     num_progress_jobs +=1
                 elif jobs.status == 2:
                     num_completed_jobs +=1
+                elif jobs.status == 3:
+                    num_review_jobs +=1
         elif request.user.profile.role == 'worker':
             workerJobs = Job.objects.filter(Q(worker_id=request.user.id))
-            num_created_jobs, num_open_jobs, num_progress_jobs, num_completed_jobs = 0, 0, 0, 0
+            num_created_jobs, num_open_jobs, num_progress_jobs, num_completed_jobs, num_review_jobs = 0, 0, 0, 0, 0
             for jobs in workerJobs:
                 if jobs.status == 1:
                     num_progress_jobs +=1
                 elif jobs.status == 2:
                     num_completed_jobs +=1
-                    
+                elif jobs.status == 3:
+                    num_review_jobs +=1
         if request.method == 'GET':
             if User.objects.get(id=request.user.id).profile.role == ''\
                     or User.objects.get(id=request.user.id).profile.time_zone == '':
@@ -57,7 +60,8 @@ def home(request):
                                                      'num_created_jobs': num_created_jobs,
                                                      'num_open_jobs': num_open_jobs, 
                                                      'num_completed_jobs': num_completed_jobs,
-                                                     'num_progress_jobs': num_progress_jobs})
+                                                     'num_progress_jobs': num_progress_jobs,
+                                                     'num_review_jobs': num_review_jobs})
 
 
         elif request.method == 'POST':

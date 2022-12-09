@@ -51,7 +51,7 @@
                     <button class="btn-info btn btn-create-modal mt-2 float-right" type="button" data-toggle="modal" data-target="#myModal">Create Job</button>
                     {% endif %}
                 </h2>
-                <table id="recordTable" class="table table-hover">
+                <table id="recordTable" class="table table-hover table-striped">
                     <thead class="thead-dark">
                     <tr>
                         <th scope="col">Id
@@ -66,7 +66,7 @@
                             <i class="fas fa-arrow-up" type="button" onclick="sortTableAsc(2)"></i>
                             <i class="fas fa-arrow-down" type="button" onclick="sortTableDesc(2)"></i>
                         </th>
-                        <th scope="col">Created
+                        <th scope="col">Created on
                             <i class="fas fa-arrow-up" type="button" onclick="sortTableAsc(3)"></i>
                             <i class="fas fa-arrow-down" type="button" onclick="sortTableDesc(3)"></i>
                         </th>
@@ -82,7 +82,7 @@
                         <td scope="row">{{job.id}}</td>
                         <td><a href="{% url 'detail_job_url'%}?id={{job.id}}" target="_blank">{{job.name}}</a></td>
                         <td>{{job.price}}</td>
-                        <td>{{job.age}} days ago</td>
+                        <td>{{job.created_date}}</td>
                         <td><span class="badge {{job.status_badge}}">{{job.status}}</span></td>
                     </tr>
                     {% endfor %}

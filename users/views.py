@@ -1,7 +1,6 @@
 import os
 import re
 import requests
-import datetime
 import pytz
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -9,7 +8,6 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.core.files.storage import default_storage
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import JobForm
-from .models import Job
 from .models import ReviewRating
 from .filters import JobFilter
 from django.shortcuts import render, redirect
@@ -21,14 +19,11 @@ from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
-from .models import Job
 from itertools import chain
-from users.models import Job
 from django.http import JsonResponse
 import logging
 logger = logging.getLogger(__name__)
 import datetime
-from .models import Job
 from .models import Job, Comment
 
 def user_login(request):
@@ -192,14 +187,13 @@ def users_jobs(request):
         elif request.method == 'GET':
             is_creator = False
             if request.user.profile.role == 'creator':
-                post_list = Job.objects.filter(Q(user_id=request.user.id))
+                myFilter = JobFilter(request.GET, queryset = Job.objects.filter(Q(user_id=request.user.id)).order_by("id"))
+                post_list = myFilter.qs
                 is_creator = True
             else:
-                post_list = Job.objects.filter(Q(worker_id=request.user.id))
-                post_list = list(chain(post_list, Job.objects.filter(Q(worker_id=0))))
-
-            myFilter = JobFilter(request.GET, queryset = Job.objects.all().order_by('id'))
-            post_list = myFilter.qs
+                myFilter = JobFilter(request.GET, queryset = Job.objects.filter(Q(worker_id=request.user.id) | Q(worker_id=0)).order_by("id"))
+                post_list = myFilter.qs
+                
             page = request.GET.get('page', '1')
             paginator = Paginator(post_list, 10)
             try:
@@ -220,6 +214,7 @@ def users_jobs(request):
                 job.status_badge = badge_classes[job.status]
                 job.price = "{:.2f}".format(job.price)
                 job.age = (datetime.datetime.utcnow().date() - job.created_date.date()).days
+                job.created_date = job.created_date.date()
 
             return render(request, 'jobs/jobs.html', {'page': page,
                                                       'posts': posts,

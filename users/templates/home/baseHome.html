@@ -79,7 +79,12 @@
 				                        <h3>{{user.first_name}}</h3>
 			                        </div>
 			                        <hr>
-
+			                    {% if user.profile.role == 'worker'%}
+				                <div class="rating">
+					                <span class="fa fa-star checked"></span>
+					                <span>{{user.profile.rating}}</span>
+				                </div>
+			                    {% endif %}
 			                        <div class = "edit-profile">
 			                        <a href="{% url 'profile_url' %}" class="sub-menu-link">
 				                        <p>Edit Profile</p>
