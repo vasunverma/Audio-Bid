@@ -198,7 +198,7 @@ def users_jobs(request):
                 post_list = Job.objects.filter(Q(worker_id=request.user.id))
                 post_list = list(chain(post_list, Job.objects.filter(Q(worker_id=0))))
 
-            myFilter = JobFilter(request.GET, queryset = Job.objects.all())
+            myFilter = JobFilter(request.GET, queryset = Job.objects.all().order_by('id'))
             post_list = myFilter.qs
             page = request.GET.get('page', '1')
             paginator = Paginator(post_list, 10)
