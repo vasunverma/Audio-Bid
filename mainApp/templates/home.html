@@ -25,12 +25,12 @@
       data: {
         datasets: [
         {
-          data: [{{num_completed_jobs}}, {{num_progress_jobs}}, {{num_review_jobs}}],
+          data: [{{num_progress_jobs}}, {{num_review_jobs}}, {{num_completed_jobs}}],
           backgroundColor: ['#72b4eb', '#8464a0', '#cea9bc'],
           borderColor: '#323232',
           label: 'Jobs'
         }],
-        labels: ['Completed','In Progress', 'In Review']
+        labels: ['In Progress', 'In Review', 'Completed']
       },
       options: {
         responsive: true
@@ -41,12 +41,12 @@
       type: 'pie',
       data: {
         datasets: [{
-          data: [{{ num_created_jobs }}, {{num_completed_jobs}}, {{num_progress_jobs}}, {{num_open_jobs}}, {{num_review_jobs}}],
-          backgroundColor: ['#2085ec ','#72b4eb', '#0a417a ', '#8464a0 ', '#cea9bc '],
+          data: [{{num_open_jobs}}, {{num_progress_jobs}}, {{num_review_jobs}}, {{num_completed_jobs}}],
+          backgroundColor: ['#2085ec ','#72b4eb', '#8464a0 ', '#cea9bc '],
           borderColor: '#323232 ',
           label: 'Jobs'
         }],
-        labels: ['Created','Completed','In Progress','Available', 'In Review']
+        labels: ['Available','In Progress','In Review','Completed']
       },
       options: {
         responsive: true
