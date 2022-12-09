@@ -25,12 +25,12 @@
       data: {
         datasets: [
         {
-          data: [{{num_completed_jobs}}, {{num_progress_jobs}}],
-          backgroundColor: ['#00FFFF', '#F0FFFF', '#0000FF'],
-          borderColor: 'black',
+          data: [{{num_completed_jobs}}, {{num_progress_jobs}}, {{num_review_jobs}}],
+          backgroundColor: ['#72b4eb', '#8464a0', '#cea9bc'],
+          borderColor: '#323232',
           label: 'Jobs'
         }],
-        labels: ['Completed','In Progress']
+        labels: ['Completed','In Progress', 'In Review']
       },
       options: {
         responsive: true
@@ -41,12 +41,12 @@
       type: 'pie',
       data: {
         datasets: [{
-          data: [{{ num_created_jobs }}, {{num_completed_jobs}}, {{num_progress_jobs}}, {{num_open_jobs}}],
-          backgroundColor: ['#008080','#00FFFF', '#F0FFFF', '#0000FF'],
-          borderColor: 'black',
+          data: [{{ num_created_jobs }}, {{num_completed_jobs}}, {{num_progress_jobs}}, {{num_open_jobs}}, {{num_review_jobs}}],
+          backgroundColor: ['#2085ec ','#72b4eb', '#0a417a ', '#8464a0 ', '#cea9bc '],
+          borderColor: '#323232 ',
           label: 'Jobs'
         }],
-        labels: ['Created','Completed','In Progress','Available']
+        labels: ['Created','Completed','In Progress','Available', 'In Review']
       },
       options: {
         responsive: true
@@ -82,8 +82,9 @@
             <h1 class="main__heading">Welcome {{ user.first_name }}!</h1>
             <div class="main__welcome">
               <ul class="main__left__list">
-                <li><h1 class="main_list_element">In progress Jobs: {{num_progress_jobs}}</h1></li>
-                <li><h1 class="main_list_element">Completed Jobs: {{num_completed_jobs}}</h1></li>     
+                <li><h1 class="main_list_element">In Progress Jobs: {{num_progress_jobs}}</h1></li>
+                <li><h1 class="main_list_element">In Review Jobs: {{num_review_jobs}}</h1></li>    
+                <li><h1 class="main_list_element">Completed Jobs: {{num_completed_jobs}}</h1></li>    
               </ul> 
             </div>
             <div id="container" style="width: 20%;" class="main__piechart__container">
@@ -99,8 +100,9 @@
             <div class="main__welcome">
               <ul class="main__left__list">
                 <li><h1 class="main__list__element">Created Jobs: {{ num_created_jobs }}</h1></li>
-                <li><h1 class="main__list__element">In progress Jobs: {{num_progress_jobs}}</h1></li>
                 <li><h1 class="main__list__element">Available Jobs: {{num_open_jobs}}</h1></li>
+                <li><h1 class="main__list__element">In Progress Jobs: {{num_progress_jobs}}</h1></li>
+                <li><h1 class="main__list__element">In Review Jobs: {{num_review_jobs}}</h1></li> 
                 <li><h1 class="main__list__element">Completed Jobs: {{num_completed_jobs}}</h1></li>              
               </ul> 
             </div>
