@@ -38,3 +38,14 @@
     `import logging`<br />
     `logger = logging.getLogger(__name__)`
 3. To use it, write `logger.debug('Add what you want to print')`
+### Deployment
+1. Create an account on Heroku
+2. Install Heroku CLI
+3. Go to project directory in Terminal and use command `heroku login` and follow the steps as instructed
+4. Use command `heroku create audiobid` to create an app on Heroku
+5. Add env variables to heroku using command: `heroku config:set env_variable_name=env_variable_value`
+6. Run `git push heroku main` to push your code to heroku
+7. Run `heroku python3 manage.py migrate` to set the db
+8. Create a superuser using the command `heroku python3 manage.py createsuperuser` and follow the instructions on screen
+9. To open the deployed app, run `heroku open` and it will open the deployed app in the default web browser
+10. To setup google auth use the steps present above
