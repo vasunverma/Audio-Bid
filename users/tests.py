@@ -100,6 +100,10 @@ class ComprehensiveTestCase(TestCase):
         self.assertTemplateUsed(response, 'home.html')
         self.assertContains(response, 'Welcome to AudioBid !!')
     
+    def test_login(self):
+        client.force_login(self.user)
+        self.assertEqual(self.user.is_authenticated, True)
+    
     def test_Profile_view(self):
         client.force_login(self.user)
         response = client.get(reverse('profile_url'))
