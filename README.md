@@ -11,6 +11,7 @@
 7. To create migrations: `python manage.py makemigrations`, `python manage.py migrate`
 8. To make static files load, run : `python manage.py collectstatic`
 9. To run the application: `python manage.py runserver`
+10. To run test: `python manage.py test --noinput`
 ### PostgressSQL Database Setup
 1. Install PostgressSQL from: [Download Link](https://www.enterprisedb.com/postgresql-tutorial-resources-training?uuid=db55e32d-e9f0-4d7c-9aef-b17d01210704&campaignId=7012J000001NhszQAC)
 2. Run application pgAdmin
