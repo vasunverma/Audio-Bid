@@ -4,6 +4,8 @@ import pytz
 from users.models import Job
 from django.db.models.query_utils import Q
 
+# View for Home page depending if user is logged in or not and if user is a creator or worker
+# Sends all data to the home page html
 def home(request):
     if request.user.is_authenticated:
         user = User.objects.get(id=request.user.id)

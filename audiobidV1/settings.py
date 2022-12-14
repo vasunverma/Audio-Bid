@@ -161,6 +161,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "allauth.socialaccount.context_processors.socialaccount",
 )
 
+# Allauth Configuration
 SOCIALACCOUNT_QUERY_EMAIL = True
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_UNIQUE_EMAIL = True
@@ -180,6 +181,7 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+# AWS S3 Bucket Configuration
 AWS_ACCESS_KEY_ID = os.environ['aws_id']
 AWS_SECRET_ACCESS_KEY = os.environ['aws_secret_id']
 AWS_STORAGE_BUCKET_NAME = os.environ['bucket_name']
@@ -187,6 +189,7 @@ AWS_DEFAULT_ACL = None
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
+# Cron jobs Parameters, First parameter is the time interval and second is the function to be called
 CRONJOBS = [
     ('* */6 * * *', 'users.cron.dynamic_job_price')
 ]

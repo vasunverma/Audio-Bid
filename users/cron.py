@@ -2,6 +2,7 @@ from datetime import datetime
 from users.models import Job
 from django.db.models.query_utils import Q
 
+# Cron job to increase the price of the job by $1 every day
 def dynamic_job_price():
     jobs = Job.objects.filter(Q(status= 0)).order_by("id")
     for job in jobs:

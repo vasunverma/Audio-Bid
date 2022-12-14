@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+# Profile model is used to store additional information about the user
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=10)
@@ -12,6 +13,7 @@ class Profile(models.Model):
     def __str__(self):
         return f'{self.user.username} Profile'
 
+# Job model is used to store information about the job
 class Job(models.Model):
     name= models.CharField(max_length=50, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -34,7 +36,7 @@ class Job(models.Model):
     ]
     status = models.IntegerField(choices=status_choices, default=0)
 
-
+# ReviewRating model is used to store information about the review and rating
 class ReviewRating(models.Model):
     job_id = models.BigIntegerField(default='-1')
     creator_id = models.CharField(max_length=100, default='0')

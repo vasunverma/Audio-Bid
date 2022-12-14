@@ -26,6 +26,7 @@ logger = logging.getLogger(__name__)
 import datetime
 from .models import Job, Comment
 
+# View for user login
 def user_login(request):
     form = AuthenticationForm()
     if request.method == "POST":
@@ -50,12 +51,12 @@ def user_login(request):
 
     return render(request, 'registration/login.html', {'form': form, 'title': 'log in'})
 
-
+# View for user logout
 def user_logout(request):
     logout(request)
     return redirect('home')
 
-
+# View for user signup
 def users_signup(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -99,7 +100,9 @@ def users_signup(request):
         messages.error(request, "Account not created, please try again!")
         return render(request, 'registration/signup.html', {"error": error})
 
-
+# View for user password reset
+# AWS SES is used to send the reset password email
+# Production version of SES is needed - apply for it in AWS
 def users_reset_password(request):
     if request.method == "POST":
         password_reset_form = PasswordResetForm(request.POST)
@@ -110,6 +113,7 @@ def users_reset_password(request):
                 for user in associated_users:
                     subject = "Password Reset Requested"
                     email_template_name = "registration/password/password_reset_email.txt"
+                    # Set the context variables that are used in the email template
                     c = {
                         "email": user.email,
                         'domain': 'audiobid.herokuapp.com',
@@ -131,7 +135,7 @@ def users_reset_password(request):
     return render(request=request, template_name="registration/password/password_reset.html",
                   context={"password_reset_form": password_reset_form})
 
-
+# Veiw for user profile
 def users_profile(request):
     if request.user.is_authenticated:
         if request.method == 'GET':
@@ -158,11 +162,13 @@ def users_profile(request):
     else:
         return redirect('login_url')
 
+# View to create jobs
 def users_jobs(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
             form = JobForm(request.POST or None)
             form.instance.user = request.user
+            # Checking which audio file option is selected
             if form.is_valid():
                 if request.POST.get("URL"):
                     check_gdrive(request.POST.get("URL"))
@@ -187,6 +193,7 @@ def users_jobs(request):
         elif request.method == 'GET':
             is_creator = False
             if request.user.profile.role == 'creator':
+                # Filter is used to filter the jobs based on the user
                 myFilter = JobFilter(request.GET, queryset = Job.objects.filter(Q(user_id=request.user.id)).order_by("id"))
                 post_list = myFilter.qs
                 is_creator = True
@@ -225,6 +232,10 @@ def users_jobs(request):
     else:
         return redirect('login_url')
 
+# View for functions related to jobs like claim, complete, review
+# It is a bit too long but can be broken down into smaller functions later
+# It handles all the POST requests for jobs related to modifying the job status
+# formId is used to identify the form that is being submitted
 def users_detail_job(request):
     if request.user.is_authenticated:
         badge_classes = {
@@ -366,11 +377,14 @@ def users_detail_job(request):
     else:
         return redirect('login_url')
 
+# View for editing a job
+# Ajax call from jobs_details.html
 def users_edit_job(request, id):
     if request.user.is_authenticated:
         job = Job.objects.get(id=id)
         if request.method == 'POST':
             form = JobForm(request.POST, instance=job)
+            # Checking which audio file option was selected
             if form.is_valid():
                 if request.POST.get("URL"):
                     check_gdrive(request.POST.get("URL"))
@@ -408,6 +422,7 @@ def users_edit_job(request, id):
             else:
                 messages.error(request, 'Error updating Job. Please try again')
         else:
+            # Response for Ajax call
             return JsonResponse({
                 "name": job.name,
                 "description": job.description,
@@ -419,21 +434,21 @@ def users_edit_job(request, id):
     else:
         return redirect('login_url')
     
-    
+# View for user reviews - not used as shifted inside jobs_details 
 def users_reviews(request):
     if request.user.is_authenticated:
         return render(request, 'Reviews/reviews.html')
     else:
         return redirect('login_url')
 
-
+# View for user payments - future use
 def users_payments(request):
     if request.user.is_authenticated:
         return render(request, 'Payments/payments.html')
     else:
         return redirect('login_url')
 
-
+# View for user instructions - future use
 def users_instructions(request):
     if request.user.is_authenticated:
         return render(request, 'home/instructions.html')
@@ -441,7 +456,7 @@ def users_instructions(request):
         return redirect('login_url')
 
 
-# Helpers
+# Helpers for GDrive and S3
 def check_gdrive(url):
     response = requests.get(url)
     if 'drive.google.com' not in response.url or 'ServiceLogin' in response.url:

@@ -3,6 +3,7 @@ from .models import *
 from django import forms
 from django.forms import MultiWidget
 
+# Filter for the jobs list on job page
 class JobFilter(django_filters.FilterSet):
     #created_date = django_filters.DateFilter(field_name='created_date', label='Created Date', widget=forms.DateInput())
     created_date = django_filters.DateFilter(widget=forms.DateInput(attrs={'placeholder':'mm-dd-yyyy',
